@@ -45,7 +45,7 @@ ul, ul li{
 
 nav {
   background-color: black;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 0 3px black;
   color: white;
   padding: 0 1em;
@@ -102,6 +102,32 @@ a.cta-button{
   border-radius: 5px;
   font-size: 0.8em;
   text-decoration: none;
+}
+
+footer{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8em;
+  padding: 0 2em;
+}
+
+footer div{
+  max-width: 80%;
+  width: 100%;
+  padding: 1em 0;
+  border-top: 1px solid rgba(255,255,255,0.5);
+}
+
+footer div p{
+  margin: 0;
+  font-size: 1.2em;
+}
+
+footer div p:last-of-type{
+  font-size: 0.8em;
+  line-height: 1.6em;
 }
 
 #performances{

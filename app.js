@@ -11,21 +11,7 @@ const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-
-const partialsDirectory = `${__dirname}/views/partials`
-
-fs.readdirSync(partialsDirectory).forEach(file => {
-
-  if(file.indexOf('.hbs') > -1){
-
-    const partialName = file.split('.')[0];
-
-    hbs.registerPartial(partialName, fs.readFileSync(`${partialsDirectory}/${file}`, 'utf8'));
-    console.log(partialName, `${partialsDirectory}/${file}`);
-
-  }
-
-})
+hbs.registerPartials(__dirname + '/views/partials');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -35,6 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', require('./routes/index'));
 app.use('/create', require('./routes/create'));
+app.use('/record', require('./routes/record'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
