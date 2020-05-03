@@ -25,7 +25,7 @@ h1, h2, h3, h4, h5, h6{
 
 body{ 
   overflow: scroll;
-  background-image: url('/images/background.png');
+  background-image: url('/assets/images/background.png');
   background-size: 100% auto;
   background-position: 50% -20vh;
   background-repeat: no-repeat;
@@ -56,11 +56,17 @@ nav {
   height: 50px;
   align-items: center;
   display: flex;
+  justify-content: space-between;
 }
 
 nav a {
   text-decoration: none;
   color: white;
+}
+
+nav section a{
+  margin-left: 1em;
+  font-size: 0.8em;
 }
 
 header{
@@ -125,7 +131,7 @@ a.cta-button{
   color: white;
   font-size: 0.75em;
   width: 20%;
-  background-image: url('/images/search_icon.png');
+  background-image: url('/assets/images/search_icon.png');
   background-size: auto 50%;
   background-position: 95% 50%;
   background-repeat: no-repeat;
