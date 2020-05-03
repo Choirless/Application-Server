@@ -2,62 +2,91 @@
 
     <div class="half">
         <video id="lead" src="/assets/videos/guitar.mp4" ></video>
+        <h3>Lead</h3>
     </div>
 
     <div class="half">
         <video id="performance" muted></video>
+        <h3>You</h3>
     </div>
 
-    <script>
+</div>
 
-        (function(){
+<div id="controls">
+    <button class="cta-button listen">Listen to lead</button>
+    <button class="cta-button record">Record performance</button>
+</div>
 
-            'use strict';
+<script>
 
-            var performanceVideo = document.querySelector('video#performance');
+    (function(){
 
-            console.log(performanceVideo);
+        'use strict';
 
-            navigator.mediaDevices.enumerateDevices()
-                .then( function(listOfDevices){
+        var playingLead = false;
+        var recording = false;
 
-                    var constraints = { video: {width: { min: 640, ideal: 1920, max: 1920 }, height: { min: 400, ideal: 1080 } },  audio: true };
-                    //constraints.video = { facingMode: { exact: "user" } };
+        var leadVideo = document.querySelector('video#lead');
+        var performanceVideo = document.querySelector('video#performance');
+        var listenBtn = document.querySelector('#controls button.listen');
+        var recordBtn = document.querySelector('#controls button.record');
 
-                    // Possibly limit video size for speed.
-                    //constraints.video.width = { max : 1280 };
+        listenBtn.addEventListener('click', function(){
 
-                    navigator.mediaDevices.getUserMedia(constraints)
-                        .then(function(stream) {
+            if(!playingLead){
+                playingLead = true;
+                leadVideo.currentTime = 0;
+                leadVideo.play();
+                listenBtn.textContent = "Stop lead";
+            } else {
+                leadVideo.pause();
+                playingLead = false;
+                leadVideo.currentTime = 0;
+                listenBtn.textContent = "Listen to lead";
+            }
 
-                            try{
-                                const vidURL = window.URL.createObjectURL(stream);
-                                performanceVideo.src = vidURL;
-                            } catch(err){
+        }, false);
 
-                                console.log('Unable to createObjectURL for stream. Setting srcObject to stream instead...');
-                                performanceVideo.srcObject = stream;
+        leadVideo.addEventListener('ended', function(){
+            playingLead = false;
+            leadVideo.currentTime = 0;
+            listenBtn.textContent = "Listen to lead";
+        }, false);
 
+        navigator.mediaDevices.enumerateDevices()
+            .then( function(listOfDevices){
+
+                var constraints = { video: {width: { min: 640, ideal: 1280, max: 1280 }, height: { min: 400, ideal: 720 } },  audio: true };
+
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function(stream) {
+
+                        try{
+                            const vidURL = window.URL.createObjectURL(stream);
+                            performanceVideo.src = vidURL;
+                        } catch(err){
+
+                            console.log('Unable to createObjectURL for stream. Setting srcObject to stream instead...');
+                            performanceVideo.srcObject = stream;
+
+                        }
+
+                        setTimeout(function(){
+
+                            console.log('Video is playing', !performanceVideo.paused);
+                            
+                            if(performanceVideo.paused){
+                                performanceVideo.play();
                             }
 
-                            setTimeout(function(){
+                        }, 1000);
 
-                                console.log('Video is playing', !performanceVideo.paused);
-                                
-                                if(performanceVideo.paused){
-                                    performanceVideo.play();
-                                }
+                    })
+                ;
 
-                            }, 1000);
+            })
+        ;
 
-                        })
-                    ;
+    }());
 
-                })
-            ;
-
-        }());
-
-    </script>
-
-</div>
+</script>
