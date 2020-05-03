@@ -181,3 +181,32 @@ a.cta-button{
 #performances ul li p{
   margin-top: 0.5em;
 }
+
+/* RECORD STYLES */
+
+body#record #videos{
+  display: flex;
+  min-height: 100%;
+}
+
+body#record #videos .half{
+  display: flex;
+  width: 50%;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+body#record #videos .half:first-of-type{
+  border-right: 5px solid black;
+}
+
+body#record #videos .half:last-of-type{
+  border-left: 5px solid black;
+}
+
+body#record #videos .half video{
+  min-height: 100%;
+}

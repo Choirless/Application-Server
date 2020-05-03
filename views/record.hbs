@@ -1,2 +1,65 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+{{> nav}}
+
+<div id="videos">
+
+    <div class="half">
+        <video id="lead" src="/assets/videos/guitar.mp4" ></video>
+    </div>
+
+    <div class="half">
+        <video id="performance" muted></video>
+    </div>
+
+    <script>
+
+        (function(){
+
+            'use strict';
+
+            var performanceVideo = document.querySelector('video#performance');
+
+            console.log(performanceVideo);
+
+            navigator.mediaDevices.enumerateDevices()
+                .then( function(listOfDevices){
+
+                    var constraints = { video: {width: { min: 640, ideal: 1920, max: 1920 }, height: { min: 400, ideal: 1080 } },  audio: true };
+                    //constraints.video = { facingMode: { exact: "user" } };
+
+                    // Possibly limit video size for speed.
+                    //constraints.video.width = { max : 1280 };
+
+                    navigator.mediaDevices.getUserMedia(constraints)
+                        .then(function(stream) {
+
+                            try{
+                                const vidURL = window.URL.createObjectURL(stream);
+                                performanceVideo.src = vidURL;
+                            } catch(err){
+
+                                console.log('Unable to createObjectURL for stream. Setting srcObject to stream instead...');
+                                performanceVideo.srcObject = stream;
+
+                            }
+
+                            setTimeout(function(){
+
+                                console.log('Video is playing', !performanceVideo.paused);
+                                
+                                if(performanceVideo.paused){
+                                    performanceVideo.play();
+                                }
+
+                            }, 1000);
+
+                        })
+                    ;
+
+                })
+            ;
+
+        }());
+
+    </script>
+
+</div>
