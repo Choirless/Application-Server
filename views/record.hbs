@@ -329,36 +329,58 @@
 
         }, false);
 
-        var req = new XMLHttpRequest();
-        req.open('GET', '/assets/videos/guitar.mp4', true);
-        req.responseType = 'blob';
+        var leadVideoAddr = "/assets/videos/guitar.mp4";
+        var videoSize = 0;
+        fetch(leadVideoAddr, {
+                method : "HEAD"
+            })
+            .then(function(res){
+                if(res.ok){
+                    return Number(res.headers.get('Content-Length'));
+                }
+            })
+            .then(function(sizeOfFile){
 
-        req.onload = function() {
+                var req = new XMLHttpRequest();
+                req.open('GET', leadVideoAddr, true);
+                req.responseType = 'blob';
 
-            if (this.status === 200) {
-                leadVideo.src = window.URL.createObjectURL(this.response);
-                leadView.dataset.videoloaded = "true";
-                listenBtn.dataset.active = "true";
+                req.onload = function() {
 
-                if(performanceVideo.readyState === 4){
-                    recordBtn.dataset.active = "true";
+                    if (this.status === 200) {
+                        leadVideo.src = window.URL.createObjectURL(this.response);
+                        leadView.dataset.videoloaded = "true";
+                        listenBtn.dataset.active = "true";
+
+                        if(performanceVideo.readyState === 4){
+                            recordBtn.dataset.active = "true";
+                        }
+
+                    }
+
                 }
 
-            }
+                req.onerror = function(err) {
+                    // Error
+                    console.log(err);
+                }
 
-        }
+                req.onprogress = function(e){
+                    console.log(e);
+                    progressIndicator.style.width = (e.loaded / sizeOfFile) * 100 + "%";
+                }
 
-        req.onerror = function(err) {
-            // Error
-            console.log(err);
-        }
+                req.send();
 
-        req.onprogress = function(e){
-            console.log(e);
-            progressIndicator.style.width = (e.loaded / e.total) * 100 + "%";
-        }
+            })
+            .catch(function(err){
 
-        req.send();
+                console.log('fetch HEAD err:', err);
+
+            })
+
+        ;
+
 
     }());
 
