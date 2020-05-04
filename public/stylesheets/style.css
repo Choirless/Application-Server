@@ -313,17 +313,18 @@ body#record #controls button{
   color: white;
   outline: 0 solid transparent;
   border-top: 1px solid rgba(255, 255, 255, 0.35);
+  min-width: 185px;
 }
 
 body#record #controls button:hover{
   cursor: pointer;
 }
 
-body#record #controls button.listen{
+body#record #controls button.listen, body#record #controls button.playback{
   background-color: #46649f;
 }
 
-body#record #controls button.listen:hover{
+body#record #controls button.listen:hover, body#record #controls button.playback:hover{
   background-color: #5679bd;
 }
 
@@ -333,4 +334,8 @@ body#record #controls button.record{
 
 body#record #controls button.record:hover{
   background-color: #e05252;
+}
+
+body#record #controls button.save{
+  color: black;
 }

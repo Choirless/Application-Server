@@ -2,8 +2,8 @@
 
     <div class="half" id="lead" data-videoloaded="false">
         <video preload src="" ></video>
-        
-        <div id="lead-loading" class="video-dialog"> 
+
+        <div id="lead-loading" class="video-dialog">
             <h2>Loading Lead Video</h2>
             <div id="progress">
                 <span id="indicator"></span>
@@ -15,8 +15,8 @@
 
     <div class="half" id="performance" data-videoloaded="false">
         <video muted></video>
-
-        <div id="activate-cameras" class="video-dialog"> 
+        <video id="recorded" data-active="false"></video>
+        <div id="activate-cameras" class="video-dialog">
             <h2>Camera + Microphone Access</h2>
             <p>To record your performance, you'll need to let Choirless use your camera and microphone.</p>
             <button class="cta-button" id="enableCapture">Enable Camera + Microphone</button>
@@ -44,16 +44,19 @@
         var playingLead = false;
         var recording = false;
 
+        var showingPerformance = false;
+
         var leadView = document.querySelector('.half#lead');
         var performanceView = document.querySelector('.half#performance');;
 
         var leadVideo = leadView.querySelector('video');
         var performanceVideo = performanceView.querySelector('video');
+        var recordedVideo = performanceView.querySelector('video#recorded');
 
         const progressIndicator = leadView.querySelector('#indicator');
 
         var enableCaptureBtn = performanceView.querySelector('#enableCapture')
-        
+
         var listenBtn = document.querySelector('#controls button.listen');
         var recordBtn = document.querySelector('#controls button.record');
         var playbackBtn = document.querySelector('#controls button.playback');
@@ -62,21 +65,6 @@
         var performanceData = [];
         var performanceStream;
         var mR;
-
-        function download(chunks) {
-            var blob = new Blob(chunks, {
-                type: "video/webm"
-            });
-            performanceData.length = 0;
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement("a");
-            document.body.appendChild(a);
-            a.style = "display: none";
-            a.href = url;
-            a.download = "test.webm";
-            a.click();
-            window.URL.revokeObjectURL(url);
-        }
 
         listenBtn.addEventListener('click', function(){
 
@@ -99,8 +87,19 @@
             if(!recording){
 
                 recording = true;
+                
                 recordBtn.textContent = "Stop Recording";
+                
+                listenBtn.dataset.active = "false";
+                recordedVideo.dataset.active = "false";
+                performanceVideo.dataset.active = "true";
+                playbackBtn.dataset.active = "false";
+                saveBtn.dataset.active = "false";
+
                 performanceData.length = 0;
+
+                recordedVideo.pause();
+                leadVideo.currentTime = 0;
                 leadVideo.play();
 
                 mR = new MediaRecorder(performanceStream);
@@ -115,22 +114,71 @@
                     console.log(performanceData);
                 }
 
-                mR.start(1000);
+                mR.start(50);
 
             } else {
 
                 recording = false;
-                recordBtn.textContent = "Record Performance";
+                recordBtn.textContent = "Re-Record Performance";
 
                 leadVideo.pause();
                 leadVideo.currentTime = 0;
 
                 mR.stop();
 
-                download(performanceData);
+                performanceVideo.dataset.active = "false";
+
+                var blob = new Blob(performanceData, {
+                    type: "video/webm"
+                });
+
+                try{
+                    const vidURL = window.URL.createObjectURL(blob);
+                    recordedVideo.src = vidURL;
+                } catch(err){
+
+                    console.log('Unable to createObjectURL for stream. Setting srcObject to stream instead...');
+                    recordedVideo.srcObject = stream;
+
+                }
+
+                recordedVideo.dataset.active = "true";
+                recordedVideo.currentTime = 0;
+
+                playbackBtn.dataset.active = "true";
+                saveBtn.dataset.active = "true";
 
             }
 
+
+        }, false);
+
+        playbackBtn.addEventListener('click', function(){
+            
+            if(!showingPerformance){
+                showingPerformance = true;
+                
+                playbackBtn.textContent = "Stop Playback";
+
+                recordedVideo.currentTime = 0;
+                leadVideo.currentTime = 0;
+
+                recordedVideo.play()
+                leadVideo.play();
+
+            } else {
+                
+                showingPerformance = false;
+                
+                playbackBtn.textContent = "Replay Performance";
+
+                recordedVideo.pause()
+                leadVideo.pause();
+
+                recordedVideo.currentTime = 0;
+                leadVideo.currentTime = 0;
+
+            }
 
         }, false);
 
@@ -138,6 +186,21 @@
             playingLead = false;
             leadVideo.currentTime = 0;
             listenBtn.textContent = "Listen to lead";
+
+            if(showingPerformance && recordedVideo.paused === true){
+                showingPerformance = false;
+                playbackBtn.textContent = "Replay Performance";
+            }
+
+        }, false);
+
+        recordedVideo.addEventListener('ended', function(){
+
+            if(showingPerformance && leadVideo.paused === true){
+                showingPerformance = false;
+                playbackBtn.textContent = "Replay Performance";
+            }
+
         }, false);
 
         enableCaptureBtn.addEventListener('click', function(){
@@ -149,7 +212,7 @@
 
                     navigator.mediaDevices.getUserMedia(constraints)
                         .then(function(stream) {
-                            
+
                             performanceStream = stream.clone();
 
                             try{
@@ -165,11 +228,11 @@
                             setTimeout(function(){
 
                                 console.log('Video is playing', !performanceVideo.paused);
-                                
+
                                 if(performanceVideo.paused){
                                     performanceVideo.play();
                                     performanceView.dataset.videoloaded = "true";
-                                    
+
                                     if(leadVideo.readyState === 4){
                                         recordBtn.dataset.active = "true";
                                     }
@@ -216,7 +279,7 @@
         }
 
         req.send();
-    
+
     }());
 
 
