@@ -105,7 +105,6 @@
                 mR = new MediaRecorder(performanceStream);
 
                 mR.ondataavailable = function(e){
-                    console.log(e.data);
                     performanceData.push(e.data);
                 }
 
