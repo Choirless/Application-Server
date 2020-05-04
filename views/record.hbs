@@ -28,11 +28,19 @@
 
 </div>
 
-<div id="controls" data-active="false">
+<div id="controls" data-active="true">
     <button class="cta-button listen" data-active="false">Listen To Lead</button>
     <button class="cta-button record" data-active="false">Record Performance</button>
     <button class="cta-button playback" data-active="false">Replay Performance</button>
     <button class="cta-button save"  data-active="false">Save Performance</button>
+</div>
+
+<div id="uploadDialog" class="global-dialog" data-active="false">
+    <div class="dialog-content">
+        <h3 id="heading">Saving performance</h3>
+        <p id="message">Sending your performance to the Choirless servers.<br/><br/>Please don't leave this page until the upload has finished.<br/><br/>Your lead will be notified when the video is ready to be used.</p>
+        <a class="cta-button" id="action" data-active="false" href="/">OK</a>
+    </div>
 </div>
 
 <script>
@@ -62,6 +70,8 @@
         var playbackBtn = document.querySelector('#controls button.playback');
         var saveBtn = document.querySelector('#controls button.save');
 
+        var uploadDialog = document.querySelector('#uploadDialog');
+
         var performanceData = [];
         var performanceStream;
         var mR;
@@ -71,14 +81,19 @@
             var blob = new Blob(chunks, {
                 type: "video/webm"
             });
+
             performanceData.length = 0;
+            
             var url = URL.createObjectURL(blob);
             var a = document.createElement("a");
+            
             document.body.appendChild(a);
+            
             a.style = "display: none";
             a.href = url;
             a.download = "test.webm";
             a.click();
+            
             window.URL.revokeObjectURL(url);
 
         }
@@ -276,6 +291,8 @@
 
         saveBtn.addEventListener('click', function(){
 
+            uploadDialog.dataset.active = "true";
+
             var recordedVideo = new Blob(performanceData, {
                 type: "video/webm"
             });
@@ -292,10 +309,18 @@
                 })
                 .then(function(res){
                     if(res.ok){
-                        console.log("All sent!")
+                        console.log("All sent!");
+                        return;
                     } else {
                         throw res;
                     }
+                })
+                .then(function(){
+
+                    uploadDialog.querySelector('.dialog-content #heading').textContent = "Performance saved!";
+                    uploadDialog.querySelector('.dialog-content p').textContent = "Your performance has been saved to Choirless. Thanks!";
+                    uploadDialog.querySelector('#action').dataset.active = "true";
+
                 })
                 .catch(function(err){
                     console.log('Upload err:', err);
