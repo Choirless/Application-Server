@@ -328,9 +328,9 @@ body#record #controls button.listen:hover{
 }
 
 body#record #controls button.record{
-  background-color: #488832;
+  background-color: #c34343;
 }
 
 body#record #controls button.record:hover{
-  background-color: #57ad39;
+  background-color: #e05252;
 }

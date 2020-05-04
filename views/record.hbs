@@ -29,8 +29,8 @@
 </div>
 
 <div id="controls" data-active="false">
-    <button class="cta-button listen">Listen to lead</button>
-    <button class="cta-button record">Record performance</button>
+    <button class="cta-button listen" data-active="false">Listen to lead</button>
+    <button class="cta-button record" data-active="false">Record performance</button>
     <button class="cta-button playback" data-active="false">Replay performance</button>
     <button class="cta-button save"  data-active="false">Save performance</button>
 </div>
@@ -108,6 +108,11 @@
                                 if(performanceVideo.paused){
                                     performanceVideo.play();
                                     performanceView.dataset.videoloaded = "true";
+                                    
+                                    if(leadVideo.readyState === 4){
+                                        recordBtn.dataset.active = "true";
+                                    }
+
                                 }
 
                             }, 1000);
@@ -129,6 +134,12 @@
             if (this.status === 200) {
                 leadVideo.src = window.URL.createObjectURL(this.response);
                 leadView.dataset.videoloaded = "true";
+                listenBtn.dataset.active = "true";
+
+                if(performanceVideo.readyState === 4){
+                    recordBtn.dataset.active = "true";
+                }
+
             }
 
         }
