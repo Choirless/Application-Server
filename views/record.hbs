@@ -1,20 +1,38 @@
 <div id="videos">
 
-    <div class="half">
-        <video id="lead" src="/assets/videos/guitar.mp4" ></video>
+    <div class="half" id="lead" data-videoloaded="false">
+        <video preload src="" ></video>
+        
+        <div id="lead-loading" class="video-dialog"> 
+            <h2>Loading Lead Video</h2>
+            <div id="progress">
+                <span id="indicator"></span>
+            </div>
+        </div>
+
         <h3>Lead</h3>
     </div>
 
-    <div class="half">
-        <video id="performance" muted></video>
+    <div class="half" id="performance" data-videoloaded="false">
+        <video muted></video>
+
+        <div id="activate-cameras" class="video-dialog"> 
+            <h2>Camera + Microphone Access</h2>
+            <p>To record your performance, you'll need to let Choirless use your camera and microphone.</p>
+            <button class="cta-button" id="enableCapture">Enable Camera + Microphone</button>
+            <p>(Don't worry, we won't record or save anything until you tell us to).</p>
+        </div>
+
         <h3>You</h3>
     </div>
 
 </div>
 
-<div id="controls">
+<div id="controls" data-active="false">
     <button class="cta-button listen">Listen to lead</button>
     <button class="cta-button record">Record performance</button>
+    <button class="cta-button playback" data-active="false">Replay performance</button>
+    <button class="cta-button save"  data-active="false">Save performance</button>
 </div>
 
 <script>
@@ -26,10 +44,20 @@
         var playingLead = false;
         var recording = false;
 
-        var leadVideo = document.querySelector('video#lead');
-        var performanceVideo = document.querySelector('video#performance');
+        var leadView = document.querySelector('.half#lead');
+        var performanceView = document.querySelector('.half#performance');;
+
+        var leadVideo = leadView.querySelector('video');
+        var performanceVideo = performanceView.querySelector('video');
+
+        const progressIndicator = leadView.querySelector('#indicator');
+
+        var enableCaptureBtn = performanceView.querySelector('#enableCapture')
+        
         var listenBtn = document.querySelector('#controls button.listen');
         var recordBtn = document.querySelector('#controls button.record');
+        var playbackBtn = document.querySelector('#controls button.playback');
+        var saveBtn = document.querySelector('#controls button.save');
 
         listenBtn.addEventListener('click', function(){
 
@@ -53,40 +81,71 @@
             listenBtn.textContent = "Listen to lead";
         }, false);
 
-        navigator.mediaDevices.enumerateDevices()
-            .then( function(listOfDevices){
+        enableCaptureBtn.addEventListener('click', function(){
 
-                var constraints = { video: {width: { min: 640, ideal: 1280, max: 1280 }, height: { min: 400, ideal: 720 } },  audio: true };
+            navigator.mediaDevices.enumerateDevices()
+                .then( function(listOfDevices){
 
-                navigator.mediaDevices.getUserMedia(constraints)
-                    .then(function(stream) {
+                    var constraints = { video: {width: { min: 640, ideal: 1280, max: 1280 }, height: { min: 400, ideal: 720 } },  audio: true };
 
-                        try{
-                            const vidURL = window.URL.createObjectURL(stream);
-                            performanceVideo.src = vidURL;
-                        } catch(err){
+                    navigator.mediaDevices.getUserMedia(constraints)
+                        .then(function(stream) {
 
-                            console.log('Unable to createObjectURL for stream. Setting srcObject to stream instead...');
-                            performanceVideo.srcObject = stream;
+                            try{
+                                const vidURL = window.URL.createObjectURL(stream);
+                                performanceVideo.src = vidURL;
+                            } catch(err){
 
-                        }
+                                console.log('Unable to createObjectURL for stream. Setting srcObject to stream instead...');
+                                performanceVideo.srcObject = stream;
 
-                        setTimeout(function(){
-
-                            console.log('Video is playing', !performanceVideo.paused);
-                            
-                            if(performanceVideo.paused){
-                                performanceVideo.play();
                             }
 
-                        }, 1000);
+                            setTimeout(function(){
 
-                    })
-                ;
+                                console.log('Video is playing', !performanceVideo.paused);
+                                
+                                if(performanceVideo.paused){
+                                    performanceVideo.play();
+                                    performanceView.dataset.videoloaded = "true";
+                                }
 
-            })
-        ;
+                            }, 1000);
 
+                        })
+                    ;
+
+                })
+            ;
+
+        }, false);
+
+        var req = new XMLHttpRequest();
+        req.open('GET', '/assets/videos/guitar.mp4', true);
+        req.responseType = 'blob';
+
+        req.onload = function() {
+
+            if (this.status === 200) {
+                leadVideo.src = window.URL.createObjectURL(this.response);
+                leadView.dataset.videoloaded = "true";
+            }
+
+        }
+
+        req.onerror = function(err) {
+            // Error
+            console.log(err);
+        }
+
+        req.onprogress = function(e){
+            console.log(e);
+            progressIndicator.style.width = (e.loaded / e.total) * 100 + "%";
+        }
+
+        req.send();
+    
     }());
+
 
 </script>

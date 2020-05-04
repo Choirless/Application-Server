@@ -5,6 +5,10 @@
        url('/fonts/f/f.svg#svgFontName') format('svg'); /* Legacy iOS */
 }
 
+*[data-active="false"]{
+  display: none;
+}
+
 html, body {
   padding: 0;
   margin: 0;
@@ -102,6 +106,7 @@ a.cta-button, button.cta-button{
   border-radius: 5px;
   font-size: 0.8em;
   text-decoration: none;
+  cursor: pointer;
 }
 
 footer{
@@ -212,7 +217,7 @@ footer div p:last-of-type{
 
 body#record #videos{
   display: flex;
-  min-height: 100%;
+  height: 100%;
 }
 
 body#record #videos .half{
@@ -225,6 +230,14 @@ body#record #videos .half{
   box-sizing: border-box;
 }
 
+body#record #videos .half[data-videoloaded="false"] video{
+  display: none;
+}
+
+body#record #videos .half[data-videoloaded="true"] .video-dialog{
+  display: none;
+}
+
 body#record #videos .half:first-of-type{
   border-right: 5px solid black;
 }
@@ -234,7 +247,35 @@ body#record #videos .half:last-of-type{
 }
 
 body#record #videos .half video{
-  min-height: 100%;
+  min-height: 100vh;
+}
+
+body#record .video-dialog{
+  text-align: center;
+  max-width: 50%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+body#record .video-dialog img{
+  width: 25px;
+}
+
+body#record .video-dialog #progress{
+  width: 200px;
+  height: 10px;
+  border: 1px solid white;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+body#record .video-dialog #progress #indicator{
+  height: 100%;
+  background: white;
+  width: 0px;
+  display: block;
 }
 
 body#record #videos .half h3{
@@ -248,7 +289,7 @@ body#record #videos .half h3{
   border-width: 1px 1px 1px 0;
 }
 
-body#record #videos .half:nth-child(2) h3{
+body#record #videos .half#performance h3{
   left: inherit;
   border-radius: 3px 0 0 3px;
   right: 0;
@@ -271,6 +312,7 @@ body#record #controls button{
   box-shadow: 0 1px 2px black;
   color: white;
   outline: 0 solid transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 body#record #controls button:hover{
