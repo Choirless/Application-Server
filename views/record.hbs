@@ -274,6 +274,36 @@
 
         }, false);
 
+        saveBtn.addEventListener('click', function(){
+
+            var recordedVideo = new Blob(performanceData, {
+                type: "video/webm"
+            });
+
+            var fd = new FormData();
+            fd.append('video', recordedVideo, 'video.webm');
+
+            fetch('/record/save', {
+                    method: 'POST',
+                    body: fd , // with our form data packaged above
+                    headers: new Headers({
+                        'enctype': 'multipart/form-data' // the enctype is important to work with multer on the server
+                    })
+                })
+                .then(function(res){
+                    if(res.ok){
+                        console.log("All sent!")
+                    } else {
+                        throw res;
+                    }
+                })
+                .catch(function(err){
+                    console.log('Upload err:', err);
+                })
+            ;
+
+        }, false);
+
         var req = new XMLHttpRequest();
         req.open('GET', '/assets/videos/guitar.mp4', true);
         req.responseType = 'blob';
