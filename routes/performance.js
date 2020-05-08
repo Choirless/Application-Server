@@ -6,8 +6,11 @@ const multer = require('multer');
 const upload = multer();
 const storage = require(`${__dirname}/../bin/lib/storage`);
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/create', function(req, res, next) {
+  res.render('create', { title: 'Choirless | Create Performance', bodyid : "create" });
+});
+
+router.get('/record', function(req, res, next) {
   res.render('record', { title: 'Choirless | Record Piece', bodyid : "record" });
 });
 
