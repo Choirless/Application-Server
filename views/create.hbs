@@ -25,13 +25,13 @@
 
         </form>
 
-        <div id="share">
+        <div id="share" data-active="false">
             
             <h2>Share</h2>
 
             <p>Once you’ve added all of your sections, share the link below to your group. When they visit the link, they’ll be able to record their performance and send it along to you for review</p>
 
-            <pre>https://choirless.com/performance/9946fe89-de1f-4abf-9b3d-34e03713f4a0</pre>
+            <pre id="performanceLink">https://choirless.com/performance/9946fe89-de1f-4abf-9b3d-34e03713f4a0</pre>
 
         </div>
 
@@ -48,6 +48,7 @@
         var form = document.querySelector('form#performanceCreation');
         var performanceSections = document.querySelector('#performanceSections');
         var sectionTemplate = document.querySelector('template#sectionTemplate');
+        var shareSection = document.querySelector('#share');
 
         function bindEventsToSectionBtns(section){
             console.log(section);
@@ -140,6 +141,8 @@
                 data.sections.push(input.value);
             });
             console.log(data);
+
+            share.dataset.active = "true";
 
         }, false);
 
