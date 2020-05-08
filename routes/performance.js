@@ -16,20 +16,21 @@ router.get('/record', function(req, res, next) {
 
 router.post('/save', upload.single('video'), function(req, res, next) {
   
-  debug(req.file)
+	debug(req.file)
 
-  const filename = `${uuid()}.webm`
+	const filename = `${uuid()}.webm`
 
-  storage.put(filename, req.file.buffer)
-    .then(() => {
-      debug(`Video ${filename} stored :D`)
-    })
-    .catch(err => {
-      debug("Storage err:", err);
-    })
-  ;
-
-  res.end();
+	storage.put(filename, req.file.buffer)
+		.then(() => {
+			debug(`Video ${filename} stored :D`);
+			res.end();
+		})
+		.catch(err => {
+			debug("Storage err:", err);
+			res.status(500);
+			res.end();
+		})
+	;
 
 });
 

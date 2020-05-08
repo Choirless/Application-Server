@@ -403,7 +403,7 @@ body#record #controls button.save{
 
 /* Create Styles */
 
-body#create main{
+main{
   width: 100%;
   max-width: 1280px;
   margin-left: auto;
