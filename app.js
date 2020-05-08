@@ -19,9 +19,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', require('./routes/index'));
-app.use('/account', require('./routes/account'));
-app.use('/performance', require('./routes/performance'));
+app.use('/', require(`${__dirname}/routes/index`));
+app.use('/account', require(`${__dirname}/routes/account`));
+app.use('/performance', require(`${__dirname}/routes/performance`));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

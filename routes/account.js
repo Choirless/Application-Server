@@ -10,7 +10,6 @@ const users = require(`${__dirname}/../bin/modules/users`);
 
 const UUIDRegex = `[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}`;
 
-
 router.get('/login', function(req, res, next) {
 	res.render('account/login', { title: "Choirless | All the world's a stage", bodyid: "accountLogin" });
 });
@@ -19,9 +18,41 @@ router.get('/create', function(req, res, next) {
 	res.render('account/create', { title: "Choirless | All the world's a stage", bodyid: "accountCreate" });
 });
 
-router.post('/login', (req, res, next) => {
+/*router.post('/login', (req, res, next) => {
 
 	if(req.body.name && req.body.password){
+
+		users.get.byUsername(req.body.name)
+			.then(user => {
+				
+				if(!user){
+					res.status(422);
+					res.end();
+				} else {
+
+					bcrypt.compare(req.body.password, user.password, (err, result) => {
+
+						if(err){
+							throw err;
+						} else {
+							if(result === true){
+								res.send("Success!");
+							} else {
+								res.send("user/pass mismatch");
+							}
+						}
+
+					})
+
+				}
+
+			})
+			.catch(err => {
+				debug('Login err:', err);
+				res.status(500);
+				res.end();
+			})
+		;
 
 	} else {
 		res.status(422);
@@ -29,17 +60,19 @@ router.post('/login', (req, res, next) => {
 
 	res.end();
 
-});
+});*/
 
 router.post('/create', (req, res, next) => {
 
-  if(req.body.name && req.body.password){
+	debug('/create', req.body);
+
+	if(req.body.username && req.body.password){
 
 		bcrypt.hash(req.body.password, saltRounds)
 			.then(passwordHash => {
 
 				const userData = {
-					name : req.body.name,
+					username : req.body.username,
 					password : passwordHash,
 					uuid : uuid()
 				};
@@ -47,7 +80,8 @@ router.post('/create', (req, res, next) => {
 				users.add(userData)
 					.then(result => {
 						debug(result);
-						res.redirect('/admin');
+						
+						res.end();
 					})
 					.catch(err => {
 						debug(err);
@@ -63,6 +97,8 @@ router.post('/create', (req, res, next) => {
 		res.status(422);
 		next();
 	}
+
+	res.end();
 
 });
 
