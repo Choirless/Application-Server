@@ -258,7 +258,7 @@
                     navigator.mediaDevices.getUserMedia(constraints)
                         .then(function(stream) {
 
-                            performanceStream = stream.clone();
+                            performanceStream = stream;
 
                             try{
                                 const vidURL = window.URL.createObjectURL(stream);
