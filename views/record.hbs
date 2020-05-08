@@ -137,9 +137,14 @@
                 playbackBtn.dataset.active = "false";
                 saveBtn.dataset.active = "false";
 
+                playbackBtn.textContent = "Replay Performance";
+                playingLead = false;
+                showingPerformance = false;
+
                 performanceData.length = 0;
 
                 recordedVideo.pause();
+                recordedVideo.src = "";
                 leadVideo.currentTime = 0;
                 leadVideo.play();
 
