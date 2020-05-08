@@ -4,7 +4,7 @@
         <h4>Fill in the details below to get your performance started</h4>
     </header>
 
-    <section id="">
+    <section>
 
         <form id="performanceCreation">
             
@@ -54,7 +54,10 @@
 
             (function(section){
                 
-                section.querySelector('.addSectionBtn').addEventListener('click', function(){
+                section.querySelector('.addSectionBtn').addEventListener('click', function(e){
+                    
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
 
                     this.dataset.active = "false";
                     section.querySelector('.removeSectionBtn').dataset.active = "true";
@@ -62,24 +65,16 @@
 
                 }, false);
 
-                section.querySelector('.removeSectionBtn').addEventListener('click', function(){
-                    section.parentNode.removeChild(section);
+                section.querySelector('.removeSectionBtn').addEventListener('click', function(e){
+
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+
+                    removeSection(section);
+
                 });
                 
             })(section);
-
-            /*
-            section.querySelector('.addSectionBtn').addEventListener('click', function(){
-
-                this.dataset.active = "false";
-                this.parentNode.querySelector('.removeSectionBtn').dataset.active = "true";
-                addNewSection();
-
-            }, false);
-
-            section.querySelector('.removeSectionBtn').addEventListener('click', function(){
-                this.parentNode.parentNode.removeChild(section);
-            });*/
 
         }
 
@@ -94,6 +89,7 @@
                     <button class="cta-button red removeSectionBtn" data-active="false">Remove</button>
                 </div>
             */
+
             var div = document.createElement('div');
             var input = document.createElement('input');
             var addBtn = document.createElement('button');
@@ -103,6 +99,7 @@
             
             input.name = "section"
             input.type = "text";
+            input.placeholder = "Section Name";
 
             addBtn.classList.add('cta-button', 'blue', 'addSectionBtn');
             addBtn.dataset.active = "true";
@@ -122,12 +119,10 @@
 
             performanceSections.appendChild(sectionFrag);
 
-            //debugger;
-
         }
 
         function removeSection(section){
-
+            section.parentNode.removeChild(section);
         }
 
         form.addEventListener('submit', function(e){
@@ -140,6 +135,11 @@
             };
 
             data.performanceName = this[0].value;
+
+            Array.from(this.querySelectorAll('.sectionInput input[type="text"]')).filter(function(input){ return input.value; }).forEach(function(input){
+                data.sections.push(input.value);
+            });
+            console.log(data);
 
         }, false);
 

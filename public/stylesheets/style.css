@@ -47,6 +47,10 @@ ul, ul li{
   margin: 0;
 }
 
+input[type="text"]{
+  font-family: 'F';
+}
+
 nav {
   background-color: black;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
@@ -441,21 +445,26 @@ body#create main section form input[type="text"]{
   box-sizing: border-box;
 }
 
-body#create main section form input[type="text"]:focus{
+body#create main section form#performanceCreation input[type="text"]:focus{
   outline: 1px solid #ffeb00;
 }
 
-body#create main section form div.sectionInput{
+body#create main section form#performanceCreation div.sectionInput{
   display: flex;
   justify-content: space-between;
   margin-bottom: 2em;
 }
 
-body#create main section form div.sectionInput input[type="text"]{
-  max-width: 90%;
+body#create main section form#performanceCreation div.sectionInput input[type="text"]{
+  width: 100%;
+  margin-right: 1em;
 }
 
-body#create main section button#savePerformanceSettings{
+body#create main section form#performanceCreation button{
+  min-width: 85px;
+}
+
+body#create main section form#performanceCreation button#savePerformanceSettings{
   align-self: center;
   min-width: 100px;
 }
