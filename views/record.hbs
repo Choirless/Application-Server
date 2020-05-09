@@ -81,8 +81,6 @@
             var blob = new Blob(chunks, {
                 type: "video/webm"
             });
-
-            performanceData.length = 0;
             
             var url = URL.createObjectURL(blob);
             var a = document.createElement("a");
