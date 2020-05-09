@@ -18,9 +18,9 @@ router.get('/create', function(req, res, next) {
 	res.render('account/create', { title: "Choirless | All the world's a stage", bodyid: "accountCreate" });
 });
 
-/*router.post('/login', (req, res, next) => {
+router.post('/login', (req, res, next) => {
 
-	if(req.body.name && req.body.password){
+	if(req.body.username && req.body.password){
 
 		users.get.byUsername(req.body.name)
 			.then(user => {
@@ -36,7 +36,7 @@ router.get('/create', function(req, res, next) {
 							throw err;
 						} else {
 							if(result === true){
-								res.send("Success!");
+								res.redirect('/');
 							} else {
 								res.send("user/pass mismatch");
 							}
@@ -56,11 +56,11 @@ router.get('/create', function(req, res, next) {
 
 	} else {
 		res.status(422);
+		next();
 	}
 
-	res.end();
 
-});*/
+});
 
 router.post('/create', (req, res, next) => {
 

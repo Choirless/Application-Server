@@ -412,29 +412,29 @@ main{
   box-sizing: border-box;
 }
 
-body#create header{
+body#create header, body#accountLogin header{
   text-align: center;
   padding-top: 2em;
 }
 
-body#create main section{
+body#create main section, body#accountLogin main section{
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 3em;
 }
 
-body#create main section form{
+body#create main section form, body#accountLogin main section form{
   margin-bottom: 4em;
   display: flex;
   flex-direction: column;
 }
 
-body#create main section form h2{
+body#create main section form h2, body#accountLogin main section form h2{
   margin-top: 2em;
 }
 
-body#create main section form input[type="text"]{
+body#create main section form input[type="text"], body#accountLogin main section form input{
   background: black;
   border: 1px solid #969696;
   font-size: 1em;
@@ -443,9 +443,14 @@ body#create main section form input[type="text"]{
   font-weight: 800;
   width: 100%;
   box-sizing: border-box;
+  font-family: 'F';
 }
 
-body#create main section form#performanceCreation input[type="text"]:focus{
+body#accountLogin main section form input {
+  margin-bottom: 1em;
+}
+
+body#create main section form#performanceCreation input[type="text"]:focus, body#accountLogin main section form input:focus{
   outline: 1px solid #ffeb00;
 }
 
@@ -476,4 +481,15 @@ body#create main #share pre{
   padding: 1em;
   box-sizing: border-box;
   border-radius: 3px;
+}
+
+/* Login styles */
+
+body#accountLogin main section form{
+  display: flex;
+}
+
+body#accountLogin main section form button{
+  width: 185px;
+  align-self: center;
 }
