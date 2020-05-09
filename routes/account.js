@@ -66,27 +66,47 @@ router.post('/create', (req, res, next) => {
 
 	debug('/create', req.body);
 
-	if(req.body.username && req.body.password){
+	if(req.body.username && req.body.password && req.body.repeat_password){
+
+		if(req.body.password !== req.body.repeat_password){
+			res.status(422);
+			res.send('Password and repeated password did not match');
+		}
 
 		bcrypt.hash(req.body.password, saltRounds)
 			.then(passwordHash => {
 
-				const userData = {
-					username : req.body.username,
-					password : passwordHash,
-					uuid : uuid()
-				};
+				users.get.byUsername(req.body.username)
+					.then(user => {
 
-				users.add(userData)
-					.then(result => {
-						debug(result);
-						
-						res.end();
+						if(user){
+							res.status(422);
+							res.send("Could not create account with that username");
+						} else {
+							
+							const userData = {
+								username : req.body.username,
+								password : passwordHash,
+								uuid : uuid()
+							};
+
+							users.add(userData)
+								.then(result => {
+									debug(result);
+									res.redirect('/account/login');
+								})
+								.catch(err => {
+									debug(err);
+									res.status(500);
+									next();
+								})
+							;
+
+						}
+
 					})
 					.catch(err => {
-						debug(err);
-						res.status(500);
-						next();
+						debug('User creation err:', err);
 					})
 				;
 
@@ -97,8 +117,6 @@ router.post('/create', (req, res, next) => {
 		res.status(422);
 		next();
 	}
-
-	res.end();
 
 });
 

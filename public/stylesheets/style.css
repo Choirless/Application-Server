@@ -47,6 +47,10 @@ ul, ul li{
   margin: 0;
 }
 
+.center-text{
+  text-align: center;
+}
+
 input[type="text"]{
   font-family: 'F';
 }
@@ -412,29 +416,29 @@ main{
   box-sizing: border-box;
 }
 
-body#create header, body#accountLogin header{
+body header, body#accountLogin header{
   text-align: center;
   padding-top: 2em;
 }
 
-body#create main section, body#accountLogin main section{
+body main section, body#accountLogin main section{
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 3em;
 }
 
-body#create main section form, body#accountLogin main section form{
+body main section form, body#accountLogin main section form{
   margin-bottom: 4em;
   display: flex;
   flex-direction: column;
 }
 
-body#create main section form h2, body#accountLogin main section form h2{
+body main section form h2, body#accountLogin main section form h2{
   margin-top: 2em;
 }
 
-body#create main section form input[type="text"], body#accountLogin main section form input{
+body main section form input{
   background: black;
   border: 1px solid #969696;
   font-size: 1em;
@@ -446,35 +450,35 @@ body#create main section form input[type="text"], body#accountLogin main section
   font-family: 'F';
 }
 
-body#accountLogin main section form input {
+body#accountLogin main section form input, body#accountCreate main section form input {
   margin-bottom: 1em;
 }
 
-body#create main section form#performanceCreation input[type="text"]:focus, body#accountLogin main section form input:focus{
+body main section form input[type="text"]:focus, body#accountLogin main section form input:focus{
   outline: 1px solid #ffeb00;
 }
 
-body#create main section form#performanceCreation div.sectionInput{
+body main section form div.sectionInput{
   display: flex;
   justify-content: space-between;
   margin-bottom: 2em;
 }
 
-body#create main section form#performanceCreation div.sectionInput input[type="text"]{
+body main section form div.sectionInput input[type="text"]{
   width: 100%;
   margin-right: 1em;
 }
 
-body#create main section form#performanceCreation button{
+body main section form button{
   min-width: 85px;
 }
 
-body#create main section form#performanceCreation button#savePerformanceSettings{
+body main section form button#savePerformanceSettings{
   align-self: center;
   min-width: 100px;
 }
 
-body#create main #share pre{
+body main #share pre{
   font-family: 'F';
   background: white;
   color: black;
@@ -489,7 +493,7 @@ body#accountLogin main section form{
   display: flex;
 }
 
-body#accountLogin main section form button{
+body#accountLogin main section form button, #createAccountBtn{
   width: 185px;
   align-self: center;
 }
