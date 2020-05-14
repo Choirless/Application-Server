@@ -5,8 +5,23 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const hbs = require('hbs');
+const express_enforces_ssl = require('express-enforces-ssl');
+const hsts = require('hsts')
 
 const app = express();
+
+// Enforce HTTPS
+app.enable('trust proxy');
+
+if(process.env.NODE_ENV === "production"){
+	
+	app.use(express_enforces_ssl());
+	app.use(hsts({
+		maxAge: 86400 // 1 day in seconds
+	}));
+
+}
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
