@@ -11,16 +11,30 @@ const users = require(`${__dirname}/../bin/modules/users`);
 const UUIDRegex = `[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}`;
 
 router.get('/login', function(req, res, next) {
-	res.render('account/login', { title: "Choirless | All the world's a stage", bodyid: "accountLogin" });
+
+	if(!req.session.user){
+		res.render('account/login', { title: "Choirless | All the world's a stage", bodyid: "accountLogin" });
+	} else {
+		res.redirect('/');
+	}
+
 });
 
 router.get('/create', function(req, res, next) {
-	res.render('account/create', { title: "Choirless | All the world's a stage", bodyid: "accountCreate" });
+
+	if(!req.session.user){
+		res.render('account/create', { title: "Choirless | All the world's a stage", bodyid: "accountCreate" });
+	} else {
+		res.redirect('/');
+	}
+
 });
 
 router.post('/login', (req, res, next) => {
 
-	if(req.body.username && req.body.password){
+	if(req.session.user){
+		res.redirect('/');
+	} else if(req.body.username && req.body.password){
 
 		users.get.byUsername(req.body.name)
 			.then(user => {
@@ -36,6 +50,7 @@ router.post('/login', (req, res, next) => {
 							throw err;
 						} else {
 							if(result === true){
+								req.session.user = user.uuid;
 								res.redirect('/');
 							} else {
 								res.send("user/pass mismatch");
@@ -66,7 +81,9 @@ router.post('/create', (req, res, next) => {
 
 	debug('/create', req.body);
 
-	if(req.body.username && req.body.password && req.body.repeat_password){
+	if(req.session.user){
+		res.redirect('/');
+	} else if(req.body.username && req.body.password && req.body.repeat_password){
 
 		if(req.body.password !== req.body.repeat_password){
 			res.status(422);
@@ -118,6 +135,11 @@ router.post('/create', (req, res, next) => {
 		next();
 	}
 
+});
+
+router.get('/logout', (req, res, next) => {
+	req.session = null;
+	res.redirect('/');
 });
 
 module.exports = router;
