@@ -303,7 +303,7 @@
             var fd = new FormData();
             fd.append('video', recordedVideo, 'video.webm');
 
-            fetch('/record/save', {
+            fetch('/performance/save', {
                     method: 'POST',
                     body: fd , // with our form data packaged above
                     headers: new Headers({

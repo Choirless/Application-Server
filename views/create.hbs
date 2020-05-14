@@ -1,0 +1,153 @@
+<main>
+    <header>
+        <h1>Create a Performance</h1>
+        <h4>Fill in the details below to get your performance started</h4>
+    </header>
+
+    <section>
+
+        <form id="performanceCreation">
+            
+            <h2>Performance Name</h2>
+            <input type="text" placeholder="Performance Name" name="name"/>
+
+            <h2>Sections</h2>
+            <p>Next, add a section for each different part of your performance. For example, “Trumpets” could be one section, “Violin” another and so on. Type in the section name, then click "Add".</p>
+            <div id="performanceSections">
+                <div class="sectionInput">
+                    <input type="text" placeholder="Section Name" name="section"/>
+                    <button class="cta-button blue addSectionBtn" data-active="true">Add</button>
+                    <button class="cta-button red removeSectionBtn" data-active="false">Remove</button>
+                </div>
+            </div>
+
+            <button type="submit" class="cta-button" id="savePerformanceSettings" data-active="true">Save Performance Settings</button>
+
+        </form>
+
+        <div id="share" data-active="false">
+            
+            <h2>Share</h2>
+
+            <p>Once you’ve added all of your sections, share the link below to your group. When they visit the link, they’ll be able to record their performance and send it along to you for review</p>
+
+            <pre id="performanceLink">https://choirless.com/performance/9946fe89-de1f-4abf-9b3d-34e03713f4a0</pre>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        var form = document.querySelector('form#performanceCreation');
+        var performanceSections = document.querySelector('#performanceSections');
+        var sectionTemplate = document.querySelector('template#sectionTemplate');
+        var shareSection = document.querySelector('#share');
+
+        function bindEventsToSectionBtns(section){
+            console.log(section);
+
+            (function(section){
+                
+                section.querySelector('.addSectionBtn').addEventListener('click', function(e){
+                    
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+
+                    this.dataset.active = "false";
+                    section.querySelector('.removeSectionBtn').dataset.active = "true";
+                    addNewSection();
+
+                }, false);
+
+                section.querySelector('.removeSectionBtn').addEventListener('click', function(e){
+
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+
+                    removeSection(section);
+
+                });
+                
+            })(section);
+
+        }
+
+        function addNewSection(){
+
+            var sectionFrag = document.createDocumentFragment();
+
+            /*
+                <div class="sectionInput">
+                    <input type="text" placeholder="Section Name" name="section"/>
+                    <button class="cta-button blue addSectionBtn" data-active="true">Add</button>
+                    <button class="cta-button red removeSectionBtn" data-active="false">Remove</button>
+                </div>
+            */
+
+            var div = document.createElement('div');
+            var input = document.createElement('input');
+            var addBtn = document.createElement('button');
+            var removeBtn = document.createElement('button');
+
+            div.classList.add('sectionInput');
+            
+            input.name = "section"
+            input.type = "text";
+            input.placeholder = "Section Name";
+
+            addBtn.classList.add('cta-button', 'blue', 'addSectionBtn');
+            addBtn.dataset.active = "true";
+            addBtn.textContent = "Add"
+
+            removeBtn.classList.add('cta-button', 'red', 'removeSectionBtn');
+            removeBtn.dataset.active = "false";
+            removeBtn.textContent = "Remove";
+
+            div.appendChild(input);
+            div.appendChild(addBtn);
+            div.appendChild(removeBtn);
+
+            bindEventsToSectionBtns(div);
+
+            sectionFrag.appendChild(div);
+
+            performanceSections.appendChild(sectionFrag);
+
+        }
+
+        function removeSection(section){
+            section.parentNode.removeChild(section);
+        }
+
+        form.addEventListener('submit', function(e){
+            
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            
+            var data = {
+                sections : []
+            };
+
+            data.performanceName = this[0].value;
+
+            Array.from(this.querySelectorAll('.sectionInput input[type="text"]')).filter(function(input){ return input.value; }).forEach(function(input){
+                data.sections.push(input.value);
+            });
+            console.log(data);
+
+            share.dataset.active = "true";
+
+        }, false);
+
+        Array.from( form.querySelectorAll('.sectionInput') ).forEach(bindEventsToSectionBtns);
+
+    }());
+
+</script>
