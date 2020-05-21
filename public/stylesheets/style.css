@@ -72,6 +72,7 @@ nav {
 nav a {
   text-decoration: none;
   color: white;
+  font-weight: 800;
 }
 
 nav section a{
