@@ -1,10 +1,3 @@
-@font-face {
-  font-family: 'F';
-  src: url('/fonts/f/f.woff') format('woff'), /* Pretty Modern Browsers */
-       url('/fonts/f/f.ttf')  format('truetype'), /* Safari, Android, iOS */
-       url('/fonts/f/f.svg#svgFontName') format('svg'); /* Legacy iOS */
-}
-
 *[data-active="false"]{
   display: none !important;
 }
@@ -15,8 +8,9 @@ html, body {
   width: 100%;
   height: 100%;
   background-color: black;
-  font-family: 'F', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   color: white;
+  font-size: 16px;
 }
 
 html{
@@ -41,6 +35,10 @@ a {
   color: #00B7FF;
 }
 
+p, a{
+  font-weight: 500;
+}
+
 ul, ul li{
   list-style-type: none;
   padding: 0;
@@ -52,7 +50,7 @@ ul, ul li{
 }
 
 input[type="text"]{
-  font-family: 'F';
+  font-family: 'Montserrat';
 }
 
 nav {
@@ -74,6 +72,7 @@ nav {
 nav a {
   text-decoration: none;
   color: white;
+  font-weight: 800;
 }
 
 nav section a{
@@ -96,7 +95,7 @@ body#home header h1{
   margin: 0;
   padding: 0;
   font-size: 5em;
-  font-weight: 600;
+  font-weight: 800;
   margin-top: 20px;
 }
 
@@ -109,7 +108,7 @@ a.cta-button, button.cta-button{
   padding: 1em;
   box-sizing: border-box;
   color: black;
-  font-weight: 800;
+  font-weight: 600;
   background-color: white;
   border-radius: 5px;
   font-size: 0.8em;
@@ -219,7 +218,7 @@ footer div p:last-of-type{
   border: 1px solid #777777;
   border-width: 1px;
   outline: 0px solid transparent;
-  font-family: 'F';
+  font-family: 'Montserrat';
   color: white;
   font-size: 0.75em;
   width: 20%;
@@ -272,6 +271,8 @@ footer div p:last-of-type{
 
 #performances ul li p{
   margin-top: 0.5em;
+  font-size: 0.9em;
+  font-weight: 400;
 }
 
 /* RECORD STYLES */
@@ -444,10 +445,10 @@ body main section form input{
   font-size: 1em;
   padding: 0.75em;
   color: white;
-  font-weight: 800;
+  font-weight: 600;
   width: 100%;
   box-sizing: border-box;
-  font-family: 'F';
+  font-family: 'Montserrat';
 }
 
 body#accountLogin main section form input, body#accountCreate main section form input {
@@ -479,7 +480,7 @@ body main section form button#savePerformanceSettings{
 }
 
 body main #share pre{
-  font-family: 'F';
+  font-family: 'Montserrat';
   background: white;
   color: black;
   padding: 1em;
