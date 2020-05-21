@@ -271,6 +271,8 @@ footer div p:last-of-type{
 
 #performances ul li p{
   margin-top: 0.5em;
+  font-size: 0.9em;
+  font-weight: 400;
 }
 
 /* RECORD STYLES */
