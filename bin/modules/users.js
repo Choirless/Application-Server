@@ -1,115 +1,69 @@
 const debug = require('debug')("bin:modules:users");
-const database = require(`${__dirname}/../lib/database`);
+const fetch = require('node-fetch');
 
-function getListOfUsers(){
-    
-    return database.query({
-            "selector": {
-                "uuid": {
-                    "$exists": true
-                }
+function getSpecificUserByID(userId){
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/user?apikey=${process.env.CHOIRLESS_API_KEY}&userId=${userId}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
             }
-        }, process.env.USERS_DATABASE_NAME)
-        .then(results => {
-            debug(results);
-            return results;
         })
         .catch(err => {
-            debug(err);
+            debug('Get user error:', err);
             throw err;
         })
-    ;
-
-}
-
-function getSpecificUserByID(uuid){
-
-    return database.query({
-            "selector" : {
-                "uuid" : uuid
-            }
-        }, process.env.USERS_DATABASE_NAME)
-        .then(documents => {
-            return documents[0];
-        })    
-    ;
-
-}
-
-function getSpecificUserByEmail(email){
-
-    return database.query({
-            "selector" : {
-                "email" : email
-            }
-        }, process.env.USERS_DATABASE_NAME)
-        .then(documents => {
-            return documents[0];
-        })    
-    ;
-
-}
-
-function getSpecificUserByUsername(username){
-
-    return database.query({
-            "selector" : {
-                "username" : username
-            }
-        }, process.env.USERS_DATABASE_NAME)
-        .then(documents => {
-            return documents[0];
-        })    
     ;
 
 }
 
 function addUserToDatabase(userData){
 
-    return database.add(userData, process.env.USERS_DATABASE_NAME)
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/user?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(userData)
+        })
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
         .catch(err => {
-            debug(err);
+            debug('addUserToDatabase error:', err);
             throw err;
         })
     ;
 
 }
 
-function deleteUserFromDatabase(uuid){
+function loginUserToChoirlessService(email, password){
 
-    return getSpecificUser(uuid)
-        .then(user => {
-            return database.delete(user._id, user._rev, process.env.USERS_DATABASE_NAME);
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/user/login?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({
+                email : email,
+                password : password
+            })
+        })
+        .then(res => {
+            if(res.ok){
+                return res.json()
+            } else {
+                throw res;
+            }
         })
         .catch(err => {
-            debug('err:', err);
-            throw error;
-        })
-    ;
-
-}
-
-function updateUserInDatabase(uuid, newData){
-
-    debug(uuid, newData);
-
-    return getSpecificUser(uuid)
-        .then(userData => {
-
-            debug(userData);
-
-            Object.keys(newData).forEach(key => {
-                userData[key] = newData[key];
-            });
-
-            debug('updated user data:', userData);
-            debug(process.env.USERS_DATABASE_NAME);
-
-            return database.update(userData, process.env.USERS_DATABASE_NAME);
-
-        })
-        .catch(err => {
-            debug(err);
+            debug("loginUserToChoirlessService error:", err);
             throw err;
         })
     ;
@@ -117,13 +71,10 @@ function updateUserInDatabase(uuid, newData){
 }
 
 module.exports = {
-    list : getListOfUsers,
     get : {
-        byID : getSpecificUserByID,
-        byEmail : getSpecificUserByEmail,
-        byUsername : getSpecificUserByUsername
+        byID : getSpecificUserByID
     },
     add : addUserToDatabase,
-    delete : deleteUserFromDatabase,
-    update : updateUserInDatabase
+    update : addUserToDatabase,
+    login : loginUserToChoirlessService
 };
