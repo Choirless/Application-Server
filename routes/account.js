@@ -1,14 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const debug = require('debug')("routes:account");
-const bcrypt = require('bcrypt');
-const uuid = require('uuid/v4');
-
-const saltRounds = process.env.SALT_ROUNDS || 10;
 
 const users = require(`${__dirname}/../bin/modules/users`);
-
-const UUIDRegex = `[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}`;
 
 router.get('/login', function(req, res, next) {
 
@@ -17,6 +11,48 @@ router.get('/login', function(req, res, next) {
 	} else {
 		res.redirect('/');
 	}
+
+});
+
+router.post('/login', (req, res, next) => {
+
+	debug("SESH:", req.session);
+
+	if(req.session.user){
+		res.redirect('/');
+	} else if(req.body.email && req.body.password){
+
+		users.login(req.body.email, req.body.password)
+			.then(data => {
+
+				if(data){
+				
+					if(data.ok !== true){
+						res.status(401);
+						res.send("user/pass mismatch");
+					} else {
+						req.session.user = data.user.userId;
+						res.redirect('/');
+					}
+
+				}
+
+			})
+			.catch(err => {
+				debug('Login err:', err);
+				res.status(err.status || 422);
+				res.json({
+					status : "err",
+					msg : "Could not login with email/pass combination"
+				});
+			})
+		;
+
+	} else {
+		res.status(422);
+		next();
+	}
+
 
 });
 
@@ -30,103 +66,38 @@ router.get('/create', function(req, res, next) {
 
 });
 
-router.post('/login', (req, res, next) => {
-
-	if(req.session.user){
-		res.redirect('/');
-	} else if(req.body.username && req.body.password){
-
-		users.get.byUsername(req.body.name)
-			.then(user => {
-				
-				if(!user){
-					res.status(422);
-					res.end();
-				} else {
-
-					bcrypt.compare(req.body.password, user.password, (err, result) => {
-
-						if(err){
-							throw err;
-						} else {
-							if(result === true){
-								req.session.user = user.uuid;
-								res.redirect('/');
-							} else {
-								res.send("user/pass mismatch");
-							}
-						}
-
-					})
-
-				}
-
-			})
-			.catch(err => {
-				debug('Login err:', err);
-				res.status(500);
-				res.end();
-			})
-		;
-
-	} else {
-		res.status(422);
-		next();
-	}
-
-
-});
-
 router.post('/create', (req, res, next) => {
 
 	debug('/create', req.body);
 
 	if(req.session.user){
 		res.redirect('/');
-	} else if(req.body.username && req.body.password && req.body.repeat_password){
+	} else if(req.body.name && req.body.email && req.body.password && req.body.repeat_password){
 
 		if(req.body.password !== req.body.repeat_password){
 			res.status(422);
 			res.send('Password and repeated password did not match');
 		}
 
-		bcrypt.hash(req.body.password, saltRounds)
-			.then(passwordHash => {
+		users.add({
+				name : req.body.name,
+				email : req.body.email,
+				password : req.body.password
+			})
+			.then(response => {
 
-				users.get.byUsername(req.body.username)
-					.then(user => {
+				if(response.ok === true){
+					res.redirect('/account/login');
+				} else {
+					res.status(422);
+					res.send("Could not create account with that username");
+				}
 
-						if(user){
-							res.status(422);
-							res.send("Could not create account with that username");
-						} else {
-							
-							const userData = {
-								username : req.body.username,
-								password : passwordHash,
-								uuid : uuid()
-							};
-
-							users.add(userData)
-								.then(result => {
-									debug(result);
-									res.redirect('/account/login');
-								})
-								.catch(err => {
-									debug(err);
-									res.status(500);
-									next();
-								})
-							;
-
-						}
-
-					})
-					.catch(err => {
-						debug('User creation err:', err);
-					})
-				;
-
+			})
+			.catch(err => {
+				debug('Create user err:', err);
+				res.status(500);
+				next();
 			})
 		;
 
