@@ -87,17 +87,35 @@ router.post('/create', (req, res, next) => {
 			.then(response => {
 
 				if(response.ok === true){
-					res.redirect('/account/login');
+					req.session = {};
+					req.session.user = response.userId;
+					res.redirect('/');
 				} else {
-					res.status(422);
-					res.send("Could not create account with that username");
+					throw response;
 				}
 
 			})
 			.catch(err => {
+
 				debug('Create user err:', err);
-				res.status(500);
-				next();
+				
+				if(err.status === 409){
+					// Account exists with this email address;
+					res.status(409);
+					res.json({
+						status : "err",
+						msg : "An account already exists with that email account"
+					});
+				} else {
+					
+					res.status(err.status);
+					res.json({
+						status : "err",
+						msg : "Could not create account with that username."
+					});
+
+				}
+
 			})
 		;
 
