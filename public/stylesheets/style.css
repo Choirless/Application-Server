@@ -624,6 +624,8 @@ body#dashboard main section#choirInfo #management table{
   box-sizing: border-box;
   border-collapse: collapse;
   font-size: 0.9em;
+  width: 100%;
+  margin-bottom: 3em;
 }
 
 body#dashboard main section#choirInfo #management table thead{
