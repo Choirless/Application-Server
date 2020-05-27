@@ -118,8 +118,17 @@ a.cta-button, button.cta-button{
   border: 0 solid transparent;
 }
 
+button{
+  font-family: 'Montserrat';
+}
+
 button.cta-button.blue{
   background-color: #46649f;
+  color: white;
+}
+
+button.cta-button.light-blue{
+  background-color:#2a93e4;
   color: white;
 }
 
@@ -423,7 +432,7 @@ body header, body#accountLogin header{
   padding-top: 2em;
 }
 
-body main section, body#accountLogin main section{
+body#accountLogin main section{
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -498,4 +507,154 @@ body#accountLogin main section form{
 body#accountLogin main section form button, #createAccountBtn{
   width: 185px;
   align-self: center;
+}
+
+/* Dashboard styles */
+
+body#dashboard main{
+  display: flex;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  background-image: url('/assets/images/background_blurred.jpg');
+  background-size: cover;
+}
+
+body#dashboard main section{
+  display: flex;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  padding: 1em;
+  max-width: inherit;
+}
+
+body#dashboard main section#choirMenu{
+  flex-direction: column;
+  background: white;
+  padding: 1em;
+  color: black;
+}
+
+body#dashboard main section#choirMenu li{
+  margin-bottom: 1em;
+}
+
+body#dashboard main section#choirMenu li a{
+  text-decoration: none;
+  color: black;
+}
+
+body#dashboard main section#choirMenu li a:hover{
+  font-weight: 600;
+}
+
+body#dashboard main section#choirInfo{
+  flex-grow: 1;
+  max-width: inherit;
+  flex-direction: column;
+  text-align: left;
+  align-items: flex-start;
+  max-height: 100%;
+  overflow: scroll;
+}
+
+body#dashboard main section#choirInfo header{
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+body#dashboard main section#choirInfo header p{
+  max-width: 65%;
+  margin-bottom: 2em;
+}
+
+body#dashboard main section#choirInfo #management{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+}
+
+body#dashboard main section#choirInfo #management div, body#dashboard main section#choirInfo #management div *{
+  display: flex;
+}
+
+body#dashboard main section#choirInfo #management div{
+  border-bottom: 2px solid white;
+}
+
+body#dashboard main section#choirInfo #management div ol{
+  padding: 0;
+  margin: 0;
+}
+
+body#dashboard main section#choirInfo #management div ol li{
+  margin-right: 1em;
+}
+
+body#dashboard main section#choirInfo #management div ol li.active{
+  background: white;
+}
+
+body#dashboard main section#choirInfo #management div ol li.active button{
+  color: black;
+  font-weight: 600;
+}
+
+body#dashboard main section#choirInfo #management div ol li button{
+  background: transparent;
+  border: 0px solid transparent;
+  font-size: 1em;
+  color: white;
+  cursor: pointer;
+}
+
+body#dashboard main section#choirInfo #management div button#create{
+  margin-left: auto;
+  margin-bottom: 0.3em;
+}
+
+body#dashboard main section#choirInfo #management table{
+  margin-top: 0.3em;
+  background: white;
+  color: black;
+  box-sizing: border-box;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+body#dashboard main section#choirInfo #management table thead{
+  font-weight: 600;
+}
+
+body#dashboard main section#choirInfo #management table tr td{
+  padding: 0.5em;
+  border-bottom: 1px solid black;
+}
+
+body#dashboard main section#choirInfo #management table tbody tr td{
+  padding: 1.5em 0.5em;
+  border-right: 1px solid grey;
+}
+
+body#dashboard main section#choirInfo #management table tbody tr td:first-of-type{
+  font-weight: 600;
+}
+
+body#dashboard main section#choirInfo #management table tbody tr td:last-of-type{
+  border-right: 0;
+  text-align: center;
+
+}
+
+body#dashboard main section#choirInfo #management table tbody tr td:last-of-type a{
+  color: black;
+  font-weight: 600;
+}
+
+body#dashboard main section#choirInfo #management table tbody tr:nth-child(even){
+  background: #e5e5e5;
 }
