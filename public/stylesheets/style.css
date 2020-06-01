@@ -111,7 +111,7 @@ a.cta-button, button.cta-button{
   color: black;
   font-weight: 600;
   background-color: white;
-  border-radius: 5px;
+  border-radius: 2px;
   font-size: 0.8em;
   text-decoration: none;
   cursor: pointer;
@@ -127,13 +127,17 @@ button.cta-button.blue{
   color: white;
 }
 
+button.cta-button.blue:hover{
+  background-color: #5679bd;
+}
+
 button.cta-button.light-blue{
   background-color:#2a93e4;
   color: white;
 }
 
-button.cta-button.blue:hover{
-  background-color: #5679bd;
+button.cta-button.light-blue:hover{
+  background-color:#56acef;
 }
 
 button.cta-button.red{
@@ -538,16 +542,19 @@ body#dashboard main section#choirMenu{
 }
 
 body#dashboard main section#choirMenu li{
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+  color: black;
+}
+
+body#dashboard main section#choirMenu li:hover{
+  color: white;
+  background: black;
 }
 
 body#dashboard main section#choirMenu li a{
   text-decoration: none;
-  color: black;
-}
-
-body#dashboard main section#choirMenu li a:hover{
-  font-weight: 600;
+  color: inherit;
 }
 
 body#dashboard main section#choirInfo{
@@ -564,6 +571,10 @@ body#dashboard main section#choirInfo header{
   margin: 0;
   padding: 0;
   text-align: left;
+}
+
+body#dashboard main section#choirInfo header h1{
+  text-shadow: 0 1px 1px black;
 }
 
 body#dashboard main section#choirInfo header p{
@@ -595,11 +606,12 @@ body#dashboard main section#choirInfo #management div ol li{
   margin-right: 1em;
 }
 
-body#dashboard main section#choirInfo #management div ol li.active{
+body#dashboard main section#choirInfo #management div ol li.active, body#dashboard main section#choirInfo #management div ol li:hover{
   background: white;
+  border-radius: 2px 2px 0 0;
 }
 
-body#dashboard main section#choirInfo #management div ol li.active button{
+body#dashboard main section#choirInfo #management div ol li.active button, body#dashboard main section#choirInfo #management div ol li:hover button{
   color: black;
   font-weight: 600;
 }
@@ -610,6 +622,8 @@ body#dashboard main section#choirInfo #management div ol li button{
   font-size: 1em;
   color: white;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 body#dashboard main section#choirInfo #management div button#create{
@@ -634,12 +648,12 @@ body#dashboard main section#choirInfo #management table thead{
 
 body#dashboard main section#choirInfo #management table tr td{
   padding: 0.5em;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
 }
 
 body#dashboard main section#choirInfo #management table tbody tr td{
   padding: 1.5em 0.5em;
-  border-right: 1px solid grey;
+  border-right: 1px solid rgba(0,0,0,0.2);
 }
 
 body#dashboard main section#choirInfo #management table tbody tr td:first-of-type{
@@ -655,8 +669,4 @@ body#dashboard main section#choirInfo #management table tbody tr td:last-of-type
 body#dashboard main section#choirInfo #management table tbody tr td:last-of-type a{
   color: black;
   font-weight: 600;
-}
-
-body#dashboard main section#choirInfo #management table tbody tr:nth-child(even){
-  background: #e5e5e5;
 }
