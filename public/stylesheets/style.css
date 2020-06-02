@@ -532,6 +532,7 @@ body#dashboard main section{
   box-sizing: border-box;
   padding: 1em;
   max-width: inherit;
+  width: 15%;
 }
 
 body#dashboard main section#choirMenu{
