@@ -100,6 +100,7 @@ function getChoirsForUserID(userId){
             throw err;
         })
     ;
+
 }
 
 module.exports = {

@@ -5,6 +5,22 @@
         <ul>
             <!--<li><a href="#">The People's Front of Judea</a></li>-->
 
+            {{#if choirs}}
+            
+                {{#each choirs}}
+                    <li><a href="/dashboard/choir/{{choirId}}">{{name}}</a></li>
+                {{/each}}
+
+            {{else}}
+
+                <div class="center-text">
+                    <p>You haven't created any choirs yet.</p>
+                </div>
+
+            {{/if}}
+                <div class="center-text">
+                    <a class="cta-button black" href="" id="createChoir">Create a Choir</a>
+                </div>
         </ul>
 
     </section>
@@ -12,72 +28,40 @@
     <section id="choirInfo">
 
         <header>
-            <h1></h1> <!-- Choir Name-->
-            <p>This is where you can manage you choir. Here, you can create new songs
+
+            {{#if choirId}}
+
+                <h1>{{this.name}}</h1> <!-- Choir Name-->
+                <p>This is where you can manage you choir. Here, you can create new songs
 for recording, or add new members to you choir.</p>
+
+            {{else}}
+                
+                <h1>My Dashboard</h1> <!-- Choir Name-->
+
+                {{#if choirs}}
+
+                {{else}}
+
+                <p>This is where you can manage you choir. Here, you can create new songs
+for recording, or add new members to you choir.</p>
+                {{/if}}
+
+            {{/if}}
+
         </header>
 
         <section id="management">
+            
+            {{#if choirId}}
 
-            <div>
-                <ol>
-                    <li class="active"><button>Songs</button></li>
-                    <li><button>Members</button></li>
-                </ol>
-                <button id="create" class="cta-button light-blue">Create New Song</button>
-            </div>
-
-            <table id="songs" data-active="true">
+                {{> dashboard/subnav }}
                 
-                <thead>
-                    <tr>
-                        <td>Title</td>
-                        <td>Members</td>
-                        <td>Performances Recorded</td>
-                        <td>Created</td>
-                        <td></td>
-                    </tr>
-                </thead>
+                {{#if performances}} {{> dashboard/performances }} {{/if}}
 
-                <tbody>
-                    
-                    <!--<tr>
-                        <td>Yellow Submarine</td>
-                        <td>16 Members</td>
-                        <td>8 / 16</td>
-                        <td>25/05/2020 09:30:30</td>
-                        <td><a href="#">Review Performances</a></td>
-                    </tr>-->
+                {{#if users}} {{> dashboard/users}} {{/if}}
 
-                </tbody>
-
-            </table>
-
-            <table id="users" data-active="false">
-                
-                <thead>
-                    <tr>
-                        <td>Name</td>
-                        <td>Email Address</td>
-                        <td>Join Date</td>
-                        <td>Performances Contributes</td>
-                        <td></td>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <!--<tr>
-                        <td>John Doe</td>
-                        <td>john.doe@example.org</td>
-                        <td>10/05/2020 09:30:30</td>
-                        <td>5</td>
-                        <td><a href="#">Remove?</a></td>
-                    </tr>-->
-
-                </tbody>
-
-            </table>
+            {{/if}}
 
         </section>
 

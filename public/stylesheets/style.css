@@ -149,6 +149,11 @@ button.cta-button.red:hover{
   background-color: #e05252;;
 }
 
+button.cta-button.black, a.cta-button.black{
+  background-color: black;
+  color:white;
+}
+
 footer{
   width: 100%;
   display: flex;
