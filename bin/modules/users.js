@@ -45,6 +45,14 @@ function addUserToDatabase(userData){
 
 function loginUserToChoirlessService(email, password){
 
+    if(!email){
+        return Promise.reject(`No email was passed. Function recieved "${email}".`);
+    }
+
+    if(!password){
+        return Promise.reject(`No password was passed.`);
+    }
+
     return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/user/login?apikey=${process.env.CHOIRLESS_API_KEY}`, {
             method : "POST",
             headers : {
@@ -70,9 +78,34 @@ function loginUserToChoirlessService(email, password){
 
 }
 
+function getChoirsForUserID(userId){
+
+    if(!userId){
+        return Promise.reject(`No userId was passed. Function recieved "${userId}"`);
+    }
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/user/choirs?apikey=${process.env.CHOIRLESS_API_KEY}&userId=${userId}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.choirs;
+        })
+        .catch(err => {
+            debug('Get user error:', err);
+            throw err;
+        })
+    ;
+}
+
 module.exports = {
     get : {
-        byID : getSpecificUserByID
+        byID : getSpecificUserByID,
+        choirs : getChoirsForUserID
     },
     add : addUserToDatabase,
     update : addUserToDatabase,

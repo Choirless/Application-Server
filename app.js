@@ -41,6 +41,7 @@ app.use(cookieSession({
 }));
 
 app.use('/', require(`${__dirname}/routes/index`));
+app.use('/dashboard', require(`${__dirname}/routes/dashboard`));
 app.use('/account', require(`${__dirname}/routes/account`));
 app.use('/performance', require(`${__dirname}/routes/performance`));
 
