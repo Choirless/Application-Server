@@ -1,0 +1,94 @@
+<div id="createSong" class="modal" data-active="true">
+    <div class="container">
+        
+        <div class="content">
+            <h2>Create a Song</h2>
+
+            <form id="songCreation" method="POST" action="/choir/create-song">
+
+                <input type="text" hidden value="{{choirInfo.choirId}}" name="choirId" />
+                
+                <label for="name" class="required">Song Name</label>
+                <input id="name" type="text" placeholder="Song Name" name="name" required/>
+
+                <label for="description">Song Description</label>
+                <input id="description" type="text" placeholder="Song Description" name="description" required/>
+
+                <label>Song Parts</label>
+
+                <div id="songparts">
+                    <input type="text" readonly value="Lead (default)" name="part0"  />
+
+                    <div class="songpart">
+                        <input type="text" value="" name="part-1" placeholder="Part name (alto, soprano, bass, etc.)" />
+                        <button type="button" class="add-part cta-button green" data-active="true">Add</button>
+                        <button type="button" class="delete-part cta-button red" data-active="false">Remove</button>
+                    </div>
+
+                </div>
+
+                <div class="side-by-side">
+                    <button type="button" class="cta-button red" id="cancel">Cancel</button>
+                    <button type="submit" class="cta-button light-blue" id="createSong">Create</button>
+                </div>       
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        var form = document.querySelector('form#songCreation');
+        var cancelBtn = form.querySelector('#cancel');
+        var songParts = form.querySelector('#songparts');
+
+        function addSongPart(e){
+            console.log("click");
+            this.dataset.active = "false";
+            this.parentNode.querySelector('.delete-part').dataset.active = "true";
+
+            var newPart = this.parentNode.cloneNode(true);
+            var partName = newPart.querySelector('input');
+            var addPartBtn = newPart.querySelector('.add-part');
+            var deletePartBtn = newPart.querySelector('.delete-part');
+
+            partName.value = "";
+            partName.name = "part-" + (performance.now() | 0);
+            addPartBtn.dataset.active = "true";
+            deletePartBtn.dataset.active = "false";
+
+            addPartBtn.addEventListener('click', addSongPart, false);
+            deletePartBtn.addEventListener('click', deleteSongPart, false);
+
+            songParts.appendChild(newPart);
+
+        }
+
+        function deleteSongPart(e){
+            var thisPart = this.parentNode;
+            this.parentNode.parentNode.removeChild(thisPart);
+        }
+
+        cancelBtn.addEventListener('click', function(e){
+            
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            form.reset();
+            document.querySelector('#createSong').dataset.active = "false";
+
+        }, false);
+
+        songparts.querySelector('.songpart button.delete-part').addEventListener('click', deleteSongPart, false);
+
+        songparts.querySelector('.songpart button.add-part').addEventListener('click', addSongPart, false);
+
+    }());
+
+</script>

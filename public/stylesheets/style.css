@@ -45,6 +45,12 @@ ul, ul li{
   margin: 0;
 }
 
+a.sub-link{
+  color: black;
+  font-size:0.8em;
+  cursor: pointer;
+}
+
 .center-text{
   text-align: center;
 }
@@ -158,6 +164,15 @@ button.cta-button.red{
 
 button.cta-button.red:hover{
   background-color: #e05252;;
+}
+
+button.cta-button.green{
+  background-color: #7dce33;
+  color: white;
+}
+
+button.cta-button.green:hover{
+  background-color: #98ea4c;
 }
 
 button.cta-button.black, a.cta-button.black{
@@ -424,6 +439,7 @@ body main section form h2, body#accountLogin main section form h2{
 
 body main section form label{
   margin-bottom: 0.5em;
+  font-weight: 600;
 }
 
 body main section form input{
@@ -547,6 +563,7 @@ body#dashboard main section#choirInfo header{
   margin: 0;
   padding: 0;
   text-align: left;
+  width: 100%;
 }
 
 body#dashboard main section#choirInfo header h1{
@@ -649,10 +666,35 @@ body#dashboard main section#choirInfo table tbody tr td:last-of-type a{
 
 body#dashboard .modal .container .content form div.side-by-side{
   justify-content: flex-end;
+  margin-top: 1em;
+  border-top: 1px solid #989898;
+  padding-top: 1em;
 }
 
 body#dashboard .modal .container .content form div.side-by-side button{
   margin-left: 1em;
+}
+
+
+body#dashboard .modal .container .content form input[type="text"]{
+  background: #e2e2e2;
+  color: black;
+}
+
+body#dashboard .modal .container .content form#songCreation #songparts .songpart{
+  display: flex;
+  margin-bottom: 1em;
+  align-items: center;
+  justify-content: center;
+}
+
+body#dashboard .modal .container .content form#songCreation #songparts .songpart input{
+  margin-right: 1em;
+  margin-bottom: 0;
+}
+
+body#dashboard .modal .container .content form#songCreation #songparts .songpart .cta-button{
+  height: 100%;
 }
 
 body#dashboard .no-info{
