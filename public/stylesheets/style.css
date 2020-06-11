@@ -568,11 +568,14 @@ body#dashboard main section#choirInfo header{
 
 body#dashboard main section#choirInfo header h1{
   text-shadow: 0 1px 1px black;
+  margin-bottom: 0;
+  font-size: 2.5em;
 }
 
 body#dashboard main section#choirInfo header p{
-  max-width: 65%;
+  max-width: 45%;
   margin-bottom: 2em;
+  margin-top: 1em;
 }
 
 body#dashboard main section#choirInfo #management{
