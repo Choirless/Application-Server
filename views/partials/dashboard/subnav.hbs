@@ -1,8 +1,27 @@
-<div>
+<div id="subnav">
     <ol>
         <li class="active"><button>Songs</button></li>
         <li><button>Members</button></li>
         <li><button>Settings</button></li>
     </ol>
-    <button id="create" class="cta-button light-blue">Create a song</button>
+    <button id="createNewSong" class="cta-button light-blue" data-active="true">Create a song</button>
+    <button id="addNewMember" class="cta-button light-blue" data-active="false">Add new members</button>
 </div>
+
+<script>
+    (function(){
+
+        'use strict';
+
+        var subnav = document.querySelector('#subnav');
+        var createNewSongBtn = subnav.querySelector('button#createNewSong');
+
+        createNewSongBtn.addEventListener('click', function(){
+            
+            document.querySelector('#createSong.modal').dataset.active = "true";
+
+        }, false);
+
+    }());
+
+</script>

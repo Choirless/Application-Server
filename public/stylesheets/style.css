@@ -619,7 +619,7 @@ body#dashboard main section#choirInfo #management div ol li button{
   align-items: center;
 }
 
-body#dashboard main section#choirInfo #management div button#create{
+body#dashboard main section#choirInfo #management div button.cta-button{
   margin-left: auto;
   margin-bottom: 0.3em;
 }
