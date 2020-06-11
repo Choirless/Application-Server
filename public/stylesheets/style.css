@@ -53,6 +53,17 @@ input[type="text"]{
   font-family: 'Montserrat';
 }
 
+label.required::after{
+  content: "(required)";
+  font-size: 0.75em;
+  margin-left: 0.5em;
+  height: 100%;
+  position: relative;
+  font-weight: 600;
+  top: -0.3em;
+  color: #969696;
+}
+
 nav {
   background-color: black;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
@@ -213,6 +224,39 @@ footer div p:last-of-type{
   display: block;
 }
 
+.modal{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(0,0,0,0.8);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-size: 0.8em;
+}
+
+.modal .container{
+  width: 100%;
+  max-width: 50%;
+  background: white;
+  border-radius: 3px;
+  height: auto;
+  max-height: 80%;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  padding: 1em;
+}
+
+.side-by-side{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 
 #performances{
   width: 80%;
@@ -449,13 +493,17 @@ body#accountLogin main section{
 }
 
 body main section form, body#accountLogin main section form{
-  margin-bottom: 4em;
+  /* margin-bottom: 4em; */
   display: flex;
   flex-direction: column;
 }
 
 body main section form h2, body#accountLogin main section form h2{
-  margin-top: 2em;
+  margin-top: 1em;
+}
+
+body main section form label{
+  margin-bottom: 0.5em;
 }
 
 body main section form input{
@@ -468,6 +516,7 @@ body main section form input{
   width: 100%;
   box-sizing: border-box;
   font-family: 'Montserrat';
+  margin-bottom: 1em;
 }
 
 body#accountLogin main section form input, body#accountCreate main section form input {
@@ -564,6 +613,7 @@ body#dashboard main section#choirMenu li a{
 }
 
 body#dashboard main section#choirInfo{
+  position: relative;
   flex-grow: 1;
   max-width: inherit;
   flex-direction: column;
@@ -675,4 +725,12 @@ body#dashboard main section#choirInfo #management table tbody tr td:last-of-type
 body#dashboard main section#choirInfo #management table tbody tr td:last-of-type a{
   color: black;
   font-weight: 600;
+}
+
+body#dashboard .modal .container .content form div.side-by-side{
+  justify-content: flex-end;
+}
+
+body#dashboard .modal .container .content form div.side-by-side button{
+  margin-left: 1em;
 }

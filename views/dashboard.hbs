@@ -19,7 +19,7 @@
 
             {{/if}}
                 <div class="center-text">
-                    <a class="cta-button black" href="" id="createChoir">Create a Choir</a>
+                    <button class="cta-button black" id="choirCreationCTA">Create a Choir</button>
                 </div>
         </ul>
 
@@ -65,6 +65,26 @@ for recording, or add new members to you choir.</p>
 
         </section>
 
+        {{> dashboard/create_choir }}
+
     </section>
 
 </main>
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        var createChoirModel = document.querySelector('#createChoir.modal');
+
+        document.querySelector('#choirCreationCTA').addEventListener('click', function(){
+
+            createChoirModel.dataset.active = "true";
+
+        }, false);
+
+    }());
+
+</script>

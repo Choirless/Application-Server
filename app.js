@@ -8,6 +8,8 @@ const express_enforces_ssl = require('express-enforces-ssl');
 const hsts = require('hsts')
 const cookieSession = require('cookie-session');
 
+const checkSession = require(`./bin/middleware/check-session`);
+
 const app = express();
 
 // Enforce HTTPS
@@ -36,13 +38,14 @@ app.use( express.static( path.join(__dirname, 'public' ) ) );
 app.use(cookieSession({
 	name: 'choirless-session',
 	secret : process.env.SESSION_SECRET,
-	maxAge: 12 * 60 * 60 * 1000, // 12 hours
+	maxAge: 72 * 60 * 60 * 1000, // 3 days
 	secure : process.env.NODE_ENV === "production"
 }));
 
 app.use('/', require(`${__dirname}/routes/index`));
-app.use('/dashboard', require(`${__dirname}/routes/dashboard`));
 app.use('/account', require(`${__dirname}/routes/account`));
+app.use('/dashboard', [checkSession], require(`${__dirname}/routes/dashboard`));
+app.use('/choir', [checkSession], require(`${__dirname}/routes/choir`));
 app.use('/performance', require(`${__dirname}/routes/performance`));
 
 // catch 404 and forward to error handler

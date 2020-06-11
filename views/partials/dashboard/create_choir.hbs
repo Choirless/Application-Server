@@ -1,0 +1,47 @@
+<div id="createChoir" class="modal" data-active="false">
+    <div class="container">
+        
+        <div class="content">
+            <h2>Create a Choir</h2>
+
+            <form id="choirCreation" method="POST" action="/choir/create">
+            
+                <label for="name" class="required">Choir Name</label>
+                <input id="name" type="text" placeholder="Choir Name" name="name" required/>
+
+                <label for="description">Choir Description</label>
+                <input id="description" type="text" placeholder="Describe your choir" name="description"/>
+                
+                <div class="side-by-side">
+                    <button type="button" class="cta-button red" id="cancel">Cancel</button>
+                    <button type="submit" class="cta-button light-blue" id="createChoir">Create</button>
+                </div>       
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        var form = document.querySelector('form#choirCreation');
+        var cancelBtn = form.querySelector('#cancel');
+
+        cancelBtn.addEventListener('click', function(e){
+            
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            form.reset();
+            document.querySelector('#createChoir').dataset.active="false";
+
+        }, false);
+
+    }());
+
+</script>

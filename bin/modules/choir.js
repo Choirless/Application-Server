@@ -1,0 +1,46 @@
+const debug = require('debug')("bin:modules:choir");
+const fetch = require('node-fetch');
+
+function createANewChoir(userId, choirName, choirDescription = ""){
+
+    if(!userId){
+        return Promise.reject('A userId was not passed to the function');
+    }
+
+    if(!choirName){
+        return Promise.reject('A name for the choir was not passed');
+    }
+
+    const details = {
+        name : choirName,
+        description : choirDescription,
+        createdByUserId : userId,
+        createdByName : "N/A",
+        choirType : "public"
+    };
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir?apikey=${process.env.CHOIRLESS_API_KEY}`, { 
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(details)
+        })
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .catch(err => {
+            debug("createANewChoir Err:", err);
+            throw err;
+        })
+    ;
+
+}
+
+module.exports = {
+    create : createANewChoir
+};
