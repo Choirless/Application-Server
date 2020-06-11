@@ -258,86 +258,6 @@ footer div p:last-of-type{
   justify-content: center;
 }
 
-#performances{
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  border-top: 1px solid rgba(255,255,255,0.5);
-  padding: 2em 0 0;
-  box-sizing: border-box;
-  max-width: 1280px;
-}
-
-#performances .space-heading{
-  display: flex;
-  justify-content: space-between;
-}
-
-#performances .space-heading input#search{
-  display: block;
-  height: 1.5em;
-  padding: 0.8em;
-  background: black;
-  border: 1px solid #777777;
-  border-width: 1px;
-  outline: 0px solid transparent;
-  font-family: 'Montserrat';
-  color: white;
-  font-size: 0.75em;
-  width: 20%;
-  background-image: url('/assets/images/search_icon.png');
-  background-size: auto 50%;
-  background-position: 95% 50%;
-  background-repeat: no-repeat;
-}
-
-#performances h2{
-  margin-bottom: 1em;
-}
-
-#performances ul{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-#performances ul li{
-  flex: 1 0 21%;
-  max-width: 21%;
-  margin-bottom: 1em;
-  padding: 0.5em;
-  border-bottom: 1px solid transparent;
-}
-
-#performances ul li:hover{
-  background-color: rgba(255,255,255,0.1);
-  border-bottom: 1px solid white;
-}
-
-#performances ul li a{
-    color: inherit;
-    text-decoration: none;
-}
-
-#performances ul li a:hover{
-  cursor: pointer;
-}
-
-#performances ul li img{
-  width: 100%;
-  margin-bottom: 1em;
-}
-
-#performances ul li h4{
-  margin-bottom: 0;
-}
-
-#performances ul li p{
-  margin-top: 0.5em;
-  font-size: 0.9em;
-  font-weight: 400;
-}
-
 /* RECORD STYLES */
 
 body#record #videos{
@@ -687,7 +607,7 @@ body#dashboard main section#choirInfo #management div button#create{
   margin-bottom: 0.3em;
 }
 
-body#dashboard main section#choirInfo #management table{
+body#dashboard main section#choirInfo table{
   margin-top: 0.3em;
   background: white;
   color: black;
@@ -698,31 +618,31 @@ body#dashboard main section#choirInfo #management table{
   margin-bottom: 3em;
 }
 
-body#dashboard main section#choirInfo #management table thead{
+body#dashboard main section#choirInfo table thead{
   font-weight: 600;
 }
 
-body#dashboard main section#choirInfo #management table tr td{
+body#dashboard main section#choirInfo table tr td{
   padding: 0.5em;
   border-bottom: 1px solid rgba(0,0,0,0.2);
 }
 
-body#dashboard main section#choirInfo #management table tbody tr td{
+body#dashboard main section#choirInfo table tbody tr td{
   padding: 1.5em 0.5em;
   border-right: 1px solid rgba(0,0,0,0.2);
 }
 
-body#dashboard main section#choirInfo #management table tbody tr td:first-of-type{
+body#dashboard main section#choirInfo table tbody tr td:first-of-type{
   font-weight: 600;
 }
 
-body#dashboard main section#choirInfo #management table tbody tr td:last-of-type{
+body#dashboard main section#choirInfo table tbody tr td:last-of-type{
   border-right: 0;
   text-align: center;
 
 }
 
-body#dashboard main section#choirInfo #management table tbody tr td:last-of-type a{
+body#dashboard main section#choirInfo table tbody tr td:last-of-type a{
   color: black;
   font-weight: 600;
 }
@@ -733,4 +653,14 @@ body#dashboard .modal .container .content form div.side-by-side{
 
 body#dashboard .modal .container .content form div.side-by-side button{
   margin-left: 1em;
+}
+
+body#dashboard .no-info{
+  width: 100%;
+  background: white;
+  color: black;
+  padding: 1em;
+  box-sizing: border-box;
+  margin-top: 0.5em;
+  border-radius: 0 0 3px 3px;
 }

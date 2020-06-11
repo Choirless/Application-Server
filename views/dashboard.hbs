@@ -5,9 +5,9 @@
         <ul>
             <!--<li><a href="#">The People's Front of Judea</a></li>-->
 
-            {{#if choirs}}
+            {{#if userChoirs}}
             
-                {{#each choirs}}
+                {{#each userChoirs}}
                     <li><a href="/dashboard/choir/{{choirId}}">{{name}}</a></li>
                 {{/each}}
 
@@ -29,23 +29,17 @@
 
         <header>
 
-            {{#if choirId}}
+            {{#if choirInfo}}
 
-                <h1>{{this.name}}</h1> <!-- Choir Name-->
-                <p>This is where you can manage you choir. Here, you can create new songs
-for recording, or add new members to you choir.</p>
+                <h1>{{choirInfo.name}}</h1> <!-- Choir Name-->
+                <p>{{choirInfo.description}}</p>
 
             {{else}}
                 
                 <h1>My Dashboard</h1> <!-- Choir Name-->
 
-                {{#if choirs}}
-
-                {{else}}
-
                 <p>This is where you can manage you choir. Here, you can create new songs
 for recording, or add new members to you choir.</p>
-                {{/if}}
 
             {{/if}}
 
@@ -53,19 +47,20 @@ for recording, or add new members to you choir.</p>
 
         <section id="management">
             
-            {{#if choirId}}
+            {{#if choirInfo}}
 
                 {{> dashboard/subnav }}
-                
-                {{#if performances}} {{> dashboard/performances }} {{/if}}
 
-                {{#if users}} {{> dashboard/users}} {{/if}}
+                {{> dashboard/songs }}
+
+                {{> dashboard/users}}
 
             {{/if}}
 
+            {{> dashboard/create_choir }}
+
         </section>
 
-        {{> dashboard/create_choir }}
 
     </section>
 

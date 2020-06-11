@@ -41,6 +41,32 @@ function createANewChoir(userId, choirName, choirDescription = ""){
 
 }
 
+function getAKnownChoir(choirId){
+
+    if(!choirId){
+        return Promise.reject('No choirId was passed to function');
+    }
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(choirData => {
+            return choirData.choir
+        })
+        .catch(err => {
+            debug('getAKnownChoir Err:', err);
+            throw err;
+        })
+    ;
+
+}
+
 module.exports = {
-    create : createANewChoir
+    create : createANewChoir,
+    get : getAKnownChoir
 };
