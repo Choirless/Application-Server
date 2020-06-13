@@ -1,3 +1,7 @@
+<div class="tableActions" id="songsActions">
+    <button id="createNewSong" class="cta-button light-blue" data-active="true">Create a song</button>
+</div>
+
 {{#unless songs}}
     <div class="no-info">
         
@@ -43,3 +47,21 @@
     </table>
 
 {{/unless}}
+
+<script>
+    (function(){
+
+        'use strict';
+
+        var tableActions = document.querySelector('.tableActions#songsActions');
+        var createNewSongBtn = tableActions.querySelector('button#createNewSong');
+
+        createNewSongBtn.addEventListener('click', function(){
+            
+            document.querySelector('#createSong.modal').dataset.active = "true";
+
+        }, false);
+
+    }());
+
+</script>

@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="side-by-side">
-                    <button type="button" class="cta-button red" id="cancel">Cancel</button>
+                    <button type="button" class="cta-button red cancel">Cancel</button>
                     <button type="submit" class="cta-button light-blue" id="createSong">Create</button>
                 </div>       
 
@@ -45,7 +45,7 @@
         'use strict';
 
         var form = document.querySelector('form#songCreation');
-        var cancelBtn = form.querySelector('#cancel');
+        var cancelBtn = form.querySelector('.cancel');
         var songParts = form.querySelector('#songparts');
 
         function addSongPart(e){

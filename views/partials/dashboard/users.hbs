@@ -1,25 +1,49 @@
-<table id="users" data-active="false">
-    
-    <thead>
-        <tr>
-            <td>Name</td>
-            <td>Email Address</td>
-            <td>Join Date</td>
-            <td>Performances Contributes</td>
-            <td></td>
-        </tr>
-    </thead>
+<div class="tableActions" id="membersActions"  data-active="false">
+    <button id="addNewMember" class="cta-button light-blue">Add new members</button>
+</div>
 
-    <tbody>
+{{#unless users}}
 
-        <!--<tr>
-            <td>John Doe</td>
-            <td>john.doe@example.org</td>
-            <td>10/05/2020 09:30:30</td>
-            <td>5</td>
-            <td><a href="#">Remove?</a></td>
-        </tr>-->
+    <table id="members" data-active="false">
+        
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Email Address</td>
+                <td>Join Date</td>
+                <td></td>
+            </tr>
+        </thead>
 
-    </tbody>
+        <tbody>
 
-</table>
+            <!--<tr>
+                <td>John Doe</td>
+                <td>john.doe@example.org</td>
+                <td>10/05/2020 09:30:30</td>
+                <td><a href="#">Remove?</a></td>
+            </tr>-->
+
+        </tbody>
+
+    </table>
+
+{{/unless}}
+
+<script>
+    (function(){
+
+        'use strict';
+
+        var tableActions = document.querySelector('.tableActions#membersActions');
+        var addNewMemberBtn = tableActions.querySelector('button#addNewMember');
+
+        addNewMemberBtn.addEventListener('click', function(){
+            
+            document.querySelector('#addMember.modal').dataset.active = "true";
+
+        }, false);
+
+    }());
+
+</script>

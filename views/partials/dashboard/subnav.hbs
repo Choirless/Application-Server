@@ -1,26 +1,52 @@
 <div id="subnav">
     <ol>
-        <li class="active"><button>Songs</button></li>
-        <li><button>Members</button></li>
-        <li><button>Settings</button></li>
+        <li class="active"><button id="songTabBtn" data-target="songs">Songs</button></li>
+        <li><button id="memberTabBtn" data-target="members">Members</button></li>
+        {{!-- <li><button id="settingsTabBtn" data-target="settings">Settings</button></li> --}}
     </ol>
-    <button id="createNewSong" class="cta-button light-blue" data-active="true">Create a song</button>
-    <button id="addNewMember" class="cta-button light-blue" data-active="false">Add new members</button>
 </div>
 
 <script>
+
     (function(){
 
         'use strict';
 
         var subnav = document.querySelector('#subnav');
-        var createNewSongBtn = subnav.querySelector('button#createNewSong');
+        var subnavBtns = subnav.querySelectorAll('button');
 
-        createNewSongBtn.addEventListener('click', function(){
-            
-            document.querySelector('#createSong.modal').dataset.active = "true";
+        Array.from(subnavBtns).forEach(function(btn){
 
-        }, false);
+            btn.addEventListener('click', function(e){
+
+                console.log("click");
+
+                subnavBtns.forEach(function(btn){
+                    btn.parentNode.classList.remove('active');
+                });
+
+                this.parentNode.classList.add('active');
+
+                Array.from(document.querySelectorAll('.tableActions')).forEach(function(tableAction){
+                    tableAction.dataset.active = "false";
+                });
+
+                Array.from(document.querySelectorAll('table')).forEach(function(table){
+                    table.dataset.active = "false";
+                });
+
+                var activeTableActions = document.querySelector('.tableActions#' + this.dataset.target + "Actions")
+                var activeTable = document.querySelector('table#' + this.dataset.target);
+
+                activeTableActions.dataset.active = "true";
+
+                if(activeTable){
+                    activeTable.dataset.active = "true";
+                }
+
+            });
+
+        });
 
     }());
 

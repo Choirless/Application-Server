@@ -589,30 +589,34 @@ body#dashboard main section#choirInfo #management div, body#dashboard main secti
   display: flex;
 }
 
-body#dashboard main section#choirInfo #management div{
+body#dashboard main section#choirInfo #management div#subnav{
   border-bottom: 2px solid white;
 }
 
-body#dashboard main section#choirInfo #management div ol{
+body#dashboard main section#choirInfo #management div#subnav ol{
   padding: 0;
   margin: 0;
 }
 
-body#dashboard main section#choirInfo #management div ol li{
+body#dashboard main section#choirInfo #management div#subnav ol li{
   margin-right: 1em;
 }
 
-body#dashboard main section#choirInfo #management div ol li.active, body#dashboard main section#choirInfo #management div ol li:hover{
+body#dashboard main section#choirInfo #management div#subnav ol li button{
+  padding: 1em;
+}
+
+body#dashboard main section#choirInfo #management div#subnav ol li.active, body#dashboard main section#choirInfo #management div#subnav ol li:hover{
   background: white;
   border-radius: 2px 2px 0 0;
 }
 
-body#dashboard main section#choirInfo #management div ol li.active button, body#dashboard main section#choirInfo #management div ol li:hover button{
+body#dashboard main section#choirInfo #management div#subnav ol li.active button, body#dashboard main section#choirInfo #management div#subnav ol li:hover button{
   color: black;
   font-weight: 600;
 }
 
-body#dashboard main section#choirInfo #management div ol li button{
+body#dashboard main section#choirInfo #management div#subnav ol li button{
   background: transparent;
   border: 0px solid transparent;
   font-size: 1em;
@@ -622,13 +626,31 @@ body#dashboard main section#choirInfo #management div ol li button{
   align-items: center;
 }
 
-body#dashboard main section#choirInfo #management div button.cta-button{
+body#dashboard main section#choirInfo #management div#subnav button.cta-button{
   margin-left: auto;
   margin-bottom: 0.3em;
 }
 
+body#dashboard main section#choirInfo #management div.tableActions{
+  padding: 0.5em 0.5em;
+  text-align: right;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  background: white;
+  box-sizing: border-box;
+  margin-top: 0.5em;
+  border-radius: 2px 2px 0 0;
+  background: #ffffff73;
+  border-bottom: 1px solid #ffffff9e;
+}
+
+body#dashboard main section#choirInfo #management div.tableActions button{
+  border: 1px solid #ffffffb8;
+  box-shadow: 0 1px 1px #00000047;
+}
+
 body#dashboard main section#choirInfo table{
-  margin-top: 0.3em;
   background: white;
   color: black;
   box-sizing: border-box;
@@ -707,6 +729,5 @@ body#dashboard .no-info{
   color: black;
   padding: 1em;
   box-sizing: border-box;
-  margin-top: 0.5em;
   border-radius: 0 0 3px 3px;
 }

@@ -13,8 +13,8 @@
                 <input id="description" type="text" placeholder="Describe your choir" name="description"/>
                 
                 <div class="side-by-side">
-                    <button type="button" class="cta-button red" id="cancel">Cancel</button>
-                    <button type="submit" class="cta-button light-blue" id="createChoir">Create</button>
+                    <button type="button" class="cta-button red cancel">Cancel</button>
+                    <button type="submit" class="cta-button light-blue">Create</button>
                 </div>       
 
             </form>
@@ -30,7 +30,7 @@
         'use strict';
 
         var form = document.querySelector('form#choirCreation');
-        var cancelBtn = form.querySelector('#cancel');
+        var cancelBtn = form.querySelector('.cancel');
 
         cancelBtn.addEventListener('click', function(e){
             
