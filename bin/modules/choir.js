@@ -66,7 +66,54 @@ function getAKnownChoir(choirId){
 
 }
 
+function getAnExistingSongInAChoir(choirId, songId){
+    return Promise.resolve();
+}
+
+function addANewSongToAChoir(data){
+
+    if(!data.choirId || !data.userId || !data.name){
+        return Promise.reject(`Missing parameters for song creation.\nRequired: "choirid", "userId", "name"\nRecieved: ${data.choirId}, ${data.userId}, ${data.name}`);
+    } else {
+
+        return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/song?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+                method : "POST",
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify(data)
+            })
+            .then(res => {
+                if(res.ok){
+                    return res.json();
+                } else {
+                    throw res;
+                }
+            })
+            .then(response => {
+                return response.songId;
+            })
+            .catch(err => {
+                debug('addANewSongToAChoir err:', err);
+                throw err;
+            })
+        ;
+
+    }
+
+
+}
+
+function getAllOfTheSongsForAChoir(choirId){
+    return Promise.resolve();
+}
+
 module.exports = {
     create : createANewChoir,
-    get : getAKnownChoir
+    get : getAKnownChoir,
+    songs : {
+        get : getAnExistingSongInAChoir,
+        add : addANewSongToAChoir,
+        getAll : getAllOfTheSongsForAChoir
+    }
 };
