@@ -105,7 +105,32 @@ function addANewSongToAChoir(data){
 }
 
 function getAllOfTheSongsForAChoir(choirId){
-    return Promise.resolve();
+
+    if(!choirId){
+        
+        return Promise.reject(`No choirId was passed to function`);
+    
+    } else {
+
+        return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songs?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}`)
+            .then(res => {
+                if(res.ok){
+                    return res.json();
+                } else {
+                    throw res;
+                }
+            })
+            .then(response => {
+                return response.songs;
+            })
+            .catch(err => {
+                debug('getAllOfTheSongsForAChoir err:', err);
+                throw err;
+            })
+        ;
+
+    }
+
 }
 
 module.exports = {

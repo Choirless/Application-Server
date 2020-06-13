@@ -28,6 +28,16 @@
                 <td><a href="#">Review Performances</a></td>
             </tr>-->
 
+            {{#each songs}}
+            <tr>
+                <td>{{this.name}}</td>
+                <td>16 Members</td>
+                <td>8 / 16</td>
+                <td>{{this.createdOn}}</td>
+                <td><a href="/review/{{choirId}}/{{songId}}">Review Performances</a></td>
+            </tr>
+            {{/each}}
+
         </tbody>
 
     </table>

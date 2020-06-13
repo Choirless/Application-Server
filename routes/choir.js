@@ -42,7 +42,7 @@ router.post('/create-song', (req, res) => {
     } else {
 
         const songData = {
-            parts : []
+            partNames : []
         };
         
         Object.keys(req.body).map(key => {
@@ -50,7 +50,7 @@ router.post('/create-song', (req, res) => {
             if(key.indexOf('part') === 0){
 
                 if(req.body[key] !== ""){
-                    songData.parts.push(req.body[key]);
+                    songData.partNames.push(req.body[key]);
                 }
 
             } else {
