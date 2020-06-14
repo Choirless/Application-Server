@@ -69,7 +69,32 @@ function getAKnownChoir(choirId){
 }
 
 function getAnExistingSongInAChoir(choirId, songId){
-    return Promise.resolve();
+
+    if(!choirId){
+        return Promise.reject("No choirId was passed to function");
+    }
+
+    if(!songId){
+        return Promise.reject("No songId wass passed to function")
+    }
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/song?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}&songId=${songId}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.song;
+        })
+        .catch(err => {
+            debug('getAllOfTheSongsForAChoir err:', err);
+            throw err;
+        })
+    ;
+
 }
 
 function addANewSongToAChoir(data){
@@ -135,6 +160,68 @@ function getAllOfTheSongsForAChoir(choirId){
 
 }
 
+function getASongPart(choirId, songId, partId){
+
+    if(!choirId){
+        return Promise.reject("No choirId was passed to function");
+    }
+
+    if(!songId){
+        return Promise.reject("No songId was passed to function");
+    }
+
+    if(!partId){
+        return Promise.reject("No partIf was passed to function");
+    }
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songparts?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}&songId=${songId}&partId=${partId}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.part;
+        })
+        .catch(err => {
+            debug('getAllOfTheSongsForAChoir err:', err);
+            throw err;
+        })
+    ;
+
+}
+
+function getAllOfThePartsForASong(choirId, songId){
+
+    if(!choirId){
+        return Promise.reject("No choirId was passed to function");
+    }
+
+    if(!songId){
+        return Promise.reject("No songId was passed to function");
+    }
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songparts?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}&songId=${songId}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.parts;
+        })
+        .catch(err => {
+            debug('getAllOfTheSongsForAChoir err:', err);
+            throw err;
+        })
+    ;
+
+}
+
 function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
     
     if(!choirId){
@@ -167,19 +254,13 @@ function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
                         .then(retrievedUserDetails => {
 
                             return retrievedUserDetails.map( (details, idx) => {
+
                                 details = details.user;
-                                debug(details);
-                                debug(response.members[idx]);
-
                                 response.members[idx].info = details;
-
-                                debug(response.members[idx]);
 
                                 return response.members[idx];
 
                             });
-
-                            process.exit();
 
                         })
                         .catch(err => {
@@ -207,7 +288,11 @@ module.exports = {
     songs : {
         get : getAnExistingSongInAChoir,
         add : addANewSongToAChoir,
-        getAll : getAllOfTheSongsForAChoir
+        getAll : getAllOfTheSongsForAChoir,
+        parts : {
+            get : getASongPart,
+            getAll : getAllOfThePartsForASong
+        }
     },
     members : {
         get : getAllOfTheMembersOfAChoir
