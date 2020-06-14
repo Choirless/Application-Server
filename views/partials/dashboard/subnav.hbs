@@ -1,62 +1,7 @@
 <div id="subnav">
     <ol>
-        <li class="active"><button id="songTabBtn" data-target="songs">Songs</button></li>
-        <li><button id="memberTabBtn" data-target="members">Members</button></li>
+        <li {{#ifEquals view "songs"}}class="active"{{/ifEquals}}><a href="/dashboard/choir/{{choirInfo.choirId}}/songs">Songs</a></li>
+        <li {{#ifEquals view "members"}}class="active"{{/ifEquals}}><a href="/dashboard/choir/{{choirInfo.choirId}}/members">Members</a></li>
         {{!-- <li><button id="settingsTabBtn" data-target="settings">Settings</button></li> --}}
     </ol>
 </div>
-
-<script>
-
-    (function(){
-
-        'use strict';
-
-        var subnav = document.querySelector('#subnav');
-        var subnavBtns = subnav.querySelectorAll('button');
-
-        Array.from(subnavBtns).forEach(function(btn){
-
-            btn.addEventListener('click', function(e){
-
-                subnavBtns.forEach(function(btn){
-                    btn.parentNode.classList.remove('active');
-                });
-
-                this.parentNode.classList.add('active');
-
-                Array.from(document.querySelectorAll('.tableActions')).forEach(function(tableAction){
-                    tableAction.dataset.active = "false";
-                });
-
-                Array.from(document.querySelectorAll('table')).forEach(function(table){
-                    table.dataset.active = "false";
-                });
-
-                Array.from(document.querySelectorAll('.no-info')).forEach(function(div){
-                    div.dataset.active = "false";
-                })
-
-                var activeTableActions = document.querySelector('.tableActions#' + this.dataset.target + "Actions")
-                var activeTable = document.querySelector('table#' + this.dataset.target);
-                var noInfo = document.querySelector('.no-info[data-target="' + this.dataset.target + '"]');
-
-                if(activeTableActions){
-                    activeTableActions.dataset.active = "true";
-                }
-
-                if(activeTable){
-                    activeTable.dataset.active = "true";
-                }
-
-                if(noInfo){
-                    noInfo.dataset.active = "true";
-                }
-
-            });
-
-        });
-
-    }());
-
-</script>

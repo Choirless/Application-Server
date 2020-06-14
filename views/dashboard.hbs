@@ -51,9 +51,14 @@ for recording, or add new members to you choir.</p>
 
                 {{> dashboard/subnav }}
 
-                {{> dashboard/songs }}
+                {{#ifEquals view "songs"}}
+                    {{> dashboard/songs }}
+                {{/ifEquals}}
 
-                {{> dashboard/members}}
+                {{#ifEquals view "members"}}
+                    {{> dashboard/members}}
+                {{/ifEquals}}
+
 
             {{/if}}
 

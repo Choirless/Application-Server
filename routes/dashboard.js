@@ -28,48 +28,74 @@ router.get('/', (req, res, next) => {
 
 });
 
-router.get('/choir/:CHOIRID', (req, res, next) => {
 
-    const apiRequests = [];
+router.get('/choir/:CHOIRID/:VIEW?', (req, res, next) => {
+
+    if(!req.params.VIEW){
+        req.params.VIEW = "songs"
+    }
+
+    if(req.params.VIEW !== "songs" && req.params.VIEW !== "members"){
+        res.redirect(`/dashboard/choir/${req.params.CHOIRID}`);
+    } else {
+
+        const requiredData = {};
+        
+        const apiRequests = [];
     
-    apiRequests.push(users.get.choirs(req.session.user));
-    apiRequests.push(choir.get(req.params.CHOIRID));
-    apiRequests.push(choir.songs.getAll(req.params.CHOIRID));
-    apiRequests.push(choir.members.get(req.params.CHOIRID, true));
-
-    Promise.all(apiRequests)
-        .then(apiResponses => {
-            const userChoirInfo = apiResponses[0];
-            const choirInfo = apiResponses[1];
-            const choirSongs = apiResponses[2].length === 0 ? null : apiResponses[2];
-            const choirMembers = apiResponses[3];
-
-            debug('choirInfo:', choirInfo);
-            debug('choirSongs:', choirSongs);
-            debug('choirMembers:', choirMembers);
-
-            if(choirInfo.createdByUserId !== req.session.user){
-                res.status(401);
+        apiRequests.push(users.get.choirs(req.session.user).then(data => { requiredData.userChoirInfo = data }) );
+        apiRequests.push(choir.get(req.params.CHOIRID).then(data => { requiredData.choirInfo = data }) );
+        
+        if(req.params.VIEW === "songs"){
+            apiRequests.push(choir.songs.getAll(req.params.CHOIRID).then(data => { requiredData.choirSongs = data }) );
+        }
+    
+        if(req.params.VIEW === "members"){
+            apiRequests.push(choir.members.get(req.params.CHOIRID, true).then(data => { requiredData.choirMembers = data }) );
+        }
+    
+        Promise.all(apiRequests)
+            .then(function(){
+    
+                debug(requiredData);
+    
+                const userChoirInfo = requiredData.userChoirInfo;
+                const choirInfo = requiredData.choirInfo;
+                const choirSongs = requiredData.choirSongs;
+                const choirMembers = requiredData.choirMembers;
+    
+                debug('choirInfo:', choirInfo);
+                debug('choirSongs:', choirSongs);
+                debug('choirMembers:', choirMembers);
+    
+                if(choirInfo.createdByUserId !== req.session.user){
+                    res.status(401);
+                    next();
+                } else {
+                    res.render('dashboard', { 
+                        title : "Choirless | My Dashboard", 
+                        bodyid: "dashboard",
+                        userChoirs : userChoirInfo,
+                        choirInfo : choirInfo,
+                        songs : choirSongs,
+                        members : choirMembers,
+                        view : req.params.VIEW
+                    });
+                }
+    
+    
+            })
+            .catch(err => {
+                debug('/choir/:CHOIRID err:', err);
+                res.status(500);
+                process.exit();
                 next();
-            } else {
-                res.render('dashboard', { 
-                    title : "Choirless | My Dashboard", 
-                    bodyid: "dashboard",
-                    userChoirs : userChoirInfo,
-                    choirInfo : choirInfo,
-                    songs : choirSongs,
-                    members : choirMembers
-                });
-            }
+    
+            })
+        ;
 
-
-        })
-        .catch(err => {
-            debug('/choir/:CHOIRID err:', err);
-            res.status(500);
-            next();
-        })
-    ;
+    }
+    
 
 });
 

@@ -603,8 +603,10 @@ body#dashboard main section#choirInfo #management div#subnav ol li{
   margin-right: 1em;
 }
 
-body#dashboard main section#choirInfo #management div#subnav ol li button{
+body#dashboard main section#choirInfo #management div#subnav ol li a{
   padding: 1em;
+  color: white;
+  text-decoration: none;
 }
 
 body#dashboard main section#choirInfo #management div#subnav ol li.active, body#dashboard main section#choirInfo #management div#subnav ol li:hover{
@@ -612,12 +614,12 @@ body#dashboard main section#choirInfo #management div#subnav ol li.active, body#
   border-radius: 2px 2px 0 0;
 }
 
-body#dashboard main section#choirInfo #management div#subnav ol li.active button, body#dashboard main section#choirInfo #management div#subnav ol li:hover button{
+body#dashboard main section#choirInfo #management div#subnav ol li.active a, body#dashboard main section#choirInfo #management div#subnav ol li:hover a{
   color: black;
   font-weight: 600;
 }
 
-body#dashboard main section#choirInfo #management div#subnav ol li button{
+body#dashboard main section#choirInfo #management div#subnav ol li a{
   background: transparent;
   border: 0px solid transparent;
   font-size: 1em;
