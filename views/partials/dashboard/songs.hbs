@@ -54,13 +54,22 @@
         'use strict';
 
         var tableActions = document.querySelector('.tableActions#songsActions');
-        var createNewSongBtn = tableActions.querySelector('button#createNewSong');
 
-        createNewSongBtn.addEventListener('click', function(){
-            
-            document.querySelector('#createSong.modal').dataset.active = "true";
+        if(tableActions){
 
-        }, false);
+            var createNewSongBtn = tableActions.querySelector('button#createNewSong');
+
+            if(createNewSongBtn){
+
+                createNewSongBtn.addEventListener('click', function(){
+                    
+                    document.querySelector('#createSong.modal').dataset.active = "true";
+
+                }, false);
+
+            }
+
+        }
 
     }());
 

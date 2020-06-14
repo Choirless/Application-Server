@@ -41,7 +41,9 @@
                 var activeTable = document.querySelector('table#' + this.dataset.target);
                 var noInfo = document.querySelector('.no-info[data-target="' + this.dataset.target + '"]');
 
-                activeTableActions.dataset.active = "true";
+                if(activeTableActions){
+                    activeTableActions.dataset.active = "true";
+                }
 
                 if(activeTable){
                     activeTable.dataset.active = "true";

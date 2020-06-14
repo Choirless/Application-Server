@@ -1,6 +1,6 @@
-<div class="tableActions" id="membersActions"  data-active="false">
+{{!-- <div class="tableActions" id="membersActions"  data-active="false">
     <button id="addNewMember" class="cta-button light-blue">Add new members</button>
-</div>
+</div> --}}
 
 {{#if members}}
 
@@ -11,7 +11,6 @@
                 <td>Name</td>
                 <td>Email Address</td>
                 <td>Join Date</td>
-                <td></td>
             </tr>
         </thead>
 
@@ -28,7 +27,6 @@
                 <td>{{this.info.name}}</td>
                 <td>{{this.info.email}}</td>
                 <td> {{#humantime}}{{this.joined}}{{/humantime}}</td>
-                <td><a href="#">Remove?</a></td>
             </tr>
             {{/each}}
 
@@ -44,13 +42,21 @@
         'use strict';
 
         var tableActions = document.querySelector('.tableActions#membersActions');
-        var addNewMemberBtn = tableActions.querySelector('button#addNewMember');
 
-        addNewMemberBtn.addEventListener('click', function(){
-            
-            document.querySelector('#addMember.modal').dataset.active = "true";
+        if(tableActions){
 
-        }, false);
+            var addNewMemberBtn = tableActions.querySelector('button#addNewMember');
+
+            if(addNewMemberBtn){
+
+                addNewMemberBtn.addEventListener('click', function(){
+                    
+                    document.querySelector('#addMember.modal').dataset.active = "true";
+
+                }, false);
+
+            }
+        }
 
     }());
 

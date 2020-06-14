@@ -591,6 +591,7 @@ body#dashboard main section#choirInfo #management div, body#dashboard main secti
 
 body#dashboard main section#choirInfo #management div#subnav{
   border-bottom: 2px solid white;
+  margin-bottom: 0.5em;
 }
 
 body#dashboard main section#choirInfo #management div#subnav ol{
@@ -639,7 +640,6 @@ body#dashboard main section#choirInfo #management div.tableActions{
   justify-content: flex-end;
   background: white;
   box-sizing: border-box;
-  margin-top: 0.5em;
   border-radius: 2px 2px 0 0;
   background: #ffffff73;
   border-bottom: 1px solid #ffffff9e;
@@ -681,8 +681,6 @@ body#dashboard main section#choirInfo table tbody tr td:first-of-type{
 
 body#dashboard main section#choirInfo table tbody tr td:last-of-type{
   border-right: 0;
-  text-align: center;
-
 }
 
 body#dashboard main section#choirInfo table tbody tr td:last-of-type a{
