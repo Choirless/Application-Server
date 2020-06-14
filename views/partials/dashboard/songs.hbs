@@ -18,7 +18,6 @@
                 <td>Members</td>
                 <td>Performances Recorded</td>
                 <td>Created (DD/MM/YYYY)</td>
-                <td></td>
             </tr>
         </thead>
 
@@ -29,7 +28,6 @@
                 <td>16 Members</td>
                 <td>8 / 16</td>
                 <td>25/05/2020 09:30:30</td>
-                <td><a href="#">Review Performances</a></td>
             </tr>-->
 
             {{#each songs}}
@@ -38,7 +36,6 @@
                 <td>16 Members</td>
                 <td>8 / 16</td>
                 <td>{{#humantime}}{{this.createdOn}}{{/humantime}}</td>
-                <td><a href="/review/{{choirId}}/{{songId}}">Review Performances</a></td>
             </tr>
             {{/each}}
 

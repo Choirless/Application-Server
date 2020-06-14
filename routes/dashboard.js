@@ -29,13 +29,13 @@ router.get('/', (req, res, next) => {
 });
 
 
-router.get('/choir/:CHOIRID/:VIEW?', (req, res, next) => {
+router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
 
     if(!req.params.VIEW){
         req.params.VIEW = "songs"
     }
 
-    if(req.params.VIEW !== "songs" && req.params.VIEW !== "members"){
+    if(req.params.VIEW !== "songs" && req.params.VIEW !== "members" && req.params.VIEW !== "song"){
         res.redirect(`/dashboard/choir/${req.params.CHOIRID}`);
     } else {
 
@@ -53,6 +53,11 @@ router.get('/choir/:CHOIRID/:VIEW?', (req, res, next) => {
         if(req.params.VIEW === "members"){
             apiRequests.push(choir.members.get(req.params.CHOIRID, true).then(data => { requiredData.choirMembers = data }) );
         }
+
+        if(req.params.VIEW === "song"){
+            apiRequests.push(choir.songs.get(req.params.CHOIRID, req.params.SONGID).then(data => { requiredData.songInformation = data }) );
+            apiRequests.push(choir.songs.parts.getAll(req.params.CHOIRID, req.params.SONGID).then(data => { requiredData.songParts = data }) );
+        }
     
         Promise.all(apiRequests)
             .then(function(){
@@ -63,10 +68,34 @@ router.get('/choir/:CHOIRID/:VIEW?', (req, res, next) => {
                 const choirInfo = requiredData.choirInfo;
                 const choirSongs = requiredData.choirSongs;
                 const choirMembers = requiredData.choirMembers;
+                const songInformation = requiredData.songInformation;
+                let songParts = undefined;
+
+                if(songInformation){
+
+                    songParts = songInformation.partNames.map(partName => {
     
+                        const partInformation = {};
+                        partInformation.name = partName;
+                        partInformation.parts = requiredData.songParts.map(part => {
+    
+                            if(part.partName === partName){
+                                return part;
+                            }
+    
+                        });
+    
+                        return partInformation;
+    
+                    });
+
+                }
+
                 debug('choirInfo:', choirInfo);
                 debug('choirSongs:', choirSongs);
                 debug('choirMembers:', choirMembers);
+                debug('songInformation:', songInformation);
+                debug('songParts:', songParts);
     
                 if(choirInfo.createdByUserId !== req.session.user){
                     res.status(401);
@@ -79,6 +108,8 @@ router.get('/choir/:CHOIRID/:VIEW?', (req, res, next) => {
                         choirInfo : choirInfo,
                         songs : choirSongs,
                         members : choirMembers,
+                        songInformation : songInformation,
+                        songParts : songParts,
                         view : req.params.VIEW
                     });
                 }

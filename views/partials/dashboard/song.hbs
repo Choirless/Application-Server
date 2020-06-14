@@ -1,76 +1,49 @@
-<div class="tableActions" id="songsActions">
-    <button id="createNewSong" class="cta-button light-blue" data-active="true">Create a song</button>
+<div class="tableActions" id="songActions">
+    <button id="addANewPart" class="cta-button light-blue" data-active="true">Add a part</button>
 </div>
 
-{{#unless songs}}
-    <div class="no-info" data-target="songs">
+<table id="songs" data-active="true">
+    
+    <thead>
+        <tr>
+            <td>Contributor</td>
+            <td></td>
+        </tr>
+    </thead>
+
+    <tbody>
         
-        <p>You haven't created any songs for this choir yet...</p>
+        <!--<tr>
+            <td>Yellow Submarine</td>
+            <td>16 Members</td>
+            <td>8 / 16</td>
+            <td>25/05/2020 09:30:30</td>
+            <td><a href="#">Review Performances</a></td>
+        </tr>-->
 
-    </div>
-{{else}}
-
-    <table id="songs" data-active="true">
-        
-        <thead>
-            <tr>
-                <td>Title</td>
-                <td>Members</td>
-                <td>Performances Recorded</td>
-                <td>Created (DD/MM/YYYY)</td>
-                <td></td>
+        {{#each songParts}}
+            <tr class="subhead">
+                <td>{{this.name}}</td>
+                <td><button class="recordPart blue cta-button">Record this part</button>
             </tr>
-        </thead>
 
-        <tbody>
-            
-            <!--<tr>
-                <td>Yellow Submarine</td>
-                <td>16 Members</td>
-                <td>8 / 16</td>
-                <td>25/05/2020 09:30:30</td>
-                <td><a href="#">Review Performances</a></td>
-            </tr>-->
+            {{#unless this.parts}}
 
-            {{#each songs}}
-            <tr>
-                <td><a href="/dashboard/choir/{{this.choirId}}/song/{{this.songId}}">{{this.name}}</a></td>
-                <td>16 Members</td>
-                <td>8 / 16</td>
-                <td>{{#humantime}}{{this.createdOn}}{{/humantime}}</td>
-                <td><a href="/review/{{choirId}}/{{songId}}">Review Performances</a></td>
-            </tr>
-            {{/each}}
+            <td colspan="2">No recordings have been made for this part yet.</td>
 
-        </tbody>
+            {{else}}
 
-    </table>
+                {{#each this.parts}}
+                <tr>
+                    <td><a>{{this.userName}}</a></td>
+                </tr>
+                {{/each}}
 
-{{/unless}}
+            {{/unless}}
 
-<script>
-    (function(){
+        {{/each}}
 
-        'use strict';
 
-        var tableActions = document.querySelector('.tableActions#songsActions');
+    </tbody>
 
-        if(tableActions){
-
-            var createNewSongBtn = tableActions.querySelector('button#createNewSong');
-
-            if(createNewSongBtn){
-
-                createNewSongBtn.addEventListener('click', function(){
-                    
-                    document.querySelector('#createSong.modal').dataset.active = "true";
-
-                }, false);
-
-            }
-
-        }
-
-    }());
-
-</script>
+</table>

@@ -677,8 +677,28 @@ body#dashboard main section#choirInfo table tbody tr td{
   border-right: 1px solid rgba(0,0,0,0.2);
 }
 
+body#dashboard main section#choirInfo table tbody tr.subhead td{
+  background: #d8d8d8;
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+  border-right: 0px solid transparent;
+}
+
+body#dashboard main section#choirInfo table tbody tr.subhead td:last-of-type{
+  text-align: right;
+}
+
+body#dashboard main section#choirInfo table tbody tr.subhead td a{
+  color: black;
+}
+
 body#dashboard main section#choirInfo table tbody tr td:first-of-type{
   font-weight: 600;
+}
+
+body#dashboard main section#choirInfo table tbody tr td:first-of-type a{
+  color: black;
+  font-weight: inherit;
 }
 
 body#dashboard main section#choirInfo table tbody tr td:last-of-type{
