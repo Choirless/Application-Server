@@ -50,6 +50,9 @@ router.post('/create-song', (req, res) => {
             if(key.indexOf('part') === 0){
 
                 if(req.body[key] !== ""){
+                    if(req.body[key] === "Lead (default)"){
+                        req.body[key] = "Lead";
+                    }
                     songData.partNames.push(req.body[key]);
                 }
 
