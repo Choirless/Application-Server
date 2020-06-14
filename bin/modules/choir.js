@@ -1,6 +1,8 @@
 const debug = require('debug')("bin:modules:choir");
 const fetch = require('node-fetch');
 
+const users = require(`${__dirname}/users`);
+
 function createANewChoir(userId, choirName, choirDescription = ""){
 
     if(!userId){
@@ -133,6 +135,72 @@ function getAllOfTheSongsForAChoir(choirId){
 
 }
 
+function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
+    
+    if(!choirId){
+        
+        return Promise.reject('No choirId was passed.');
+
+    } else {
+
+        return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/members?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}`)
+            .then(res => {
+                if(res.ok){
+                    return res.json();
+                } else {
+                    throw res;
+                }
+            })
+            .then(response => {
+
+                if(!getMemberDetails){
+                    return response.members;
+                } else {
+
+                    const userDetails = [];
+
+                    response.members.forEach(memberRecord => {
+                        userDetails.push(users.get.byID(memberRecord.userId));
+                    })
+
+                    return Promise.all(userDetails)
+                        .then(retrievedUserDetails => {
+
+                            return retrievedUserDetails.map( (details, idx) => {
+                                details = details.user;
+                                debug(details);
+                                debug(response.members[idx]);
+
+                                response.members[idx].info = details;
+
+                                debug(response.members[idx]);
+
+                                return response.members[idx];
+
+                            });
+
+                            process.exit();
+
+                        })
+                        .catch(err => {
+                            debug('getMemberDetails err:', err);
+                            throw err;
+                        })
+                    ;
+
+                }
+
+            })
+            .catch(err => {
+                debug('getAllOfTheMembersForAChoir err:', err);
+                throw err;
+            })
+        ;
+
+    }
+
+}
+
 module.exports = {
     create : createANewChoir,
     get : getAKnownChoir,
@@ -140,5 +208,8 @@ module.exports = {
         get : getAnExistingSongInAChoir,
         add : addANewSongToAChoir,
         getAll : getAllOfTheSongsForAChoir
+    },
+    members : {
+        get : getAllOfTheMembersOfAChoir
     }
 };

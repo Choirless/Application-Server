@@ -35,15 +35,18 @@ router.get('/choir/:CHOIRID', (req, res, next) => {
     apiRequests.push(users.get.choirs(req.session.user));
     apiRequests.push(choir.get(req.params.CHOIRID));
     apiRequests.push(choir.songs.getAll(req.params.CHOIRID));
+    apiRequests.push(choir.members.get(req.params.CHOIRID, true));
 
     Promise.all(apiRequests)
         .then(apiResponses => {
             const userChoirInfo = apiResponses[0];
             const choirInfo = apiResponses[1];
             const choirSongs = apiResponses[2].length === 0 ? null : apiResponses[2];
+            const choirMembers = apiResponses[3];
 
             debug('choirInfo:', choirInfo);
             debug('choirSongs:', choirSongs);
+            debug('choirMembers:', choirMembers);
 
             if(choirInfo.createdByUserId !== req.session.user){
                 res.status(401);
@@ -54,7 +57,8 @@ router.get('/choir/:CHOIRID', (req, res, next) => {
                     bodyid: "dashboard",
                     userChoirs : userChoirInfo,
                     choirInfo : choirInfo,
-                    songs : choirSongs
+                    songs : choirSongs,
+                    members : choirMembers
                 });
             }
 

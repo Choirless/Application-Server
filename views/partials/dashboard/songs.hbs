@@ -3,7 +3,7 @@
 </div>
 
 {{#unless songs}}
-    <div class="no-info">
+    <div class="no-info" data-target="songs">
         
         <p>You haven't created any songs for this choir yet...</p>
 
@@ -17,7 +17,7 @@
                 <td>Title</td>
                 <td>Members</td>
                 <td>Performances Recorded</td>
-                <td>Created</td>
+                <td>Created (DD/MM/YYYY)</td>
                 <td></td>
             </tr>
         </thead>
@@ -37,7 +37,7 @@
                 <td>{{this.name}}</td>
                 <td>16 Members</td>
                 <td>8 / 16</td>
-                <td>{{this.createdOn}}</td>
+                <td>{{#humantime}}{{this.createdOn}}{{/humantime}}</td>
                 <td><a href="/review/{{choirId}}/{{songId}}">Review Performances</a></td>
             </tr>
             {{/each}}

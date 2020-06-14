@@ -19,8 +19,6 @@
 
             btn.addEventListener('click', function(e){
 
-                console.log("click");
-
                 subnavBtns.forEach(function(btn){
                     btn.parentNode.classList.remove('active');
                 });
@@ -35,13 +33,22 @@
                     table.dataset.active = "false";
                 });
 
+                Array.from(document.querySelectorAll('.no-info')).forEach(function(div){
+                    div.dataset.active = "false";
+                })
+
                 var activeTableActions = document.querySelector('.tableActions#' + this.dataset.target + "Actions")
                 var activeTable = document.querySelector('table#' + this.dataset.target);
+                var noInfo = document.querySelector('.no-info[data-target="' + this.dataset.target + '"]');
 
                 activeTableActions.dataset.active = "true";
 
                 if(activeTable){
                     activeTable.dataset.active = "true";
+                }
+
+                if(noInfo){
+                    noInfo.dataset.active = "true";
                 }
 
             });

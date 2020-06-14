@@ -28,6 +28,7 @@ if(process.env.NODE_ENV === "production"){
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 hbs.registerPartials(__dirname + '/views/partials');
+require(`${__dirname}/bin/lib/helpers`)(hbs);
 
 app.use( logger('dev') );
 app.use(express.json( { limit: '150mb'} ) );
