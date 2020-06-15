@@ -556,7 +556,8 @@ body#dashboard main section#choirMenu ul li{
 
 body#dashboard main section#choirMenu ul li:hover{
   color: white;
-  background: black;
+  background-color: #424242;
+
 }
 
 body#dashboard main section#choirMenu ul li a{
@@ -564,6 +565,25 @@ body#dashboard main section#choirMenu ul li a{
   color: inherit;
   display: block;
   padding: 0.5em;
+}
+
+body#dashboard main section#choirMenu ul li a.selected{
+  background-color: #2a93e4;
+  color: white;
+  position: relative;
+}
+
+body#dashboard main section#choirMenu ul li a.selected::after{
+  content: '';
+  display: block;
+  width: 1em;
+  height: 1em;
+  background: #2a93e4;
+  position: absolute;
+  top: 50%;
+  left: 95%;
+  margin-top: -0.5em;
+  transform: rotate(45deg);
 }
 
 body#dashboard main section#choirMenu button.cta-button{

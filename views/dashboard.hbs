@@ -8,7 +8,7 @@
             {{#if userChoirs}}
             
                 {{#each userChoirs}}
-                    <li><a href="/dashboard/choir/{{choirId}}">{{name}}</a></li>
+                    <li><a href="/dashboard/choir/{{choirId}}" {{#if ../choirInfo}} {{#ifEquals ../choirInfo.choirId choirId}}class="selected"{{/ifEquals}} {{/if}} >{{name}}</a></li>
                 {{/each}}
 
             {{else}}
