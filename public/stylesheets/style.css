@@ -180,6 +180,14 @@ button.cta-button.black, a.cta-button.black{
   color:white;
 }
 
+button.cta-button.loading{
+  background-image: url("/assets/images/loader.gif");
+  background-size: 85%;
+  background-position: 50% 45%;
+  background-repeat: no-repeat;
+  color: transparent !important;
+}
+
 footer{
   width: 100%;
   display: flex;
@@ -534,7 +542,6 @@ body#dashboard main section#choirMenu{
 
 body#dashboard main section#choirMenu li{
   margin-bottom: 0.5em;
-  padding: 0.5em;
   color: black;
 }
 
@@ -546,6 +553,8 @@ body#dashboard main section#choirMenu li:hover{
 body#dashboard main section#choirMenu li a{
   text-decoration: none;
   color: inherit;
+  display: block;
+  padding: 0.5em;
 }
 
 body#dashboard main section#choirInfo{

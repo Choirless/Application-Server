@@ -85,6 +85,10 @@
 
         }, false);
 
+        form.addEventListener('submit', function(e){
+            this.querySelector('button[type="submit"]').classList.add('loading');
+        }, false);
+
         songparts.querySelector('.songpart button.delete-part').addEventListener('click', deleteSongPart, false);
 
         songparts.querySelector('.songpart button.add-part').addEventListener('click', addSongPart, false);
