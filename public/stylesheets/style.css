@@ -93,6 +93,16 @@ nav a {
   font-weight: 800;
 }
 
+nav a#logo::after {
+  content: 'alpha';
+  font-weight: 100;
+  font-size: 0.75em;
+  position: relative;
+  top: -0.1em;
+  margin-left: 0.3em;
+  color: #ffe354;
+}
+
 nav section a{
   margin-left: 1em;
   font-size: 0.8em;
