@@ -82,6 +82,7 @@
 
             form.reset();
             document.querySelector('#createSong').dataset.active = "false";
+            form.querySelector('button[type="submit"]').classList.remove('loading');
 
         }, false);
 
