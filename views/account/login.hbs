@@ -7,7 +7,7 @@
 
     <section>
 
-        <form id="loginForm" method="POST" action="/account/login">
+        <form id="loginForm" method="POST" action="/account/login{{#if redirect}}?redirect={{redirect}}{{/if}}">
             
             <h2>Login to Choirless</h2>
             <input type="email" placeholder="Email Address" name="email"/>

@@ -10,7 +10,8 @@ router.get('/login', function(req, res, next) {
 		res.render('account/login', { 
 			title: "Choirless | All the world's a stage", 
 			bodyid: "accountLogin",
-			loggedIn : !!req.session.user
+			loggedIn : !!req.session.user,
+			redirect: req.query.redirect
 		});
 	} else {
 		res.redirect('/');
@@ -36,7 +37,7 @@ router.post('/login', (req, res, next) => {
 						res.send("user/pass mismatch");
 					} else {
 						req.session.user = data.user.userId;
-						res.redirect('/');
+						res.redirect(decodeURIComponent(req.query.redirect) || '/');
 					}
 
 				}
