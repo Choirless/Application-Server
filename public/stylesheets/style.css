@@ -544,21 +544,29 @@ body#dashboard main section#choirMenu{
   color: black;
 }
 
-body#dashboard main section#choirMenu li{
+body#dashboard main section#choirMenu ul{
+  margin-bottom: 1em;
+}
+
+body#dashboard main section#choirMenu ul li{
   margin-bottom: 0.5em;
   color: black;
 }
 
-body#dashboard main section#choirMenu li:hover{
+body#dashboard main section#choirMenu ul li:hover{
   color: white;
   background: black;
 }
 
-body#dashboard main section#choirMenu li a{
+body#dashboard main section#choirMenu ul li a{
   text-decoration: none;
   color: inherit;
   display: block;
   padding: 0.5em;
+}
+
+body#dashboard main section#choirMenu button.cta-button{
+  width: 100%;
 }
 
 body#dashboard main section#choirInfo{
@@ -658,6 +666,7 @@ body#dashboard main section#choirInfo #management div.tableActions{
   border-radius: 2px 2px 0 0;
   background: #ffffff73;
   border-bottom: 1px solid #ffffff9e;
+  border-top: 1px solid rgba(255, 255, 255, 0.55);
 }
 
 body#dashboard main section#choirInfo #management div.tableActions button{

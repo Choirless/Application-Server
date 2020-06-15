@@ -4,11 +4,11 @@
     <form id="updateChoir" method="POST" action="/choir/update/{{choirInfo.choirId}}">
             
             <label for="name">Choir Name</label>
-            <input id="name" type="text" placeholder="Choir Name" name="name"/>
+            <input id="name" type="text" placeholder="Choir Name" name="name" value="{{choirInfo.name}}"/>
 
             <label for="description">Choir Description</label>
-            <input id="description" type="text" placeholder="Describe your choir" name="description"/>
-            
+            <input id="description" type="text" placeholder="Describe your choir" name="description" value="{{choirInfo.description}}"/>
+
             <button type="submit" class="cta-button light-blue">Update</button>
 
         </form>
