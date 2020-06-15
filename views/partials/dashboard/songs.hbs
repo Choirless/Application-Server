@@ -1,0 +1,73 @@
+<div class="tableActions" id="songsActions">
+    <button id="createNewSong" class="cta-button light-blue" data-active="true">Create a song</button>
+</div>
+
+{{#unless songs}}
+    <div class="no-info" data-target="songs">
+        
+        <p>You haven't created any songs for this choir yet...</p>
+
+    </div>
+{{else}}
+
+    <table id="songs" data-active="true">
+        
+        <thead>
+            <tr>
+                <td>Title</td>
+                <td>Members</td>
+                <td>Performances Recorded</td>
+                <td>Created (DD/MM/YYYY)</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            
+            <!--<tr>
+                <td>Yellow Submarine</td>
+                <td>16 Members</td>
+                <td>8 / 16</td>
+                <td>25/05/2020 09:30:30</td>
+            </tr>-->
+
+            {{#each songs}}
+            <tr>
+                <td><a href="/dashboard/choir/{{this.choirId}}/song/{{this.songId}}">{{this.name}}</a></td>
+                <td>16 Members</td>
+                <td>8 / 16</td>
+                <td>{{#humantime}}{{this.createdOn}}{{/humantime}}</td>
+            </tr>
+            {{/each}}
+
+        </tbody>
+
+    </table>
+
+{{/unless}}
+
+<script>
+    (function(){
+
+        'use strict';
+
+        var tableActions = document.querySelector('.tableActions#songsActions');
+
+        if(tableActions){
+
+            var createNewSongBtn = tableActions.querySelector('button#createNewSong');
+
+            if(createNewSongBtn){
+
+                createNewSongBtn.addEventListener('click', function(){
+                    
+                    document.querySelector('#createSong.modal').dataset.active = "true";
+
+                }, false);
+
+            }
+
+        }
+
+    }());
+
+</script>

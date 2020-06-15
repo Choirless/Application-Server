@@ -1,0 +1,44 @@
+<div id="addMember" class="modal" data-active="false">
+    <div class="container">
+        
+        <div class="content">
+            <h2>Add member to choir</h2>
+
+            <form method="POST" action="/choir/add-member">
+            
+                <label for="name" class="required">Email Address</label>
+                <input id="name" type="email" placeholder="bob@choirless.com" name="email" required/>
+                
+                <div class="side-by-side">
+                    <button type="button" class="cta-button red cancel">Cancel</button>
+                    <button type="submit" class="cta-button light-blue">Invite Member</button>
+                </div>       
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        var form = document.querySelector('#addMember form');
+        var cancelBtn = form.querySelector('.cancel');
+
+        cancelBtn.addEventListener('click', function(e){
+            
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            form.reset();
+            document.querySelector('#addMember').dataset.active="false";
+
+        }, false);
+
+    }());
+
+</script>

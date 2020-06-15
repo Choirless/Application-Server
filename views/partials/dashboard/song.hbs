@@ -1,0 +1,71 @@
+<div class="tableActions" id="songActions">
+    <button id="addANewPart" class="cta-button light-blue" data-active="true">Add a part</button>
+</div>
+
+<table id="songs" data-active="true">
+    
+    <thead>
+        <tr>
+            <td>Contributor</td>
+            <td></td>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {{#each songParts}}
+            <tr class="subhead collapsable" data-collapsetarget="{{this.name}}" data-expanded="false">
+                <td>{{this.name}}</td>
+                <td><a href="/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.name}}" class="recordPart blue cta-button">Record this part</a>
+            </tr>
+
+            {{#unless this.parts}}
+                <tr data-collapsed="true" data-collapseid="{{this.name}}">
+                    <td colspan="2">No recordings have been made for this part yet.</td>
+                </tr>
+            {{else}}
+
+                {{#each this.parts}}
+                <tr data-collapsed="true" data-collapseid="{{this.name}}">
+                    <td><a>{{this.userName}}</a></td>
+                </tr>
+                {{/each}}
+
+            {{/unless}}
+
+        {{/each}}
+
+
+    </tbody>
+
+</table>
+
+<script>
+
+    (function(){
+
+        'use strict';
+        var table = document.querySelector('table#songs');
+        var collapsableHeaders = Array.from(table.querySelectorAll('tr[data-collapsetarget]'));
+
+        collapsableHeaders.forEach(function(header){
+            
+            header.addEventListener('click', function(){
+                
+                this.dataset.expanded = this.dataset.expanded === "true" ? "false" : "true";
+
+                var targetRows = table.querySelectorAll('[data-collapseid="' + this.dataset.collapsetarget + '"]')
+                console.log(targetRows);
+
+                Array.from(targetRows).forEach(function(target){
+                    target.dataset.collapsed = target.dataset.collapsed === "true" ? "false" : "true";
+                });
+
+            }, false);
+
+
+        });
+
+    }());
+
+</script>

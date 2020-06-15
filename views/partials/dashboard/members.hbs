@@ -1,0 +1,64 @@
+{{!-- <div class="tableActions" id="membersActions"  data-active="false">
+    <button id="addNewMember" class="cta-button light-blue">Add new members</button>
+</div> --}}
+
+{{#if members}}
+
+    <table id="members">
+        
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Email Address</td>
+                <td>Join Date</td>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <!--<tr>
+                <td>John Doe</td>
+                <td>john.doe@example.org</td>
+                <td><a href="#">Remove?</a></td>
+            </tr>-->
+
+            {{#each members}}
+            <tr>
+                <td>{{this.info.name}}</td>
+                <td>{{this.info.email}}</td>
+                <td> {{#humantime}}{{this.joined}}{{/humantime}}</td>
+            </tr>
+            {{/each}}
+
+        </tbody>
+
+    </table>
+
+{{/if}}
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        var tableActions = document.querySelector('.tableActions#membersActions');
+
+        if(tableActions){
+
+            var addNewMemberBtn = tableActions.querySelector('button#addNewMember');
+
+            if(addNewMemberBtn){
+
+                addNewMemberBtn.addEventListener('click', function(){
+                    
+                    document.querySelector('#addMember.modal').dataset.active = "true";
+
+                }, false);
+
+            }
+        }
+
+    }());
+
+</script>

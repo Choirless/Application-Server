@@ -37,6 +37,7 @@ a {
 
 p, a{
   font-weight: 500;
+  line-height: 1.5em;
 }
 
 ul, ul li{
@@ -45,12 +46,29 @@ ul, ul li{
   margin: 0;
 }
 
+a.sub-link{
+  color: black;
+  font-size:0.8em;
+  cursor: pointer;
+}
+
 .center-text{
   text-align: center;
 }
 
 input[type="text"]{
   font-family: 'Montserrat';
+}
+
+label.required::after{
+  content: "(required)";
+  font-size: 0.75em;
+  margin-left: 0.5em;
+  height: 100%;
+  position: relative;
+  font-weight: 600;
+  top: -0.3em;
+  color: #969696;
 }
 
 nav {
@@ -111,29 +129,68 @@ a.cta-button, button.cta-button{
   color: black;
   font-weight: 600;
   background-color: white;
-  border-radius: 5px;
+  border-radius: 2px;
   font-size: 0.8em;
   text-decoration: none;
   cursor: pointer;
   border: 0 solid transparent;
 }
 
-button.cta-button.blue{
-  background-color: #46649f;
-  color: white;
+a.cta-button{
+  display: inline-block;
 }
 
-button.cta-button.blue:hover{
+button{
+  font-family: 'Montserrat';
+}
+
+a.cta-button.blue, button.cta-button.blue{
+  background-color: #46649f;
+  color: white !important;
+}
+
+a.cta-button.blue:hover, button.cta-button.blue:hover{
   background-color: #5679bd;
 }
 
-button.cta-button.red{
-  background-color: #c34343;;
-  color: white;
+a.cta-button.light-blue, button.cta-button.light-blue{
+  background-color:#2a93e4;
+  color: white !important;
 }
 
-button.cta-button.red:hover{
+a.cta-button.light-blue:hover, button.cta-button.light-blue:hover{
+  background-color:#56acef;
+}
+
+a.cta-button.red, button.cta-button.red{
+  background-color: #c34343;;
+  color: white !important;
+}
+
+a.cta-button.red:hover, button.cta-button.red:hover{
   background-color: #e05252;;
+}
+
+a.cta-button.green, button.cta-button.green{
+  background-color: #7dce33;
+  color: white !important;
+}
+
+a.cta-button.green:hover, button.cta-button.green:hover{
+  background-color: #98ea4c;
+}
+
+a.cta-button.black, button.cta-button.black{
+  background-color: black;
+  color:white !important;
+}
+
+a.cta-button.loading, button.cta-button.loading{
+  background-image: url("/assets/images/loader.gif");
+  background-size: 85%;
+  background-position: 50% 45%;
+  background-repeat: no-repeat;
+  color: transparent !important;
 }
 
 footer{
@@ -195,85 +252,38 @@ footer div p:last-of-type{
   display: block;
 }
 
-
-#performances{
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  border-top: 1px solid rgba(255,255,255,0.5);
-  padding: 2em 0 0;
-  box-sizing: border-box;
-  max-width: 1280px;
-}
-
-#performances .space-heading{
-  display: flex;
-  justify-content: space-between;
-}
-
-#performances .space-heading input#search{
-  display: block;
-  height: 1.5em;
-  padding: 0.8em;
-  background: black;
-  border: 1px solid #777777;
-  border-width: 1px;
-  outline: 0px solid transparent;
-  font-family: 'Montserrat';
-  color: white;
-  font-size: 0.75em;
-  width: 20%;
-  background-image: url('/assets/images/search_icon.png');
-  background-size: auto 50%;
-  background-position: 95% 50%;
-  background-repeat: no-repeat;
-}
-
-#performances h2{
-  margin-bottom: 1em;
-}
-
-#performances ul{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-#performances ul li{
-  flex: 1 0 21%;
-  max-width: 21%;
-  margin-bottom: 1em;
-  padding: 0.5em;
-  border-bottom: 1px solid transparent;
-}
-
-#performances ul li:hover{
-  background-color: rgba(255,255,255,0.1);
-  border-bottom: 1px solid white;
-}
-
-#performances ul li a{
-    color: inherit;
-    text-decoration: none;
-}
-
-#performances ul li a:hover{
-  cursor: pointer;
-}
-
-#performances ul li img{
+.modal{
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 100%;
-  margin-bottom: 1em;
+  box-sizing: border-box;
+  background: rgba(0,0,0,0.8);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-size: 0.8em;
 }
 
-#performances ul li h4{
-  margin-bottom: 0;
+.modal .container{
+  width: 100%;
+  max-width: 50%;
+  background: white;
+  border-radius: 3px;
+  height: auto;
+  max-height: 80%;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  padding: 1em;
 }
 
-#performances ul li p{
-  margin-top: 0.5em;
-  font-size: 0.9em;
-  font-weight: 400;
+.side-by-side{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 /* RECORD STYLES */
@@ -423,7 +433,7 @@ body header, body#accountLogin header{
   padding-top: 2em;
 }
 
-body main section, body#accountLogin main section{
+body#accountLogin main section{
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -431,13 +441,18 @@ body main section, body#accountLogin main section{
 }
 
 body main section form, body#accountLogin main section form{
-  margin-bottom: 4em;
+  /* margin-bottom: 4em; */
   display: flex;
   flex-direction: column;
 }
 
 body main section form h2, body#accountLogin main section form h2{
-  margin-top: 2em;
+  margin-top: 1em;
+}
+
+body main section form label{
+  margin-bottom: 0.5em;
+  font-weight: 600;
 }
 
 body main section form input{
@@ -450,6 +465,7 @@ body main section form input{
   width: 100%;
   box-sizing: border-box;
   font-family: 'Montserrat';
+  margin-bottom: 1em;
 }
 
 body#accountLogin main section form input, body#accountCreate main section form input {
@@ -498,4 +514,306 @@ body#accountLogin main section form{
 body#accountLogin main section form button, #createAccountBtn{
   width: 185px;
   align-self: center;
+}
+
+/* Dashboard styles */
+
+body#dashboard main{
+  display: flex;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  background-image: url('/assets/images/background_blurred.jpg');
+  background-size: cover;
+}
+
+body#dashboard main section{
+  display: flex;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  padding: 1em;
+  max-width: inherit;
+  width: 15%;
+}
+
+body#dashboard main section#choirMenu{
+  flex-direction: column;
+  background: white;
+  padding: 1em;
+  color: black;
+}
+
+body#dashboard main section#choirMenu ul{
+  margin-bottom: 1em;
+}
+
+body#dashboard main section#choirMenu ul li{
+  margin-bottom: 0.5em;
+  color: black;
+}
+
+body#dashboard main section#choirMenu ul li:hover{
+  color: white;
+  background: black;
+}
+
+body#dashboard main section#choirMenu ul li a{
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 0.5em;
+}
+
+body#dashboard main section#choirMenu button.cta-button{
+  width: 100%;
+}
+
+body#dashboard main section#choirInfo{
+  position: relative;
+  flex-grow: 1;
+  max-width: inherit;
+  flex-direction: column;
+  text-align: left;
+  align-items: flex-start;
+  max-height: 100%;
+  overflow: scroll;
+}
+
+body#dashboard main section#choirInfo header{
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+body#dashboard main section#choirInfo header h1{
+  text-shadow: 0 1px 1px black;
+  margin-bottom: 0;
+  font-size: 2.5em;
+}
+
+body#dashboard main section#choirInfo header p{
+  max-width: 45%;
+  margin-bottom: 2em;
+  margin-top: 1em;
+}
+
+body#dashboard main section#choirInfo #management{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+}
+
+body#dashboard main section#choirInfo #management div, body#dashboard main section#choirInfo #management div *{
+  display: flex;
+}
+
+body#dashboard main section#choirInfo #management div#subnav{
+  border-bottom: 2px solid white;
+  margin-bottom: 0.5em;
+}
+
+body#dashboard main section#choirInfo #management div#subnav ol{
+  padding: 0;
+  margin: 0;
+}
+
+body#dashboard main section#choirInfo #management div#subnav ol li{
+  margin-right: 1em;
+}
+
+body#dashboard main section#choirInfo #management div#subnav ol li a{
+  padding: 1em;
+  color: white;
+  text-decoration: none;
+}
+
+body#dashboard main section#choirInfo #management div#subnav ol li.active, body#dashboard main section#choirInfo #management div#subnav ol li:hover{
+  background: white;
+  border-radius: 2px 2px 0 0;
+}
+
+body#dashboard main section#choirInfo #management div#subnav ol li.active a, body#dashboard main section#choirInfo #management div#subnav ol li:hover a{
+  color: black;
+  font-weight: 600;
+}
+
+body#dashboard main section#choirInfo #management div#subnav ol li a{
+  background: transparent;
+  border: 0px solid transparent;
+  font-size: 1em;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+body#dashboard main section#choirInfo #management div#subnav button.cta-button{
+  margin-left: auto;
+  margin-bottom: 0.3em;
+}
+
+body#dashboard main section#choirInfo #management div.tableActions{
+  padding: 0.5em 0.5em;
+  text-align: right;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  background: white;
+  box-sizing: border-box;
+  border-radius: 2px 2px 0 0;
+  background: #ffffff73;
+  border-bottom: 1px solid #ffffff9e;
+  border-top: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+body#dashboard main section#choirInfo #management div.tableActions button{
+  border: 1px solid #ffffffb8;
+  box-shadow: 0 1px 1px #00000047;
+}
+
+body#dashboard main section#choirInfo table{
+  background: white;
+  color: black;
+  box-sizing: border-box;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  width: 100%;
+  margin-bottom: 3em;
+  border-radius: 0 0 3px 3px;
+}
+
+body#dashboard main section#choirInfo table thead{
+  font-weight: 600;
+}
+
+body#dashboard main section#choirInfo table thead td{
+  background: #636363;
+  color: white;
+  border-right: 1px solid white;
+}
+
+body#dashboard main section#choirInfo table tr[data-collapsed="true"]{
+  display: none;
+}
+
+body#dashboard main section#choirInfo table tr td{
+  padding: 0.5em;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+body#dashboard main section#choirInfo table tbody tr td{
+  padding: 1.5em 0.5em;
+  border-right: 1px solid rgba(0,0,0,0.2);
+}
+
+body#dashboard main section#choirInfo table tbody tr.subhead.collapsable{
+  cursor: pointer;
+  background: #d8d8d8;
+  background-image: url('/assets/images/expand.gif');
+  background-repeat: no-repeat;
+  background-size: 0.8em;
+  background-position: 0.5em;
+}
+
+body#dashboard main section#choirInfo table tbody tr.subhead.collapsable[data-expanded="true"]{
+  background-image: url('/assets/images/collapse.gif');
+}
+
+body#dashboard main section#choirInfo table tbody tr.subhead.collapsable td:first-of-type{
+  padding-left: 2em;
+}
+
+body#dashboard main section#choirInfo table tbody tr.subhead td{
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+  border-right: 0px solid transparent;
+}
+
+body#dashboard main section#choirInfo table tbody tr.subhead td:last-of-type{
+  text-align: right;
+}
+
+body#dashboard main section#choirInfo table tbody tr.subhead td a{
+  color: black;
+}
+
+body#dashboard main section#choirInfo table tbody tr td:first-of-type{
+  font-weight: 600;
+}
+
+body#dashboard main section#choirInfo table tbody tr td:first-of-type a{
+  color: black;
+  font-weight: inherit;
+}
+
+body#dashboard main section#choirInfo table tbody tr td:last-of-type{
+  border-right: 0;
+}
+
+body#dashboard main section#choirInfo table tbody tr td:last-of-type a{
+  color: black;
+  font-weight: 600;
+}
+
+body#dashboard main section#choirInfo div#settings{
+  background: white;
+  color: black;
+  padding: 0 1em 1em;
+  box-sizing: border-box;
+  border-radius: 0 0 2px 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+body#dashboard main section#choirInfo div#settings button{
+  display: block;
+  width: auto;
+  justify-self: center;
+  align-self: center;
+}
+
+body#dashboard .modal .container .content form div.side-by-side{
+  justify-content: flex-end;
+  margin-top: 1em;
+  border-top: 1px solid #989898;
+  padding-top: 1em;
+}
+
+body#dashboard .modal .container .content form div.side-by-side button{
+  margin-left: 1em;
+}
+
+
+body#dashboard .modal .container .content form input[type="text"]{
+  background: #e2e2e2;
+  color: black;
+}
+
+body#dashboard .modal .container .content form#songCreation #songparts .songpart{
+  display: flex;
+  margin-bottom: 1em;
+  align-items: center;
+  justify-content: center;
+}
+
+body#dashboard .modal .container .content form#songCreation #songparts .songpart input{
+  margin-right: 1em;
+  margin-bottom: 0;
+}
+
+body#dashboard .modal .container .content form#songCreation #songparts .songpart .cta-button{
+  height: 100%;
+}
+
+body#dashboard .no-info{
+  width: 100%;
+  background: white;
+  color: black;
+  padding: 1em;
+  box-sizing: border-box;
+  border-radius: 0 0 3px 3px;
 }
