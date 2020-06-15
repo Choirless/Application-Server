@@ -7,7 +7,11 @@ const users = require(`${__dirname}/../bin/modules/users`);
 router.get('/login', function(req, res, next) {
 
 	if(!req.session.user){
-		res.render('account/login', { title: "Choirless | All the world's a stage", bodyid: "accountLogin" });
+		res.render('account/login', { 
+			title: "Choirless | All the world's a stage", 
+			bodyid: "accountLogin",
+			loggedIn : !!req.session.user
+		});
 	} else {
 		res.redirect('/');
 	}

@@ -15,7 +15,8 @@ router.get('/', (req, res, next) => {
             res.render('dashboard', { 
                 title : "Choirless | My Dashboard", 
                 bodyid: "dashboard",
-                userChoirs : userChoirs
+                userChoirs : userChoirs,
+                loggedIn : !!req.session.user
             });
 
         })
@@ -112,7 +113,8 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         members : choirMembers,
                         songInformation : songInformation,
                         songParts : songParts,
-                        view : req.params.VIEW
+                        view : req.params.VIEW,
+                        loggedIn : !!req.session.user
                     });
                 }
     
