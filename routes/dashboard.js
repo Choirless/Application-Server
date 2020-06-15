@@ -31,11 +31,13 @@ router.get('/', (req, res, next) => {
 
 router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
 
+    const validViews = ['songs', 'members', 'song', 'settings'];
+
     if(!req.params.VIEW){
         req.params.VIEW = "songs"
     }
 
-    if(req.params.VIEW !== "songs" && req.params.VIEW !== "members" && req.params.VIEW !== "song"){
+    if( validViews.indexOf(req.params.VIEW) === -1){
         res.redirect(`/dashboard/choir/${req.params.CHOIRID}`);
     } else {
 
@@ -119,7 +121,6 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
             .catch(err => {
                 debug('/choir/:CHOIRID err:', err);
                 res.status(500);
-                process.exit();
                 next();
     
             })

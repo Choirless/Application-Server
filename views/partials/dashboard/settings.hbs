@@ -1,0 +1,17 @@
+<div id="settings">
+    <p>This is the settings page. Here, you can change the name and description of your choir, as well as set it to be a public or private choir.</p>
+    
+    <form id="updateChoir" method="POST" action="/choir/update/{{choirInfo.choirId}}">
+            
+            <label for="name">Choir Name</label>
+            <input id="name" type="text" placeholder="Choir Name" name="name"/>
+
+            <label for="description">Choir Description</label>
+            <input id="description" type="text" placeholder="Describe your choir" name="description"/>
+            
+            <button type="submit" class="cta-button light-blue">Update</button>
+
+        </form>
+
+
+</div>

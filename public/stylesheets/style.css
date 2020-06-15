@@ -749,6 +749,23 @@ body#dashboard main section#choirInfo table tbody tr td:last-of-type a{
   font-weight: 600;
 }
 
+body#dashboard main section#choirInfo div#settings{
+  background: white;
+  color: black;
+  padding: 0 1em 1em;
+  box-sizing: border-box;
+  border-radius: 0 0 2px 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+body#dashboard main section#choirInfo div#settings button{
+  display: block;
+  width: auto;
+  justify-self: center;
+  align-self: center;
+}
+
 body#dashboard .modal .container .content form div.side-by-side{
   justify-content: flex-end;
   margin-top: 1em;

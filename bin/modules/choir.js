@@ -43,6 +43,40 @@ function createANewChoir(userId, choirName, choirDescription = ""){
 
 }
 
+function updateAnExistingChoir(userId, choirId, data = {}){
+
+    const validProperties = ['name', 'description', 'type'];
+
+    const details = {
+        userId : userId,
+        choirId : choirId,
+    };
+
+    validProperties.forEach(property => {
+        details[property] = data[property];
+    });
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir?apikey=${process.env.CHOIRLESS_API_KEY}`, { 
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(details)
+        })
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .catch(err => {
+            debug("createANewChoir Err:", err);
+            throw err;
+        })
+    ;
+}
+
 function getAKnownChoir(choirId){
 
     if(!choirId){
@@ -284,6 +318,7 @@ function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
 
 module.exports = {
     create : createANewChoir,
+    update : updateAnExistingChoir,
     get : getAKnownChoir,
     songs : {
         get : getAnExistingSongInAChoir,

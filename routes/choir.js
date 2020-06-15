@@ -32,6 +32,22 @@ router.post('/create', (req, res, next) => {
 
 });
 
+router.post('/update/:CHOIRID', (req, res, next) => {
+
+    choirInterface.update(req.session.user, req.params.CHOIRID, req.body)
+        .then(result => {
+            debug('result');
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}`);
+        })
+        .catch(err => {
+            debug(`/choir/update/:CHOIRID err`, err);
+            res.status(500);
+            next();
+        })
+    ;
+
+});
+
 router.post('/create-song', (req, res) => {
 
     debug(req.body);
