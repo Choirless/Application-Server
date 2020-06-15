@@ -37,6 +37,7 @@ a {
 
 p, a{
   font-weight: 500;
+  line-height: 1.5em;
 }
 
 ul, ul li{
