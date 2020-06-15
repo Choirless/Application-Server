@@ -571,6 +571,7 @@ body#dashboard main section#choirMenu ul li a.selected{
   background-color: #2a93e4;
   color: white;
   position: relative;
+  font-weight: 600;
 }
 
 body#dashboard main section#choirMenu ul li a.selected::after{
