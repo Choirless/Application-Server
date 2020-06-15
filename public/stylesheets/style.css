@@ -702,10 +702,22 @@ body#dashboard main section#choirInfo table tbody tr td{
 
 body#dashboard main section#choirInfo table tbody tr.subhead.collapsable{
   cursor: pointer;
+  background: #d8d8d8;
+  background-image: url('/assets/images/expand.gif');
+  background-repeat: no-repeat;
+  background-size: 0.8em;
+  background-position: 0.5em;
+}
+
+body#dashboard main section#choirInfo table tbody tr.subhead.collapsable[data-expanded="true"]{
+  background-image: url('/assets/images/collapse.gif');
+}
+
+body#dashboard main section#choirInfo table tbody tr.subhead.collapsable td:first-of-type{
+  padding-left: 2em;
 }
 
 body#dashboard main section#choirInfo table tbody tr.subhead td{
-  background: #d8d8d8;
   padding-bottom: 0.5em;
   padding-top: 0.5em;
   border-right: 0px solid transparent;

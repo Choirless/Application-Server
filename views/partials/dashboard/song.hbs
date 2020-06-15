@@ -14,7 +14,7 @@
     <tbody>
 
         {{#each songParts}}
-            <tr class="subhead collapsable" data-collapsetarget="{{this.name}}">
+            <tr class="subhead collapsable" data-collapsetarget="{{this.name}}" data-expanded="false">
                 <td>{{this.name}}</td>
                 <td><a href="/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.name}}" class="recordPart blue cta-button">Record this part</a>
             </tr>
@@ -52,6 +52,8 @@
             
             header.addEventListener('click', function(){
                 
+                this.dataset.expanded = this.dataset.expanded === "true" ? "false" : "true";
+
                 var targetRows = table.querySelectorAll('[data-collapseid="' + this.dataset.collapsetarget + '"]')
                 console.log(targetRows);
 
