@@ -5,7 +5,8 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const hbs = require('hbs');
 const express_enforces_ssl = require('express-enforces-ssl');
-const hsts = require('hsts')
+const hsts = require('hsts');
+const compress = require('compression');
 const cookieSession = require('cookie-session');
 
 const checkSession = require(`./bin/middleware/check-session`);
@@ -30,11 +31,13 @@ app.set('view engine', 'hbs');
 hbs.registerPartials(__dirname + '/views/partials');
 require(`${__dirname}/bin/lib/helpers`)(hbs);
 
+app.use(compress());
 app.use( logger('dev') );
 app.use(express.json( { limit: '150mb'} ) );
 app.use(express.urlencoded( { extended: false } ) );
 app.use( cookieParser() );
 app.use( express.static( path.join(__dirname, 'public' ), { maxAge: (60 * 60 * 1000).toString()} ) );
+
 
 app.use(cookieSession({
 	name: 'choirless-session',
