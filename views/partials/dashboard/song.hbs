@@ -12,29 +12,21 @@
     </thead>
 
     <tbody>
-        
-        <!--<tr>
-            <td>Yellow Submarine</td>
-            <td>16 Members</td>
-            <td>8 / 16</td>
-            <td>25/05/2020 09:30:30</td>
-            <td><a href="#">Review Performances</a></td>
-        </tr>-->
 
         {{#each songParts}}
-            <tr class="subhead">
+            <tr class="subhead collapsable" data-collapsetarget="{{this.name}}">
                 <td>{{this.name}}</td>
-                <td><button class="recordPart blue cta-button">Record this part</button>
+                <td><a href="/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.name}}" class="recordPart blue cta-button">Record this part</a>
             </tr>
 
             {{#unless this.parts}}
-
-            <td colspan="2">No recordings have been made for this part yet.</td>
-
+                <tr data-collapsed="true" data-collapseid="{{this.name}}">
+                    <td colspan="2">No recordings have been made for this part yet.</td>
+                </tr>
             {{else}}
 
                 {{#each this.parts}}
-                <tr>
+                <tr data-collapsed="true" data-collapseid="{{this.name}}">
                     <td><a>{{this.userName}}</a></td>
                 </tr>
                 {{/each}}
@@ -47,3 +39,31 @@
     </tbody>
 
 </table>
+
+<script>
+
+    (function(){
+
+        'use strict';
+        var table = document.querySelector('table#songs');
+        var collapsableHeaders = Array.from(table.querySelectorAll('tr[data-collapsetarget]'));
+
+        collapsableHeaders.forEach(function(header){
+            
+            header.addEventListener('click', function(){
+                
+                var targetRows = table.querySelectorAll('[data-collapseid="' + this.dataset.collapsetarget + '"]')
+                console.log(targetRows);
+
+                Array.from(targetRows).forEach(function(target){
+                    target.dataset.collapsed = target.dataset.collapsed === "true" ? "false" : "true";
+                });
+
+            }, false);
+
+
+        });
+
+    }());
+
+</script>

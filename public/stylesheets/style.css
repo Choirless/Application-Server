@@ -135,52 +135,56 @@ a.cta-button, button.cta-button{
   border: 0 solid transparent;
 }
 
+a.cta-button{
+  display: inline-block;
+}
+
 button{
   font-family: 'Montserrat';
 }
 
-button.cta-button.blue{
+a.cta-button.blue, button.cta-button.blue{
   background-color: #46649f;
-  color: white;
+  color: white !important;
 }
 
-button.cta-button.blue:hover{
+a.cta-button.blue:hover, button.cta-button.blue:hover{
   background-color: #5679bd;
 }
 
-button.cta-button.light-blue{
+a.cta-button.light-blue, button.cta-button.light-blue{
   background-color:#2a93e4;
-  color: white;
+  color: white !important;
 }
 
-button.cta-button.light-blue:hover{
+a.cta-button.light-blue:hover, button.cta-button.light-blue:hover{
   background-color:#56acef;
 }
 
-button.cta-button.red{
+a.cta-button.red, button.cta-button.red{
   background-color: #c34343;;
-  color: white;
+  color: white !important;
 }
 
-button.cta-button.red:hover{
+a.cta-button.red:hover, button.cta-button.red:hover{
   background-color: #e05252;;
 }
 
-button.cta-button.green{
+a.cta-button.green, button.cta-button.green{
   background-color: #7dce33;
-  color: white;
+  color: white !important;
 }
 
-button.cta-button.green:hover{
+a.cta-button.green:hover, button.cta-button.green:hover{
   background-color: #98ea4c;
 }
 
-button.cta-button.black, a.cta-button.black{
+a.cta-button.black, button.cta-button.black{
   background-color: black;
-  color:white;
+  color:white !important;
 }
 
-button.cta-button.loading{
+a.cta-button.loading, button.cta-button.loading{
   background-image: url("/assets/images/loader.gif");
   background-size: 85%;
   background-position: 50% 45%;
@@ -676,6 +680,16 @@ body#dashboard main section#choirInfo table thead{
   font-weight: 600;
 }
 
+body#dashboard main section#choirInfo table thead td{
+  background: #636363;
+  color: white;
+  border-right: 1px solid white;
+}
+
+body#dashboard main section#choirInfo table tr[data-collapsed="true"]{
+  display: none;
+}
+
 body#dashboard main section#choirInfo table tr td{
   padding: 0.5em;
   border-bottom: 1px solid rgba(0,0,0,0.2);
@@ -684,6 +698,10 @@ body#dashboard main section#choirInfo table tr td{
 body#dashboard main section#choirInfo table tbody tr td{
   padding: 1.5em 0.5em;
   border-right: 1px solid rgba(0,0,0,0.2);
+}
+
+body#dashboard main section#choirInfo table tbody tr.subhead.collapsable{
+  cursor: pointer;
 }
 
 body#dashboard main section#choirInfo table tbody tr.subhead td{
