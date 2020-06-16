@@ -6,12 +6,17 @@ const multer = require('multer');
 const upload = multer();
 const storage = require(`${__dirname}/../bin/lib/storage`);
 
-router.get('/record', function(req, res, next) {
-  res.render('record', { 
-	  title: 'Choirless | Record Piece', 
-	  bodyid : "record",
-	  loggedIn : !!req.session.user
+router.get('/record/:CHOIRID/:SONGID/:PARTNAME', function(req, res, next) {
+
+	res.render('record', { 
+		title: 'Choirless | Record Piece', 
+		bodyid : "record",
+		loggedIn : !!req.session.user,
+		choirId : req.params.CHOIRID,
+		songId : req.params.SONGID,
+		partName : req.params.PARTNAME
 	});
+
 });
 
 router.post('/save', upload.single('video'), function(req, res, next) {

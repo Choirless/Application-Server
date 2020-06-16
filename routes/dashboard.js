@@ -113,6 +113,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         members : choirMembers,
                         songInformation : songInformation,
                         songParts : songParts,
+                        leadFilmed : !!songParts ? songParts.length !== 0 : false,
                         view : req.params.VIEW,
                         loggedIn : !!req.session.user
                     });

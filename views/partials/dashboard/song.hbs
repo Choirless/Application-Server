@@ -16,7 +16,15 @@
         {{#each songParts}}
             <tr class="subhead collapsable" data-collapsetarget="{{this.name}}" data-expanded="false">
                 <td>{{this.name}}</td>
-                <td><a href="/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.name}}" class="recordPart blue cta-button">Record this part</a>
+                <td>
+                    {{#ifEquals this.name "Lead"}}
+                        <a href="/performance/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.name}}" class="recordPart blue cta-button">Record this part</a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals ../this.leadRecorded true }}
+                        <a href="/performance/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.name}}" class="recordPart blue cta-button">Record this part</a>
+                    {{/ifEquals}}
+                </td>
             </tr>
 
             {{#unless this.parts}}
