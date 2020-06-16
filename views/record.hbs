@@ -221,10 +221,12 @@
                 playbackBtn.textContent = "Stop Playback";
 
                 recordedVideo.currentTime = 0;
-                leadVideo.currentTime = 0;
-
                 recordedVideo.play()
-                leadVideo.play();
+                
+                if(leadVideo){
+                    leadVideo.currentTime = 0;
+                    leadVideo.play();
+                }
 
             } else {
                 
@@ -236,7 +238,9 @@
                 leadVideo.pause();
 
                 recordedVideo.currentTime = 0;
-                leadVideo.currentTime = 0;
+                if(leadVideo){
+                    leadVideo.currentTime = 0;
+                }
 
             }
 
@@ -260,9 +264,20 @@
 
         recordedVideo.addEventListener('ended', function(){
 
-            if(showingPerformance && leadVideo.paused === true){
-                showingPerformance = false;
-                playbackBtn.textContent = "Replay Performance";
+            if(showingPerformance){
+                
+                if(leadVideo){
+                    
+                    if(leadVideo.paused === true){
+                        showingPerformance = false;
+                        playbackBtn.textContent = "Replay Performance";
+                    }
+
+                } else {
+                    showingPerformance = false;
+                    playbackBtn.textContent = "Replay Performance";
+                }
+
             }
 
         }, false);
