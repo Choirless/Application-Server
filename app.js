@@ -50,7 +50,7 @@ app.use('/', require(`${__dirname}/routes/index`));
 app.use('/account', require(`${__dirname}/routes/account`));
 app.use('/dashboard', [checkSession], require(`${__dirname}/routes/dashboard`));
 app.use('/choir', [checkSession], require(`${__dirname}/routes/choir`));
-app.use('/performance', require(`${__dirname}/routes/performance`));
+app.use('/performance', [checkSession], require(`${__dirname}/routes/performance`));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
