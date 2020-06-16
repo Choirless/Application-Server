@@ -29,7 +29,13 @@
 
             {{#unless this.parts}}
                 <tr data-collapsed="true" data-collapseid="{{this.name}}">
-                    <td colspan="2">No recordings have been made for this part yet.</td>
+
+                    {{#ifEquals this.name "Lead"}}
+                        <td colspan="2">No recordings have been made for this part yet.</td>
+                    {{else}}
+                        <td colspan="2">Recordings for this part are not available until a lead part has been recorded.</td>
+                    {{/ifEquals}}
+
                 </tr>
             {{else}}
 
