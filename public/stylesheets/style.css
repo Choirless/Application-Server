@@ -528,14 +528,17 @@ body#accountLogin main section form button, #createAccountBtn{
 
 /* Dashboard styles */
 
+body#dashboard{
+  background-image: url('/assets/images/background_blurred.jpg');
+  background-size: cover;
+}
+
 body#dashboard main{
   display: flex;
   padding: 0;
   height: 100%;
   width: 100%;
   max-width: 100%;
-  background-image: url('/assets/images/background_blurred.jpg');
-  background-size: cover;
 }
 
 body#dashboard main section{
