@@ -194,7 +194,7 @@ function getAllOfTheSongsForAChoir(choirId){
 
 }
 
-function addAPartToASong(choirId, songId, partName){
+function addASectionToASong(choirId, songId, partName){
 
     if(!choirId){
         return Promise.reject("No choirId was passed to function");
@@ -234,14 +234,14 @@ function addAPartToASong(choirId, songId, partName){
             return res.songId;
         })
         .catch(err => {
-            debug('addAPartToASong err:', err);
+            debug('addASectionToASong err:', err);
             throw err;
         })
     ;
 
 }
 
-function getAllOfThePartsForASong(choirId, songId){
+function getAllOfTheSectionsForASong(choirId, songId){
 
     if(!choirId){
         return Promise.reject("No choirId was passed to function");
@@ -264,6 +264,45 @@ function getAllOfThePartsForASong(choirId, songId){
         })
         .catch(err => {
             debug('getAllOfTheSongsForAChoir err:', err);
+            throw err;
+        })
+    ;
+
+}
+
+function addARecordingToAChoir(data){
+
+    const mandatoryParameters = ['choirId', 'songId', 'partNameId', 'userId', 'userName'];
+    const missingParameters = mandatoryParameters.filter(parameter => {
+        return !data[parameter];
+    });
+
+    if(missingParameters.length > 0){
+        return Promise.reject(`Missing parameters in data object: "${missingParameters.join('", "')}"`);
+    }
+
+    debug(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}`);
+    debug(data);
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(data)
+        })
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.partId;
+        })
+        .catch(err => {
+            debug('addARecordingToAChoir err:', err);
             throw err;
         })
     ;
@@ -338,9 +377,12 @@ module.exports = {
         get : getAnExistingSongInAChoir,
         add : addANewSongToAChoir,
         getAll : getAllOfTheSongsForAChoir,
-        parts : {
-            add : addAPartToASong,
-            getAll : getAllOfThePartsForASong
+        sections : {
+            add : addASectionToASong,
+            getAll : getAllOfTheSectionsForASong
+        },
+        recordings : {
+            add : addARecordingToAChoir
         }
     },
     members : {

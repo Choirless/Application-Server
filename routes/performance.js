@@ -31,7 +31,6 @@ router.get('/record/:CHOIRID/:SONGID/:PARTNAMEID', function(req, res, next) {
 		})
 	;
 
-
 });
 
 router.post('/save/:CHOIRID/:SONGID/:PARTNAMEID', upload.single('video'), function(req, res, next) {
@@ -39,19 +38,34 @@ router.post('/save/:CHOIRID/:SONGID/:PARTNAMEID', upload.single('video'), functi
 	debug(req.file)
 	debug(req.params.CHOIRID, req.params.SONGID, req.params.PARTNAMEID);
 
-	const filename = `${req.params.CHOIRID}:${req.params.SONGID}:.webm`
+	const recordingData = {
+		choirId : req.params.CHOIRID,
+		songId : req.params.SONGID,
+		partNameId : req.params.PARTNAMEID,
+		userId : req.session.user,
+		userName : "TEST"
+	};
 
-	storage.put(filename, req.file.buffer)
-		.then(() => {
-			debug(`Video ${filename} stored :D`);
-			res.end();
-		})
-		.catch(err => {
-			debug("Storage err:", err);
-			res.status(500);
-			res.end();
+	choir.songs.recordings.add(recordingData)
+		.then(partId => {
+
+			const filename = `${req.params.CHOIRID}:${req.params.SONGID}:${partId}.webm`
+		
+			storage.put(filename, req.file.buffer)
+				.then(() => {
+					debug(`Video ${filename} stored :D`);
+					res.end();
+				})
+				.catch(err => {
+					debug("Storage err:", err);
+					res.status(500);
+					res.end();
+				})
+			;
+
 		})
 	;
+
 
 });
 
