@@ -59,6 +59,21 @@ router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 
 });
 
+router.get('/video/:VIDEOIDENTIFIER', (req, res, next) => {
+
+	storage.check(req.params.VIDEOIDENTIFIER)
+		.then(existence => {
+			if(existence){
+				storage.getStream(req.params.VIDEOIDENTIFIER).pipe(res)
+			} else {
+				res.status(404);
+				next();
+			}
+		})
+	;
+
+});
+
 router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), function(req, res, next) {
   
 	debug(req.file)
