@@ -270,7 +270,7 @@ function getAllOfTheSectionsForASong(choirId, songId){
 
 }
 
-function addARecordingToAChoir(data){
+function addARecordingToASongInAChoir(data){
 
     const mandatoryParameters = ['choirId', 'songId', 'partNameId', 'userId', 'userName'];
     const missingParameters = mandatoryParameters.filter(parameter => {
@@ -302,8 +302,36 @@ function addARecordingToAChoir(data){
             return response.partId;
         })
         .catch(err => {
-            debug('addARecordingToAChoir err:', err);
+            debug('addARecordingToASongInAChoir err:', err);
             throw err;
+        })
+    ;
+
+}
+
+function getAllRecordingsForASongInAChoir(choirId, songId){
+    
+    if(!choirId){
+        return Promise.reject('No choirId passed to function');
+    }
+
+    if(!songId){
+        return Promise.reject('No songId passed to function');
+    }
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songparts?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}&songId=${songId}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(res => {
+            return res.parts;
+        })
+        .catch(err => {
+            debug('getAllRecordingsForASongInAChoir:', err);
         })
     ;
 
@@ -382,7 +410,8 @@ module.exports = {
             getAll : getAllOfTheSectionsForASong
         },
         recordings : {
-            add : addARecordingToAChoir
+            add : addARecordingToASongInAChoir,
+            getAll : getAllRecordingsForASongInAChoir
         }
     },
     members : {

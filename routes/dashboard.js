@@ -59,12 +59,13 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
 
         if(req.params.VIEW === "song"){
             apiRequests.push(choir.songs.get(req.params.CHOIRID, req.params.SONGID).then(data => { requiredData.songInformation = data }) );
+            apiRequests.push(choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID).then(data => { requiredData.recordings = data }) );
         }
     
         Promise.all(apiRequests)
             .then(function(){
-    
-                debug(requiredData);
+                
+                debug('requiredData:', requiredData);
     
                 const userChoirInfo = requiredData.userChoirInfo;
                 const choirInfo = requiredData.choirInfo;
