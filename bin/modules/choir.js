@@ -241,10 +241,6 @@ function addAPartToASong(choirId, songId, partName){
 
 }
 
-function getASongPart(choirId, songId, partName){
-
-}
-
 function getAllOfThePartsForASong(choirId, songId){
 
     if(!choirId){
@@ -344,7 +340,6 @@ module.exports = {
         getAll : getAllOfTheSongsForAChoir,
         parts : {
             add : addAPartToASong,
-            get : getASongPart,
             getAll : getAllOfThePartsForASong
         }
     },
