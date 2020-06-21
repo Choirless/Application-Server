@@ -71,25 +71,25 @@ router.post('/create-song', (req, res, next) => {
 
                 debug('Song successfully created:', songId);
 
-                const partsToCreate = [];
+                const sectionsToCreate = [];
 
                 Object.keys(req.body).forEach(key => {
                     if(key.indexOf('part-') > -1){
 
                         if(req.body[key] === "Lead (default)"){
-                            partsToCreate.push('Lead');
+                            sectionsToCreate.push('Lead');
                         } else if(req.body[key] !== "") {
-                            partsToCreate.push(req.body[key]);
+                            sectionsToCreate.push(req.body[key]);
                         }
 
                     }
                 })
 
-                const createProcesses = partsToCreate.map((part, idx) => {
+                const createProcesses = sectionsToCreate.map((part, idx) => {
 
                     return new Promise( (resolve, reject) => {
                         setTimeout(function(){
-                            choirInterface.songs.parts.add(req.body.choirId, songId, part)
+                            choirInterface.songs.sections.add(req.body.choirId, songId, part)
                                 .then(result => {
                                     resolve(result);
                                 })

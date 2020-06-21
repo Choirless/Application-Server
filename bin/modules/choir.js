@@ -21,7 +21,7 @@ function createANewChoir(userId, choirName, choirDescription = ""){
         choirType : "public"
     };
 
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir?apikey=${process.env.CHOIRLESS_API_KEY}`, { 
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir?apikey=${process.env.CHOIRLESS_API_KEY}`, {
             method : "POST",
             headers : {
                 "Content-Type" : "application/json"
@@ -56,7 +56,7 @@ function updateAnExistingChoir(userId, choirId, data = {}){
         details[property] = data[property];
     });
 
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir?apikey=${process.env.CHOIRLESS_API_KEY}`, { 
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir?apikey=${process.env.CHOIRLESS_API_KEY}`, {
             method : "POST",
             headers : {
                 "Content-Type" : "application/json"
@@ -168,9 +168,9 @@ function addANewSongToAChoir(data){
 function getAllOfTheSongsForAChoir(choirId){
 
     if(!choirId){
-        
+
         return Promise.reject(`No choirId was passed to function`);
-    
+
     } else {
 
         return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songs?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}`)
@@ -194,7 +194,7 @@ function getAllOfTheSongsForAChoir(choirId){
 
 }
 
-function addAPartToASong(choirId, songId, partName){
+function addASectionToASong(choirId, songId, partName){
 
     if(!choirId){
         return Promise.reject("No choirId was passed to function");
@@ -214,10 +214,8 @@ function addAPartToASong(choirId, songId, partName){
         name : partName
     };
 
-    debug(data);
-
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songPartName?apikey=${process.env.CHOIRLESS_API_KEY}`, { 
-            method : "POST", 
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songPartName?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+            method : "POST",
             headers : {
                 "Content-Type" : "application/json"
             },
@@ -234,21 +232,96 @@ function addAPartToASong(choirId, songId, partName){
             return res.songId;
         })
         .catch(err => {
-            debug('addAPartToASong err:', err);
+            debug('addASectionToASong err:', err);
             throw err;
         })
     ;
 
 }
 
-function getAllOfThePartsForASong(choirId, songId){
+function getASpecificSectionForASong(choirId, songId, sectionId){
+
+    if(!sectionId){ 
+        return Promise.reject('No sectionId was passed');
+    }
+
+    return getAllOfTheSectionsForASong(choirId, songId)
+        .then(sections => {
+
+            return sections.filter(section => {
+                return section.partNameId === sectionId;
+            })[0];
+
+        })
+        .catch(err => {
+            debug("getASpecificSectionForASong err:", err);
+        })
+    ;
+
+
+}
+
+function getAllOfTheSectionsForASong(choirId, songId){
+
+    return getAnExistingSongInAChoir(choirId, songId)
+        .then(data => {
+            return data.partNames;
+        })
+        .catch(err => {
+            debug('getAllOfTheSectionsForASong err:', err);
+            throw err;
+        })
+    ;
+
+}
+
+function addARecordingToASongInAChoir(data){
+
+    const mandatoryParameters = ['choirId', 'songId', 'partNameId', 'userId', 'userName'];
+    const missingParameters = mandatoryParameters.filter(parameter => {
+        return !data[parameter];
+    });
+
+    if(missingParameters.length > 0){
+        return Promise.reject(`Missing parameters in data object: "${missingParameters.join('", "')}"`);
+    }
+
+    debug(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}`);
+    debug(data);
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(data)
+        })
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.partId;
+        })
+        .catch(err => {
+            debug('addARecordingToASongInAChoir err:', err);
+            throw err;
+        })
+    ;
+
+}
+
+function getAllRecordingsForASongInAChoir(choirId, songId){
 
     if(!choirId){
-        return Promise.reject("No choirId was passed to function");
+        return Promise.reject('No choirId passed to function');
     }
 
     if(!songId){
-        return Promise.reject("No songId was passed to function");
+        return Promise.reject('No songId passed to function');
     }
 
     return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songparts?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}&songId=${songId}`)
@@ -259,21 +332,20 @@ function getAllOfThePartsForASong(choirId, songId){
                 throw res;
             }
         })
-        .then(response => {
-            return response.parts;
+        .then(res => {
+            return res.parts;
         })
         .catch(err => {
-            debug('getAllOfTheSongsForAChoir err:', err);
-            throw err;
+            debug('getAllRecordingsForASongInAChoir:', err);
         })
     ;
 
 }
 
 function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
-    
+
     if(!choirId){
-        
+
         return Promise.reject('No choirId was passed.');
 
     } else {
@@ -338,9 +410,14 @@ module.exports = {
         get : getAnExistingSongInAChoir,
         add : addANewSongToAChoir,
         getAll : getAllOfTheSongsForAChoir,
-        parts : {
-            add : addAPartToASong,
-            getAll : getAllOfThePartsForASong
+        sections : {
+            add : addASectionToASong,
+            get: getASpecificSectionForASong,
+            getAll : getAllOfTheSectionsForASong
+        },
+        recordings : {
+            add : addARecordingToASongInAChoir,
+            getAll : getAllRecordingsForASongInAChoir
         }
     },
     members : {

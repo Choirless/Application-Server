@@ -337,6 +337,12 @@ body#record #videos .half video{
   height: 100%;
 }
 
+body#record #videos[data-leadrecording="true"] div#performance {
+  width: 100%;
+  border-left: 0 transparent solid !important;
+  border-right: 0 transparent solid !important;
+}
+
 body#record .video-dialog{
   text-align: center;
   max-width: 50%;
@@ -344,6 +350,10 @@ body#record .video-dialog{
   align-items: center;
   display: flex;
   flex-direction: column;
+}
+
+body#record #videos[data-leadrecording="true"] .video-dialog{
+  max-width: 25%;
 }
 
 body#record .video-dialog img{

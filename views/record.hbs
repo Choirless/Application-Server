@@ -1,5 +1,7 @@
-<div id="videos">
-
+<div id="videos" data-leadrecording="{{#ifEquals this.partName "Lead"}}true{{else}}false{{/ifEquals}}">
+    
+    {{#ifNotEquals this.partName "Lead"}}
+    
     <div class="half" id="lead" data-videoloaded="false">
         <video preload src="" ></video>
 
@@ -12,6 +14,8 @@
 
         <h3>Lead</h3>
     </div>
+
+    {{/ifNotEquals}}
 
     <div class="half" id="performance" data-videoloaded="false">
         <video muted></video>
@@ -29,7 +33,7 @@
 </div>
 
 <div id="controls" data-active="true">
-    <button class="cta-button listen" data-active="false">Listen To Lead</button>
+    {{#ifNotEquals this.partName "Lead"}}<button class="cta-button listen" data-active="false">Listen To Lead</button>{{/ifNotEquals}}
     <button class="cta-button record" data-active="false">Record Performance</button>
     <button class="cta-button playback" data-active="false">Replay Performance</button>
     <button class="cta-button save"  data-active="false">Save Performance</button>
@@ -39,7 +43,7 @@
     <div class="dialog-content">
         <h3 id="heading">Saving performance</h3>
         <p id="message">Sending your performance to the Choirless servers.<br/><br/>Please don't leave this page until the upload has finished.<br/><br/>Your lead will be notified when the video is ready to be used.</p>
-        <a class="cta-button" id="action" data-active="false" href="/">OK</a>
+        <a class="cta-button" id="action" data-active="false" href="/dashboard/choir/{{choirId}}/song/{{songId}}">OK</a>
     </div>
 </div>
 
@@ -49,23 +53,24 @@
 
         'use strict';
 
+        const isLeadRecording = document.querySelector('#videos').dataset.leadrecording === "true";
+
         var playingLead = false;
         var recording = false;
 
         var showingPerformance = false;
 
-        var leadView = document.querySelector('.half#lead');
-        var performanceView = document.querySelector('.half#performance');;
+        var leadView = isLeadRecording ? null : document.querySelector('.half#lead');
+        var leadVideo = isLeadRecording ? null : leadView.querySelector('video');
+        var progressIndicator = isLeadRecording ? null : leadView.querySelector('#indicator');
 
-        var leadVideo = leadView.querySelector('video');
+        var performanceView = document.querySelector('.half#performance');;
         var performanceVideo = performanceView.querySelector('video');
         var recordedVideo = performanceView.querySelector('video#recorded');
 
-        const progressIndicator = leadView.querySelector('#indicator');
-
         var enableCaptureBtn = performanceView.querySelector('#enableCapture')
 
-        var listenBtn = document.querySelector('#controls button.listen');
+        var listenBtn = isLeadRecording ? null : document.querySelector('#controls button.listen');
         var recordBtn = document.querySelector('#controls button.record');
         var playbackBtn = document.querySelector('#controls button.playback');
         var saveBtn = document.querySelector('#controls button.save');
@@ -105,21 +110,25 @@
 
         }, false);
 
-        listenBtn.addEventListener('click', function(){
+        if(listenBtn){
 
-            if(!playingLead){
-                playingLead = true;
-                leadVideo.currentTime = 0;
-                leadVideo.play();
-                listenBtn.textContent = "Stop Lead";
-            } else {
-                leadVideo.pause();
-                playingLead = false;
-                leadVideo.currentTime = 0;
-                listenBtn.textContent = "Listen To Lead";
-            }
+            listenBtn.addEventListener('click', function(){
 
-        }, false);
+                if(!playingLead){
+                    playingLead = true;
+                    leadVideo.currentTime = 0;
+                    leadVideo.play();
+                    listenBtn.textContent = "Stop Lead";
+                } else {
+                    leadVideo.pause();
+                    playingLead = false;
+                    leadVideo.currentTime = 0;
+                    listenBtn.textContent = "Listen To Lead";
+                }
+
+            }, false);
+
+        }
 
         recordBtn.addEventListener('click', function(){
 
@@ -129,7 +138,10 @@
                 
                 recordBtn.textContent = "Stop Recording";
                 
-                listenBtn.dataset.active = "false";
+                if(listenBtn){
+                    listenBtn.dataset.active = "false";
+                }
+
                 recordedVideo.dataset.active = "false";
                 performanceVideo.dataset.active = "true";
                 playbackBtn.dataset.active = "false";
@@ -143,8 +155,11 @@
 
                 recordedVideo.pause();
                 recordedVideo.src = "";
-                leadVideo.currentTime = 0;
-                leadVideo.play();
+
+                if(leadVideo){
+                    leadVideo.currentTime = 0;
+                    leadVideo.play();
+                }
 
                 mR = new MediaRecorder(performanceStream);
 
@@ -164,8 +179,10 @@
                 recording = false;
                 recordBtn.textContent = "Re-Record Performance";
 
-                leadVideo.pause();
-                leadVideo.currentTime = 0;
+                if(leadVideo){
+                    leadVideo.pause();
+                    leadVideo.currentTime = 0;
+                }
 
                 mR.stop();
 
@@ -204,10 +221,12 @@
                 playbackBtn.textContent = "Stop Playback";
 
                 recordedVideo.currentTime = 0;
-                leadVideo.currentTime = 0;
-
                 recordedVideo.play()
-                leadVideo.play();
+                
+                if(leadVideo){
+                    leadVideo.currentTime = 0;
+                    leadVideo.play();
+                }
 
             } else {
                 
@@ -219,29 +238,46 @@
                 leadVideo.pause();
 
                 recordedVideo.currentTime = 0;
+                if(leadVideo){
+                    leadVideo.currentTime = 0;
+                }
+
+            }
+
+        }, false);
+
+        if(leadVideo){
+
+            leadVideo.addEventListener('ended', function(){
+                playingLead = false;
                 leadVideo.currentTime = 0;
+                listenBtn.textContent = "Listen to lead";
 
-            }
+                if(showingPerformance && recordedVideo.paused === true){
+                    showingPerformance = false;
+                    playbackBtn.textContent = "Replay Performance";
+                }
 
-        }, false);
+            }, false);
 
-        leadVideo.addEventListener('ended', function(){
-            playingLead = false;
-            leadVideo.currentTime = 0;
-            listenBtn.textContent = "Listen to lead";
-
-            if(showingPerformance && recordedVideo.paused === true){
-                showingPerformance = false;
-                playbackBtn.textContent = "Replay Performance";
-            }
-
-        }, false);
+        }
 
         recordedVideo.addEventListener('ended', function(){
 
-            if(showingPerformance && leadVideo.paused === true){
-                showingPerformance = false;
-                playbackBtn.textContent = "Replay Performance";
+            if(showingPerformance){
+                
+                if(leadVideo){
+                    
+                    if(leadVideo.paused === true){
+                        showingPerformance = false;
+                        playbackBtn.textContent = "Replay Performance";
+                    }
+
+                } else {
+                    showingPerformance = false;
+                    playbackBtn.textContent = "Replay Performance";
+                }
+
             }
 
         }, false);
@@ -275,8 +311,14 @@
                                 if(performanceVideo.paused){
                                     performanceVideo.play();
                                     performanceView.dataset.videoloaded = "true";
+                                    
+                                    if(leadVideo){
 
-                                    if(leadVideo.readyState === 4){
+                                        if(leadVideo.readyState === 4){
+                                            recordBtn.dataset.active = "true";
+                                        }
+
+                                    } else {
                                         recordBtn.dataset.active = "true";
                                     }
 
@@ -303,7 +345,7 @@
             var fd = new FormData();
             fd.append('video', recordedVideo, 'video.webm');
 
-            fetch('/performance/save', {
+            fetch('/performance/save/{{this.choirId}}/{{this.songId}}/{{this.partNameId}}', {
                     method: 'POST',
                     body: fd , // with our form data packaged above
                     headers: new Headers({
@@ -332,58 +374,62 @@
 
         }, false);
 
-        var leadVideoAddr = "/assets/videos/msrea.mp4";
-        var videoSize = 0;
-        fetch(leadVideoAddr, {
-                method : "HEAD"
-            })
-            .then(function(res){
-                if(res.ok){
-                    return Number(res.headers.get('Content-Length'));
-                }
-            })
-            .then(function(sizeOfFile){
+        if(!isLeadRecording){
 
-                var req = new XMLHttpRequest();
-                req.open('GET', leadVideoAddr, true);
-                req.responseType = 'blob';
+            var leadVideoAddr = "/performance/video/{{leadVideoIdentifier}}.webm";
+            var videoSize = 0;
+            fetch(leadVideoAddr, {
+                    method : "HEAD"
+                })
+                .then(function(res){
+                    if(res.ok){
+                        return Number(res.headers.get('Content-Length'));
+                    }
+                })
+                .then(function(sizeOfFile){
 
-                req.onload = function() {
+                    var req = new XMLHttpRequest();
+                    req.open('GET', leadVideoAddr, true);
+                    req.withCredentials = true;
+                    req.responseType = 'blob';
 
-                    if (this.status === 200) {
-                        leadVideo.src = window.URL.createObjectURL(this.response);
-                        leadView.dataset.videoloaded = "true";
-                        listenBtn.dataset.active = "true";
+                    req.onload = function() {
 
-                        if(performanceVideo.readyState === 4){
-                            recordBtn.dataset.active = "true";
+                        if (this.status === 200) {
+                            leadVideo.src = window.URL.createObjectURL(this.response);
+                            leadView.dataset.videoloaded = "true";
+                            listenBtn.dataset.active = "true";
+
+                            if(performanceVideo.readyState === 4){
+                                recordBtn.dataset.active = "true";
+                            }
+
                         }
 
                     }
 
-                }
+                    req.onerror = function(err) {
+                        // Error
+                        console.log(err);
+                    }
 
-                req.onerror = function(err) {
-                    // Error
-                    console.log(err);
-                }
+                    req.onprogress = function(e){
+                        console.log(e);
+                        progressIndicator.style.width = (e.loaded / sizeOfFile) * 100 + "%";
+                    }
 
-                req.onprogress = function(e){
-                    console.log(e);
-                    progressIndicator.style.width = (e.loaded / sizeOfFile) * 100 + "%";
-                }
+                    req.send();
 
-                req.send();
+                })
+                .catch(function(err){
 
-            })
-            .catch(function(err){
+                    console.log('fetch HEAD err:', err);
 
-                console.log('fetch HEAD err:', err);
+                })
 
-            })
+            ;
 
-        ;
-
+        }
 
     }());
 

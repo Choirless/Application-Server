@@ -59,25 +59,37 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
 
         if(req.params.VIEW === "song"){
             apiRequests.push(choir.songs.get(req.params.CHOIRID, req.params.SONGID).then(data => { requiredData.songInformation = data }) );
+            apiRequests.push(choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID).then(data => { requiredData.recordings = data }) );
         }
     
         Promise.all(apiRequests)
             .then(function(){
-    
-                debug(requiredData);
+                
+                debug('requiredData:', requiredData);
     
                 const userChoirInfo = requiredData.userChoirInfo;
                 const choirInfo = requiredData.choirInfo;
                 const choirSongs = requiredData.choirSongs;
                 const choirMembers = requiredData.choirMembers;
                 const songInformation = requiredData.songInformation;
-                const songParts = songInformation.partNames;
+                let songSections;
+                const songRecordings = requiredData.recordings;
 
-                debug('choirInfo:', choirInfo);
-                debug('choirSongs:', choirSongs);
-                debug('choirMembers:', choirMembers);
-                debug('songInformation:', songInformation);
-                debug('songParts:', songParts);
+                if(songInformation){
+                    songSections = songInformation.partNames.map(section => {
+
+                        section.recordings = songRecordings.filter(recording => {
+                            return recording.partNameId === section.partNameId
+                        });
+
+                        if(section.recordings.length === 0){
+                            section.recordings = undefined;
+                        }
+
+                        return section;
+                    });
+                }
+
 
                 if(choirInfo.createdByUserId !== req.session.user){
                     res.status(401);
@@ -91,7 +103,8 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         songs : choirSongs,
                         members : choirMembers,
                         songInformation : songInformation,
-                        songParts : songParts,
+                        songSections : songSections,
+                        leadRecorded : !!songRecordings ? songRecordings.length !== 0 : false,
                         view : req.params.VIEW,
                         loggedIn : !!req.session.user
                     });

@@ -13,21 +13,45 @@
 
     <tbody>
 
-        {{#each songParts}}
+        {{#each songSections}}
             <tr class="subhead collapsable" data-collapsetarget="{{this.partNameId}}" data-expanded="false">
                 <td>{{this.name}}</td>
-                <td><a href="/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.partNameId}}" class="recordPart blue cta-button">Record this part</a>
+                <td>
+                    {{#ifEquals this.name "Lead"}}
+                        <a href="/performance/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.partNameId}}" class="recordPart blue cta-button">Record this part</a>
+                    {{/ifEquals}}
+
+                    {{#ifEquals ../this.leadRecorded true }}
+
+                        {{#ifNotEquals this.name "Lead"}}
+                            <a href="/performance/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.partNameId}}" class="recordPart blue cta-button">Record this part</a>
+                        {{/ifNotEquals}}
+
+                    {{/ifEquals}}
+                </td>
             </tr>
 
-            {{#unless this.parts}}
-                <tr data-collapsed="true" data-collapseid="{{this.name}}">
-                    <td colspan="2">No recordings have been made for this part yet.</td>
+            {{#unless this.recordings}}
+                <tr data-collapsed="true" data-collapseid="{{this.partNameId}}">
+
+                    {{#ifEquals this.name "Lead"}}
+                        <td colspan="2">No recordings have been made for this part yet.</td>
+                    {{else}}
+
+                        {{#ifEquals ../this.leadRecorded true }}
+                            <td colspan="2">No recordings have been made for this part yet.</td>
+                        {{else}}
+                            <td colspan="2">Recordings for this part are not available until a lead part has been recorded.</td>
+                        {{/ifEquals}}
+
+                    {{/ifEquals}}
+
                 </tr>
             {{else}}
 
-                {{#each this.parts}}
-                <tr data-collapsed="true" data-collapseid="{{this.name}}">
-                    <td><a>{{this.userName}}</a></td>
+                {{#each this.recordings}}
+                <tr data-collapsed="true" data-collapseid="{{this.partNameId}}">
+                    <td colspan="2"><a>{{this.userName}}</a></td>
                 </tr>
                 {{/each}}
 
