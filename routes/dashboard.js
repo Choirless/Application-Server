@@ -71,7 +71,11 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                 const choirSongs = requiredData.choirSongs;
                 const choirMembers = requiredData.choirMembers;
                 const songInformation = requiredData.songInformation;
-                const songParts = songInformation.partNames;
+                let songParts;
+
+                if(songInformation){
+                    songParts = songInformation.partNames;
+                }
 
                 debug('choirInfo:', choirInfo);
                 debug('choirSongs:', choirSongs);
