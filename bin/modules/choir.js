@@ -21,7 +21,7 @@ function createANewChoir(userId, choirName, choirDescription = ""){
         choirType : "public"
     };
 
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir?apikey=${process.env.CHOIRLESS_API_KEY}`, { 
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir?apikey=${process.env.CHOIRLESS_API_KEY}`, {
             method : "POST",
             headers : {
                 "Content-Type" : "application/json"
@@ -56,7 +56,7 @@ function updateAnExistingChoir(userId, choirId, data = {}){
         details[property] = data[property];
     });
 
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir?apikey=${process.env.CHOIRLESS_API_KEY}`, { 
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir?apikey=${process.env.CHOIRLESS_API_KEY}`, {
             method : "POST",
             headers : {
                 "Content-Type" : "application/json"
@@ -168,9 +168,9 @@ function addANewSongToAChoir(data){
 function getAllOfTheSongsForAChoir(choirId){
 
     if(!choirId){
-        
+
         return Promise.reject(`No choirId was passed to function`);
-    
+
     } else {
 
         return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songs?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}`)
@@ -214,10 +214,8 @@ function addASectionToASong(choirId, songId, partName){
         name : partName
     };
 
-    debug(data);
-
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songPartName?apikey=${process.env.CHOIRLESS_API_KEY}`, { 
-            method : "POST", 
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songPartName?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+            method : "POST",
             headers : {
                 "Content-Type" : "application/json"
             },
@@ -241,29 +239,36 @@ function addASectionToASong(choirId, songId, partName){
 
 }
 
-function getAllOfTheSectionsForASong(choirId, songId){
+function getASpecificSectionForASong(choirId, songId, sectionId){
 
-    if(!choirId){
-        return Promise.reject("No choirId was passed to function");
+    if(!sectionId){
+        return Promise.reject('No sectionId was passed');
     }
 
-    if(!songId){
-        return Promise.reject("No songId was passed to function");
-    }
+    return getAllOfTheSectionsForASong(choirId, songId)
+        .then(sections => {
 
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songparts?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}&songId=${songId}`)
-        .then(res => {
-            if(res.ok){
-                return res.json();
-            } else {
-                throw res;
-            }
-        })
-        .then(response => {
-            return response.parts;
+            return sections.filter(section => {
+                return section.partNameId === sectionId;
+            })[0];
+
         })
         .catch(err => {
-            debug('getAllOfTheSongsForAChoir err:', err);
+            debug("getASpecificSectionForASong err:", err);
+        })
+    ;
+
+
+}
+
+function getAllOfTheSectionsForASong(choirId, songId){
+
+    return getAnExistingSongInAChoir(choirId, songId)
+        .then(data => {
+            return data.partNames;
+        })
+        .catch(err => {
+            debug('getAllOfTheSectionsForASong err:', err);
             throw err;
         })
     ;
@@ -272,7 +277,7 @@ function getAllOfTheSectionsForASong(choirId, songId){
 
 function addARecordingToASongInAChoir(data){
 
-    const mandatoryParameters = ['choirId', 'songId', 'partNameId', 'userId', 'userName'];
+    const mandatoryParameters = ['choirId', 'songId', 'partNameId', 'userId', 'userName', 'partName'];
     const missingParameters = mandatoryParameters.filter(parameter => {
         return !data[parameter];
     });
@@ -310,7 +315,7 @@ function addARecordingToASongInAChoir(data){
 }
 
 function getAllRecordingsForASongInAChoir(choirId, songId){
-    
+
     if(!choirId){
         return Promise.reject('No choirId passed to function');
     }
@@ -338,9 +343,9 @@ function getAllRecordingsForASongInAChoir(choirId, songId){
 }
 
 function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
-    
+
     if(!choirId){
-        
+
         return Promise.reject('No choirId was passed.');
 
     } else {
@@ -407,6 +412,7 @@ module.exports = {
         getAll : getAllOfTheSongsForAChoir,
         sections : {
             add : addASectionToASong,
+            get: getASpecificSectionForASong,
             getAll : getAllOfTheSectionsForASong
         },
         recordings : {

@@ -79,7 +79,6 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                     songSections = songInformation.partNames.map(section => {
 
                         section.recordings = songRecordings.filter(recording => {
-                            debug('\t', recording);
                             return recording.partNameId === section.partNameId
                         });
 
