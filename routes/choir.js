@@ -48,47 +48,76 @@ router.post('/update/:CHOIRID', (req, res, next) => {
 
 });
 
-router.post('/create-song', (req, res) => {
+router.post('/create-song', (req, res, next) => {
 
     debug(req.body);
 
-    if(!req.body.name){
+    if(!req.body.name || !req.body.choirId){
         res.status(422);
         next();
     } else {
 
         const songData = {
-            partNames : []
+            userId : req.session.user,
+            choirId : req.body.choirId,
+            name : req.body.name,
+            description : req.body.description
         };
-        
-        Object.keys(req.body).map(key => {
-    
-            if(key.indexOf('part') === 0){
-
-                if(req.body[key] !== ""){
-                    if(req.body[key] === "Lead (default)"){
-                        req.body[key] = "Lead";
-                    }
-                    songData.partNames.push(req.body[key]);
-                }
-
-            } else {
-                songData[key] = req.body[key];
-            }
-    
-        });
-        
-        debug("songData:", songData);
 
         songData.userId = req.session.user;
 
         choirInterface.songs.add(songData)
             .then(songId => {
-                debug(`Song "${songData.name}" successfully created with id "${songId}" in choir "${songData.choirId}"`);
-                res.redirect(`/dashboard/choir/${songData.choirId}`);
+
+                debug('Song successfully created:', songId);
+
+                const partsToCreate = [];
+
+                Object.keys(req.body).forEach(key => {
+                    if(key.indexOf('part-') > -1){
+
+                        if(req.body[key] === "Lead (default)"){
+                            partsToCreate.push('Lead');
+                        } else if(req.body[key] !== "") {
+                            partsToCreate.push(req.body[key]);
+                        }
+
+                    }
+                })
+
+                const createProcesses = partsToCreate.map((part, idx) => {
+
+                    return new Promise( (resolve, reject) => {
+                        setTimeout(function(){
+                            choirInterface.songs.parts.add(req.body.choirId, songId, part)
+                                .then(result => {
+                                    resolve(result);
+                                })
+                                .catch(err => {
+                                    reject(err);
+                                })
+                        }, idx * 100);
+
+                    } );
+
+                });
+
+                return Promise.all(createProcesses)
+                    .then(function(){
+                        return songId;
+                    })
+                ;
+
+            })
+            .then(songId => {
+                res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}`)
+            })
+            .catch(err => {
+                debug('/create-song err:', err);
+                res.status(500);
+                next();
             })
         ;
-
 
     }
 
