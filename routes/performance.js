@@ -19,6 +19,7 @@ router.get('/record/:CHOIRID/:SONGID/:PARTNAMEID', function(req, res, next) {
 				loggedIn : !!req.session.user,
 				choirId : req.params.CHOIRID,
 				songId : req.params.SONGID,
+				partNameId : req.params.PARTNAMEID,
 				partName : songInformation.partNames.filter(part => part.partNameId === req.params.PARTNAMEID)[0].name
 			});
 
@@ -33,11 +34,12 @@ router.get('/record/:CHOIRID/:SONGID/:PARTNAMEID', function(req, res, next) {
 
 });
 
-router.post('/save', upload.single('video'), function(req, res, next) {
+router.post('/save/:CHOIRID/:SONGID/:PARTNAMEID', upload.single('video'), function(req, res, next) {
   
 	debug(req.file)
+	debug(req.params.CHOIRID, req.params.SONGID, req.params.PARTNAMEID);
 
-	const filename = `${uuid()}.webm`
+	const filename = `${req.params.CHOIRID}:${req.params.SONGID}:.webm`
 
 	storage.put(filename, req.file.buffer)
 		.then(() => {
