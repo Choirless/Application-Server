@@ -241,7 +241,7 @@ function addASectionToASong(choirId, songId, partName){
 
 function getASpecificSectionForASong(choirId, songId, sectionId){
 
-    if(!sectionId){
+    if(!sectionId){ 
         return Promise.reject('No sectionId was passed');
     }
 
@@ -277,7 +277,7 @@ function getAllOfTheSectionsForASong(choirId, songId){
 
 function addARecordingToASongInAChoir(data){
 
-    const mandatoryParameters = ['choirId', 'songId', 'partNameId', 'userId', 'userName', 'partName'];
+    const mandatoryParameters = ['choirId', 'songId', 'partNameId', 'userId', 'userName'];
     const missingParameters = mandatoryParameters.filter(parameter => {
         return !data[parameter];
     });
