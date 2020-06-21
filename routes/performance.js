@@ -8,7 +8,7 @@ const storage = require(`${__dirname}/../bin/lib/storage`);
 
 const choir = require(`../bin/modules/choir`);
 
-router.get('/record/:CHOIRID/:SONGID/:PARTNAMEID', function(req, res, next) {
+router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 
 	choir.songs.get(req.params.CHOIRID, req.params.SONGID)
 		.then(songInformation => {
@@ -19,13 +19,13 @@ router.get('/record/:CHOIRID/:SONGID/:PARTNAMEID', function(req, res, next) {
 				loggedIn : !!req.session.user,
 				choirId : req.params.CHOIRID,
 				songId : req.params.SONGID,
-				partNameId : req.params.PARTNAMEID,
-				partName : songInformation.partNames.filter(part => part.partNameId === req.params.PARTNAMEID)[0].name
+				partNameId : req.params.SECTIONID,
+				partName : songInformation.partNames.filter(part => part.partNameId === req.params.SECTIONID)[0].name
 			});
 
 		})
 		.catch(err => {
-			debug('/record/:CHOIRID/:SONGID/:PARTNAMEID err:', err);
+			debug('/record/:CHOIRID/:SONGID/:SECTIONID err:', err);
 			res.status(500);
 			next();
 		})
@@ -33,15 +33,15 @@ router.get('/record/:CHOIRID/:SONGID/:PARTNAMEID', function(req, res, next) {
 
 });
 
-router.post('/save/:CHOIRID/:SONGID/:PARTNAMEID', upload.single('video'), function(req, res, next) {
+router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), function(req, res, next) {
   
 	debug(req.file)
-	debug(req.params.CHOIRID, req.params.SONGID, req.params.PARTNAMEID);
+	debug(req.params.CHOIRID, req.params.SONGID, req.params.SECTIONID);
 
 	const recordingData = {
 		choirId : req.params.CHOIRID,
 		songId : req.params.SONGID,
-		partNameId : req.params.PARTNAMEID,
+		partNameId : req.params.SECTIONID,
 		userId : req.session.user,
 		userName : "TEST"
 	};
