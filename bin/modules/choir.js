@@ -194,7 +194,7 @@ function getAllOfTheSongsForAChoir(choirId){
 
 }
 
-function getASongPart(choirId, songId, partId){
+function addAPartToASong(choirId, songId, partName){
 
     if(!choirId){
         return Promise.reject("No choirId was passed to function");
@@ -204,11 +204,25 @@ function getASongPart(choirId, songId, partId){
         return Promise.reject("No songId was passed to function");
     }
 
-    if(!partId){
-        return Promise.reject("No partIf was passed to function");
+    if(!partName){
+        return Promise.reject("No partName was passed to function");
     }
 
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songparts?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}&songId=${songId}&partId=${partId}`)
+    const data = {
+        choirId : choirId,
+        songId : songId,
+        name : partName
+    };
+
+    debug(data);
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songPartName?apikey=${process.env.CHOIRLESS_API_KEY}`, { 
+            method : "POST", 
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(data)
+        })
         .then(res => {
             if(res.ok){
                 return res.json();
@@ -216,11 +230,11 @@ function getASongPart(choirId, songId, partId){
                 throw res;
             }
         })
-        .then(response => {
-            return response.part;
+        .then(res => {
+            return res.songId;
         })
         .catch(err => {
-            debug('getAllOfTheSongsForAChoir err:', err);
+            debug('addAPartToASong err:', err);
             throw err;
         })
     ;
@@ -325,7 +339,7 @@ module.exports = {
         add : addANewSongToAChoir,
         getAll : getAllOfTheSongsForAChoir,
         parts : {
-            get : getASongPart,
+            add : addAPartToASong,
             getAll : getAllOfThePartsForASong
         }
     },
