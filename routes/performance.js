@@ -13,15 +13,41 @@ router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 	choir.songs.get(req.params.CHOIRID, req.params.SONGID)
 		.then(songInformation => {
 
-			res.render('record', { 
-				title: 'Choirless | Record Piece', 
-				bodyid : "record",
-				loggedIn : !!req.session.user,
-				choirId : req.params.CHOIRID,
-				songId : req.params.SONGID,
-				partNameId : req.params.SECTIONID,
-				partName : songInformation.partNames.filter(part => part.partNameId === req.params.SECTIONID)[0].name
-			});
+			debug(songInformation);
+
+			const leadSection = songInformation.partNames.filter(part => part.name === "Lead")[0];
+			const thisSection = songInformation.partNames.filter(part => part.partNameId === req.params.SECTIONID)[0];
+			
+			let getLeadVideoIdentifier;
+
+			if(thisSection.partNameId === leadSection.partNameId){
+				getLeadVideoIdentifier = Promise.resolve(null);
+			} else {
+				getLeadVideoIdentifier = choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID)
+					.then(recordings => {
+						const leadVideo = recordings.filter(recording => recording.partNameId === leadSection.partNameId)[0];
+						return `${leadVideo.choirId}:${leadVideo.songId}:${leadVideo.partId}.webm`;
+					})
+				;
+			}
+
+			return getLeadVideoIdentifier
+				.then(leadVideoIdentifier => {
+
+					debug(leadVideoIdentifier);
+					res.render('record', { 
+						title: 'Choirless | Record Piece', 
+						bodyid : "record",
+						loggedIn : !!req.session.user,
+						choirId : req.params.CHOIRID,
+						songId : req.params.SONGID,
+						partNameId : req.params.SECTIONID,
+						partName : thisSection.name,
+						leadVideoIdentifier : leadVideoIdentifier
+					});
+					
+				})
+			;
 
 		})
 		.catch(err => {

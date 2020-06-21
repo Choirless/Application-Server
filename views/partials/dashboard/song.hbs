@@ -43,7 +43,7 @@
                         {{else}}
                             <td colspan="2">Recordings for this part are not available until a lead part has been recorded.</td>
                         {{/ifEquals}}
-                        
+
                     {{/ifEquals}}
 
                 </tr>
@@ -51,7 +51,7 @@
 
                 {{#each this.recordings}}
                 <tr data-collapsed="true" data-collapseid="{{this.partNameId}}">
-                    <td><a>{{this.userName}}</a></td>
+                    <td colspan="2"><a>{{this.userName}}</a></td>
                 </tr>
                 {{/each}}
 
