@@ -28,7 +28,7 @@
             </tr>
 
             {{#unless this.parts}}
-                <tr data-collapsed="true" data-collapseid="{{this.name}}">
+                <tr data-collapsed="true" data-collapseid="{{this.partNameId}}">
 
                     {{#ifEquals this.name "Lead"}}
                         <td colspan="2">No recordings have been made for this part yet.</td>
@@ -40,7 +40,7 @@
             {{else}}
 
                 {{#each this.parts}}
-                <tr data-collapsed="true" data-collapseid="{{this.name}}">
+                <tr data-collapsed="true" data-collapseid="{{this.partNameId}}">
                     <td><a>{{this.userName}}</a></td>
                 </tr>
                 {{/each}}
