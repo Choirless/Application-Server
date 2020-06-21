@@ -72,17 +72,25 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                 const choirSongs = requiredData.choirSongs;
                 const choirMembers = requiredData.choirMembers;
                 const songInformation = requiredData.songInformation;
-                let songParts;
+                let songSections;
+                const songRecordings = requiredData.recordings;
 
                 if(songInformation){
-                    songParts = songInformation.partNames;
+                    songSections = songInformation.partNames.map(section => {
+
+                        section.recordings = songRecordings.filter(recording => {
+                            debug('\t', recording);
+                            return recording.partNameId === section.partNameId
+                        });
+
+                        if(section.recordings.length === 0){
+                            section.recordings = undefined;
+                        }
+
+                        return section;
+                    });
                 }
 
-                debug('choirInfo:', choirInfo);
-                debug('choirSongs:', choirSongs);
-                debug('choirMembers:', choirMembers);
-                debug('songInformation:', songInformation);
-                debug('songParts:', songParts);
 
                 if(choirInfo.createdByUserId !== req.session.user){
                     res.status(401);
@@ -96,8 +104,8 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         songs : choirSongs,
                         members : choirMembers,
                         songInformation : songInformation,
-                        songParts : songParts,
-                        leadFilmed : !!songParts ? songParts.length !== 0 : false,
+                        songSections : songSections,
+                        leadRecorded : !!songRecordings ? songRecordings.length !== 0 : false,
                         view : req.params.VIEW,
                         loggedIn : !!req.session.user
                     });

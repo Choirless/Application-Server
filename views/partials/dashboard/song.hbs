@@ -13,7 +13,7 @@
 
     <tbody>
 
-        {{#each songParts}}
+        {{#each songSections}}
             <tr class="subhead collapsable" data-collapsetarget="{{this.partNameId}}" data-expanded="false">
                 <td>{{this.name}}</td>
                 <td>
@@ -22,24 +22,34 @@
                     {{/ifEquals}}
 
                     {{#ifEquals ../this.leadRecorded true }}
-                        <a href="/performance/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.partNameId}}" class="recordPart blue cta-button">Record this part</a>
+
+                        {{#ifNotEquals this.name "Lead"}}
+                            <a href="/performance/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.partNameId}}" class="recordPart blue cta-button">Record this part</a>
+                        {{/ifNotEquals}}
+
                     {{/ifEquals}}
                 </td>
             </tr>
 
-            {{#unless this.parts}}
+            {{#unless this.recordings}}
                 <tr data-collapsed="true" data-collapseid="{{this.partNameId}}">
 
                     {{#ifEquals this.name "Lead"}}
                         <td colspan="2">No recordings have been made for this part yet.</td>
                     {{else}}
-                        <td colspan="2">Recordings for this part are not available until a lead part has been recorded.</td>
+
+                        {{#ifEquals ../this.leadRecorded true }}
+                            <td colspan="2">No recordings have been made for this part yet.</td>
+                        {{else}}
+                            <td colspan="2">Recordings for this part are not available until a lead part has been recorded.</td>
+                        {{/ifEquals}}
+                        
                     {{/ifEquals}}
 
                 </tr>
             {{else}}
 
-                {{#each this.parts}}
+                {{#each this.recordings}}
                 <tr data-collapsed="true" data-collapseid="{{this.partNameId}}">
                     <td><a>{{this.userName}}</a></td>
                 </tr>
