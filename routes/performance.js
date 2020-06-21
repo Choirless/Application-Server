@@ -6,16 +6,30 @@ const multer = require('multer');
 const upload = multer();
 const storage = require(`${__dirname}/../bin/lib/storage`);
 
-router.get('/record/:CHOIRID/:SONGID/:PARTNAME', function(req, res, next) {
+const choir = require(`../bin/modules/choir`);
 
-	res.render('record', { 
-		title: 'Choirless | Record Piece', 
-		bodyid : "record",
-		loggedIn : !!req.session.user,
-		choirId : req.params.CHOIRID,
-		songId : req.params.SONGID,
-		partName : req.params.PARTNAME
-	});
+router.get('/record/:CHOIRID/:SONGID/:PARTNAMEID', function(req, res, next) {
+
+	choir.songs.get(req.params.CHOIRID, req.params.SONGID)
+		.then(songInformation => {
+
+			res.render('record', { 
+				title: 'Choirless | Record Piece', 
+				bodyid : "record",
+				loggedIn : !!req.session.user,
+				choirId : req.params.CHOIRID,
+				songId : req.params.SONGID,
+				partName : songInformation.partNames.filter(part => part.partNameId === req.params.PARTNAMEID)[0].name
+			});
+
+		})
+		.catch(err => {
+			debug('/record/:CHOIRID/:SONGID/:PARTNAMEID err:', err);
+			res.status(500);
+			next();
+		})
+	;
+
 
 });
 
