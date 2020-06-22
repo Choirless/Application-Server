@@ -1,0 +1,218 @@
+<script>
+
+    const offset_analyser = (function(){
+        
+        'use strict';
+
+        let analysisInitialised = -1;
+        let audioPlaying = false;
+        const sequenceFrequencies = [260, 330, 400, 550];
+        const detectedFrequenciesSequence = [];
+        let firstDetection;
+
+        let audioContext;
+        let testChimesSource;
+        
+        let analyser;
+        let bufferLength;
+        let dataArray;
+        let initialGainValue = 1.5;
+
+        let streamForAnalysis;
+        let nodes = {};
+
+        const virtualElement = document.createElement('div');
+
+        function getFrequencyValue(frequency) {
+            const nyquist = audioContext.sampleRate / 2;
+            const index = Math.round(frequency / nyquist * bufferLength);
+            return dataArray[index];
+        }
+
+        function enableAudioContext(audioSource){
+            
+            if(!audioContext){
+                
+                audioContext = new (window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext)();
+                
+                testChimesSource = new Audio();
+                testChimesSource.src = audioSource || "test_chimes.wav";
+                testChimesSource.addEventListener('ended', function(){
+
+                    setTimeout(function(){
+
+                        audioPlaying = false;
+                        
+                        console.log('detectedFrequenciesSequence:', detectedFrequenciesSequence);
+                        
+                        const successfulAnalysis = (detectedFrequenciesSequence[0] === 0 && detectedFrequenciesSequence[1] === 1 && detectedFrequenciesSequence[2] === 2 && detectedFrequenciesSequence[3] === 3);
+                        
+                        detectedFrequenciesSequence.length = 0;
+
+                        virtualElement.dispatchEvent( new CustomEvent('analysed', { bubbles: false, detail: successfulAnalysis ? firstDetection - analysisInitialised : false } ) );
+
+                    }, 1000);
+
+                }, false);
+
+            }
+
+        }
+
+        function createAnalyserWithOptions(options){
+
+            if(!nodes.analyser){
+
+                options = options || {};
+                nodes.length = 0;
+
+                nodes.analyser = audioContext.createAnalyser();
+                nodes.analyser.fftSize = options.fftSize || 1024;
+                nodes.analyser.smoothingTimeConstant = options.smoothingTimeConstant || 0;
+
+                bufferLength = nodes.analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+                nodes.analyser.getByteTimeDomainData(dataArray);
+
+                nodes.gain = audioContext.createGain();
+                nodes.gain.gain.value = options.gainValue || initialGainValue;
+
+                nodes.filter = audioContext.createBiquadFilter();
+                nodes.filter.type = "lowpass";
+                nodes.filter.frequency.value = options.lowPassFilterValue || 5000;
+
+            }
+
+        }
+
+        function setStreamSourceForAnalysis(stream){
+            streamForAnalysis = audioContext.createMediaStreamSource(stream);
+        }
+
+        function connectSourceToAnalyser(){
+            streamForAnalysis.connect(nodes.gain);
+            nodes.gain.connect(nodes.filter);
+            nodes.filter.connect(nodes.analyser);
+        } 
+
+        let count = 0;
+
+        function analyseStream(){            
+
+            if(audioPlaying){
+
+                nodes.analyser.getByteFrequencyData(dataArray);
+
+                let highestIndex = 0;
+
+                const readings = [
+                    getFrequencyValue(sequenceFrequencies[0]),
+                    getFrequencyValue(sequenceFrequencies[1]),
+                    getFrequencyValue(sequenceFrequencies[2]),
+                    getFrequencyValue(sequenceFrequencies[3])
+                ];
+
+                for(let x = 0; x < readings.length; x += 1){
+                    if(readings[x] > readings[highestIndex]){
+                        highestIndex = x;
+                    }
+                }
+
+                console.log(count += 1 );
+                console.log(readings, highestIndex, readings[highestIndex]);
+
+                const lastItemInArray = detectedFrequenciesSequence[detectedFrequenciesSequence.length - 1];
+
+                if(readings[highestIndex] > 180){
+
+
+                    console.log('DFS:', detectedFrequenciesSequence.length);
+                    console.log('highestIndex:', highestIndex);
+                    console.log('highestIndex value:', readings[highestIndex]);
+
+                    if(highestIndex === 0 && detectedFrequenciesSequence.length === 0){
+
+                        firstDetection = performance.now();
+                        detectedFrequenciesSequence.push(highestIndex);
+
+                        setTimeout(analyseStream, 225);
+                        setTimeout(analyseStream, 425);
+                        setTimeout(analyseStream, 600);
+
+                    } else if(highestIndex === lastItemInArray || highestIndex === lastItemInArray + 1) {
+
+                        detectedFrequenciesSequence.push(highestIndex);
+
+                    } else if(detectedFrequenciesSequence.length === 0){
+
+                        requestAnimationFrame( analyseStream );
+                    
+                    }
+
+                } else {
+                    if(detectedFrequenciesSequence.length === 0){
+                        requestAnimationFrame( analyseStream );
+                    }
+                
+                }
+
+            }
+
+        }
+
+        function findTheDelayInTheStream(attempts, attempt){
+
+            attempts = attempts || 1;
+            attempt = attempt || 1;
+
+            if(attempt > 1){
+                nodes.gain.gain.value = nodes.gain.gain.value * 1.1;
+            } else {
+                nodes.gain.gain.value = initialGainValue;
+            }
+
+            if(audioPlaying){
+
+                return Promise.reject('An analysis process is already running');
+
+            } else {
+                
+                analysisInitialised = performance.now();
+                audioPlaying = true;
+                testChimesSource.play();
+                analyseStream();
+
+                return new Promise( function(resolve, reject){
+
+                    virtualElement.addEventListener('analysed', function(e){
+
+                        if(!e.detail && attempt < attempts){
+
+                            setTimeout(function(){
+                                resolve(findTheDelayInTheStream(attempts, attempt += 1));
+                            }, 2000);
+
+                        } else {
+                            resolve(e.detail);
+                        }
+
+                    }, {once : true});
+
+                });
+
+            }
+
+
+        }
+
+        return { 
+            enable : enableAudioContext,
+            create : createAnalyserWithOptions,
+            src : setStreamSourceForAnalysis,
+            connect : connectSourceToAnalyser,
+            find : findTheDelayInTheStream
+        };
+
+    })();
+
+</script>

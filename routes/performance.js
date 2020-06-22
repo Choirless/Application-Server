@@ -76,7 +76,9 @@ router.get('/video/:VIDEOIDENTIFIER', (req, res, next) => {
 
 	storage.check(req.params.VIDEOIDENTIFIER)
 		.then(existence => {
+			debug(existence);
 			if(existence){
+				// res.set('Content-Type', 'application/octet-stream')
 				storage.getStream(req.params.VIDEOIDENTIFIER).pipe(res)
 			} else {
 				res.status(404);
