@@ -118,17 +118,9 @@
                     }
                 }
 
-                console.log(count += 1 );
-                console.log(readings, highestIndex, readings[highestIndex]);
-
                 const lastItemInArray = detectedFrequenciesSequence[detectedFrequenciesSequence.length - 1];
 
                 if(readings[highestIndex] > 180){
-
-
-                    console.log('DFS:', detectedFrequenciesSequence.length);
-                    console.log('highestIndex:', highestIndex);
-                    console.log('highestIndex value:', readings[highestIndex]);
 
                     if(highestIndex === 0 && detectedFrequenciesSequence.length === 0){
 

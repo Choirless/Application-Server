@@ -197,10 +197,14 @@ a.cta-button.black, button.cta-button.black{
 
 a.cta-button.loading, button.cta-button.loading{
   background-image: url("/assets/images/loader.gif");
-  background-size: 85%;
+  background-size: 60% auto ;
   background-position: 50% 45%;
   background-repeat: no-repeat;
   color: transparent !important;
+}
+
+a.cta-button.loading.dark, button.cta-button.loading.dark{
+  background-image: url("/assets/images/loader_dark.gif");
 }
 
 footer{
@@ -313,6 +317,11 @@ body#record #videos .half{
   box-sizing: border-box;
 }
 
+body#record #videos .half.inverted{
+  background: white;
+  color: black;
+}
+
 body#record #videos .half[data-videoloaded="false"] video{
   display: none;
 }
@@ -392,6 +401,7 @@ body#record #videos .half#performance h3{
   right: 0;
   padding: 0.5em 2em 0.5em 1em;
   border-width: 1px 0 1px 1px;
+  color: white;
 }
 
 body#record #controls{

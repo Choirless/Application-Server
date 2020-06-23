@@ -1,7 +1,7 @@
 <div id="videos" data-leadrecording="{{#ifEquals this.partName "Lead"}}true{{else}}false{{/ifEquals}}">
-    
+
     {{#ifNotEquals this.partName "Lead"}}
-    
+
     <div class="half" id="lead" data-videoloaded="false">
         <video preload src="" ></video>
 
@@ -17,14 +17,24 @@
 
     {{/ifNotEquals}}
 
-    <div class="half" id="performance" data-videoloaded="false">
+    <div class="half inverse" id="performance" data-videoloaded="false">
         <video muted></video>
         <video id="recorded" data-active="false"></video>
-        <div id="activate-cameras" class="video-dialog">
+        <div id="activate-cameras" class="video-dialog" data-active="true">
             <h2>Camera + Microphone Access</h2>
             <p>To record your performance, you'll need to let Choirless use your camera and microphone.</p>
             <button class="cta-button" id="enableCapture">Enable Camera + Microphone</button>
             <p>(Don't worry, we won't record or save anything until you tell us to).</p>
+        </div>
+
+        <div id="calibrate-stream" class="video-dialog" data-active="false">
+            <h2>Calibrate Inputs</h2>
+            <p>Before we get started, we'd like to calibrate your camera and microphone for the best quality.</p>
+            <p><strong>Please remove any headphones you have attached to your device and unmute your speakers.</strong></p>
+            <p>When you click the <strong>"Calibrate Inputs"</strong> button below you'll hear a series of tones.</p>
+            <p>They'll only play for a few seconds, after which your video will appear and you'll be able to begin recording.</p>
+            <button class="cta-button black" id="beginCalibration">Calibrate Inputs</button>
+            {{!-- <p>(Don't worry, we won't record or save anything until you tell us to).</p> --}}
         </div>
 
         <h3>You</h3>
@@ -70,7 +80,11 @@
         var performanceVideo = performanceView.querySelector('video');
         var recordedVideo = performanceView.querySelector('video#recorded');
 
-        var enableCaptureBtn = performanceView.querySelector('#enableCapture')
+        var activateCameraDialog = document.querySelector('#activate-cameras');
+        var enableCaptureBtn = activateCameraDialog.querySelector('#enableCapture');
+
+        var calibrateInputsDialog = document.querySelector('#calibrate-stream');
+        var calibrateInputsBtn = calibrateInputsDialog.querySelector('#beginCalibration');
 
         var listenBtn = isLeadRecording ? null : document.querySelector('#controls button.listen');
         var recordBtn = document.querySelector('#controls button.record');
@@ -83,22 +97,24 @@
         var performanceStream;
         var mR;
 
+        var streamOffset = 0;
+
         function download(chunks) {
-            
+
             var blob = new Blob(chunks, {
                 type: "video/webm"
             });
-            
+
             var url = URL.createObjectURL(blob);
             var a = document.createElement("a");
-            
+
             document.body.appendChild(a);
-            
+
             a.style = "display: none";
             a.href = url;
             a.download = "test.webm";
             a.click();
-            
+
             window.URL.revokeObjectURL(url);
 
         }
@@ -137,9 +153,9 @@
             if(!recording){
 
                 recording = true;
-                
+
                 recordBtn.textContent = "Stop Recording";
-                
+
                 if(listenBtn){
                     listenBtn.dataset.active = "false";
                 }
@@ -216,24 +232,24 @@
         }, false);
 
         playbackBtn.addEventListener('click', function(){
-            
+
             if(!showingPerformance){
                 showingPerformance = true;
-                
+
                 playbackBtn.textContent = "Stop Playback";
 
                 recordedVideo.currentTime = 0;
                 recordedVideo.play()
-                
+
                 if(leadVideo){
                     leadVideo.currentTime = 0;
                     leadVideo.play();
                 }
 
             } else {
-                
+
                 showingPerformance = false;
-                
+
                 playbackBtn.textContent = "Replay Performance";
 
                 recordedVideo.pause()
@@ -267,9 +283,9 @@
         recordedVideo.addEventListener('ended', function(){
 
             if(showingPerformance){
-                
+
                 if(leadVideo){
-                    
+
                     if(leadVideo.paused === true){
                         showingPerformance = false;
                         playbackBtn.textContent = "Replay Performance";
@@ -285,6 +301,9 @@
         }, false);
 
         enableCaptureBtn.addEventListener('click', function(){
+
+            this.classList.add('loading');
+            this.classList.add('dark');
 
             navigator.mediaDevices.enumerateDevices()
                 .then( function(listOfDevices){
@@ -312,8 +331,16 @@
 
                                 if(performanceVideo.paused){
                                     performanceVideo.play();
-                                    performanceView.dataset.videoloaded = "true";
-                                    
+
+                                    //performanceVideo.addEventListener('canplaythrough', function(){
+
+                                        activateCameraDialog.dataset.active = "false";
+                                        calibrateInputsDialog.dataset.active = "true";
+
+                                        performanceView.classList.add('inverted');
+
+                                    //}, {once : true});
+
                                     if(leadVideo){
 
                                         if(leadVideo.readyState === 4){
@@ -331,6 +358,34 @@
                         })
                     ;
 
+                })
+            ;
+
+        }, false);
+
+        calibrateInputsBtn.addEventListener('click', function(){
+
+            this.classList.add('loading');
+
+            offset_analyser.enable("/assets/audio/test_chimes.wav");
+            offset_analyser.create();
+            offset_analyser.src(performanceStream);
+            offset_analyser.connect();
+            offset_analyser.find(3)
+                .then(function(result){
+
+                    if(result){
+                        streamOffset = result;
+                    }
+
+                    console.log(result);
+                    performanceView.dataset.videoloaded = "true";
+
+                    return result;
+                })
+                .catch(function(err){
+                    console.log('Offset Analyser err:', err);
+                    performanceView.dataset.videoloaded = "true";
                 })
             ;
 
