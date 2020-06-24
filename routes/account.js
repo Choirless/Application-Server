@@ -100,7 +100,13 @@ router.post('/create', (req, res, next) => {
 				if(response.ok === true){
 					req.session = {};
 					req.session.user = response.userId;
-					res.redirect('/');
+
+					if(req.query.redirect){
+						res.redirect(decodeURIComponent(req.query.redirect));
+					} else {
+						res.redirect('/dashboard');
+					}
+
 				} else {
 					throw response;
 				}
