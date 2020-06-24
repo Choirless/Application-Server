@@ -402,6 +402,59 @@ function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
 
 }
 
+function getAnInvitationById(invitationId){
+
+    return Promise.resolve();
+
+}
+
+function createAnInvitationForAUserToJoinAChoir(choirId, creatorId, inviteeEmail){
+
+    if(!choirId){
+        return Promise.reject(`No "choirId" was passed to function`);
+    }
+
+    if(!creatorId){
+        return Promise.reject(`No "creatorId" was passed to function`);
+    }
+
+    if(!inviteeEmail){
+        return Promise.reject(`No "inviteeEmail" was passed to function`);
+    }
+
+    const details = {
+        creator : creatorId,
+        invitee : inviteeEmail,
+        choirId : choirId,
+        sendMail : false
+    };
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/invitation?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(details)
+        })
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.id;
+        })
+        .catch(err => {
+            debug('createAnInvitationForAUserToJoinAChoir err:', err);
+            throw err;
+        })
+    ;
+
+}
+
+
 module.exports = {
     create : createANewChoir,
     update : updateAnExistingChoir,
@@ -421,6 +474,10 @@ module.exports = {
         }
     },
     members : {
-        get : getAllOfTheMembersOfAChoir
+        get : getAllOfTheMembersOfAChoir,
+        invitations : {
+            get : getAnInvitationById,
+            create : createAnInvitationForAUserToJoinAChoir
+        }
     }
 };

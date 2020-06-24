@@ -5,13 +5,15 @@
             <h2>Add member to choir</h2>
 
             <form method="POST" action="/choir/add-member">
-            
+
+                <input type="text" hidden value="{{choirInfo.choirId}}" name="choirId" />
+
                 <label for="name" class="required">Email Address</label>
-                <input id="name" type="email" placeholder="bob@choirless.com" name="email" required/>
+                <input id="name" type="email" placeholder="alex@choirless.com" name="email" required/>
                 
                 <div class="side-by-side">
                     <button type="button" class="cta-button red cancel">Cancel</button>
-                    <button type="submit" class="cta-button light-blue">Invite Member</button>
+                    <button type="submit" class="cta-button light-blue">Send Invitation</button>
                 </div>       
 
             </form>

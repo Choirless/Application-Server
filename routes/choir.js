@@ -123,4 +123,48 @@ router.post('/create-song', (req, res, next) => {
 
 });
 
+router.post('/add-member', (req, res, next) => {
+
+    if(!req.body.email){
+        res.status(422);
+        res.redirect(`/dashboard/choir/${req.body.choirId}/members?err=noemail`);
+    } else if(!req.body.choirId){
+        res.status(422);
+        res.redirect('/dashboard?err=nochoir');
+    } else {
+
+        choirInterface.get(req.body.choirId)
+            .then(choirData => {
+                
+                debug(choirData.createdByUserId, req.session.user);
+
+                if(choirData.createdByUserId === req.session.user){
+
+                    choirInterface.members.invitations.create(req.body.choirId, req.session.user, req.body.email)
+                        .then(inviteId => {
+                            debug(`Invitation (${inviteId}) created by ${req.session.userId} for ${req.body.email} to join ${req.body.choirId}`);
+                            const successMessage = `Invitation to "${req.body.email}" has been sent. If they accept, they will have access to your choir and appear here.`;
+                            res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${successMessage}&msgtype=success`);
+                        })
+                        .catch(err => {
+                            res.status(500);
+                            next();
+                        })
+                    ;
+
+                } else {
+                    const errMsg = ``
+                    res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${errMsg}&msgtype=error`);
+                }
+
+            })
+            .catch(err => {
+                debug('/choir/add-member err:', err);
+            })
+        ;
+
+    }
+
+});
+
 module.exports = router;
