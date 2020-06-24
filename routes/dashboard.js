@@ -87,8 +87,10 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                     });
                 };
 
-                const userIsMemberOfChoir = choirMembers.map(member => member.userId).indexOf(req.session.user) > -1;
-             
+                const userChoirInfoIndex = choirMembers.map(member => member.userId).indexOf(req.session.user);
+                const userIsMemberOfChoir = userChoirInfoIndex > -1;
+                const memberType = userIsMemberOfChoir ? choirMembers[userChoirInfoIndex].memberType : null;
+
                 if(choirInfo.createdByUserId !== req.session.user && !userIsMemberOfChoir){
                     res.status(401);
                     next();
@@ -104,6 +106,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         songSections : songSections,
                         leadRecorded : !!songRecordings ? songRecordings.length !== 0 : false,
                         view : req.params.VIEW,
+                        memberType : memberType,
                         loggedIn : !!req.session.user
                     });
                 }

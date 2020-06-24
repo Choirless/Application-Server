@@ -75,7 +75,9 @@
 
         {{> dashboard/create_song }}
 
+        {{#ifEquals memberType "leader"}}
         {{> dashboard/add_member }}
+        {{/ifEquals}}
 
     </section>
 
