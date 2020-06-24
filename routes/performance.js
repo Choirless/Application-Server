@@ -77,6 +77,7 @@ router.get('/video/:VIDEOIDENTIFIER', (req, res, next) => {
 	storage.check(req.params.VIDEOIDENTIFIER)
 		.then(existence => {
 			if(existence){
+				res.set('Content-Type', 'video/webm');
 				storage.getStream(req.params.VIDEOIDENTIFIER).pipe(res)
 			} else {
 				res.status(404);
