@@ -462,8 +462,15 @@ function getAnInvitationById(inviteId){
             return response.invitation;
         })
         .catch(err => {
+
             debug('getAnInvitationById err:', err);
-            throw err;
+
+            if(err.status === 498){
+                return { expired : true };
+            } else {
+                throw err;
+            }
+
         })
     ;        
 

@@ -140,7 +140,10 @@ router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
             debug(userInfo);
             debug(invitationInfo);
 
-            if(userInfo.email === invitationInfo.invitee){
+            if(invitationInfo.expired){
+                const expiredMsg = "Sorry, that invitation has expired. Please ask the choir leader to send another";
+                res.redirect(`/dashboard?msg=${expiredMsg}&msgtype=error`);
+            } else if(userInfo.email === invitationInfo.invitee){
                return choirInterface.join(req.params.CHOIRID, req.session.user, userInfo.name, "member")
             } else {
                 throw Error('User is not the user invited');
