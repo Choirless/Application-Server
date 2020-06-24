@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const choirInterface = require(`${__dirname}/../bin/modules/choir`);
+const usersInterface = require(`${__dirname}/../bin/modules/users`);
 
 router.post('/create', (req, res, next) => {
 
@@ -110,12 +111,93 @@ router.post('/create-song', (req, res, next) => {
 
             })
             .then(songId => {
-                res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}`)
+                res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}`);
             })
             .catch(err => {
                 debug('/create-song err:', err);
                 res.status(500);
                 next();
+            })
+        ;
+
+    }
+
+});
+
+router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
+
+    const informationRequests = [];
+
+    informationRequests.push( usersInterface.get.byID( req.session.user ) );
+    informationRequests.push( choirInterface.members.invitations.get( req.params.INVITEID ) );
+
+    Promise.all(informationRequests)
+        .then(results => {
+
+            const userInfo = results[0];
+            const invitationInfo = results[1];
+
+            debug(userInfo);
+            debug(invitationInfo);
+
+            if(userInfo.email === invitationInfo.invitee){
+               return choirInterface.join(req.params.CHOIRID, req.session.user, userInfo.name, "member")
+            } else {
+                throw Error('User is not the user invited');
+            }
+
+        })
+        .then(function(){
+
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}`);
+
+        })
+        .catch(err => {
+            debug('/join/:CHOIRID/:INVITEID err:', err);
+            res.status(500);
+            next();
+        })
+    ;
+
+});
+
+router.post('/add-member', (req, res, next) => {
+
+    if(!req.body.email){
+        res.status(422);
+        res.redirect(`/dashboard/choir/${req.body.choirId}/members?err=noemail`);
+    } else if(!req.body.choirId){
+        res.status(422);
+        res.redirect('/dashboard?err=nochoir');
+    } else {
+
+        choirInterface.get(req.body.choirId)
+            .then(choirData => {
+                
+                debug(choirData.createdByUserId, req.session.user);
+
+                if(choirData.createdByUserId === req.session.user){
+
+                    choirInterface.members.invitations.create(req.body.choirId, req.session.user, req.body.email)
+                        .then(inviteId => {
+                            debug(`Invitation (${inviteId}) created by ${req.session.userId} for ${req.body.email} to join ${req.body.choirId}`);
+                            const successMessage = `Invitation to "${req.body.email}" has been sent. If they accept, they will have access to your choir and appear here.`;
+                            res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${successMessage}&msgtype=success`);
+                        })
+                        .catch(err => {
+                            res.status(500);
+                            next();
+                        })
+                    ;
+
+                } else {
+                    const errMsg = ``
+                    res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${errMsg}&msgtype=error`);
+                }
+
+            })
+            .catch(err => {
+                debug('/choir/add-member err:', err);
             })
         ;
 

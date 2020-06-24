@@ -832,7 +832,7 @@ body#dashboard .modal .container .content form div.side-by-side button{
 }
 
 
-body#dashboard .modal .container .content form input[type="text"]{
+body#dashboard .modal .container .content form input[type="text"], body#dashboard .modal .container .content form input[type="email"]{
   background: #e2e2e2;
   color: black;
 }
