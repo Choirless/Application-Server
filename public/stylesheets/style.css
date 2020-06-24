@@ -109,6 +109,45 @@ nav section a{
   font-weight: 500;
 }
 
+#notice{
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 1em;
+  border-radius: 0 0 2px 2px;
+  box-shadow: 0 0 15px black;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+  width: 25%;
+}
+
+#notice.success{
+  background: #0ec155;
+}
+
+#notice.general{
+  background: #1a76c5;
+}
+
+#notice.error{
+  background: #bd3636;
+}
+
+#notice h5{
+  margin-bottom: 0.5em;
+}
+
+#notice p{
+  font-size: 0.8em;
+}
+
+#notice .cta-button{
+  min-width: 30%;
+  border-bottom: 1px solid black;
+  padding: 0.8em;
+}
+
 body#home header{
   display: flex;
   width: 100%;

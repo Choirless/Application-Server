@@ -14,5 +14,10 @@
   <body id="{{{bodyid}}}"></body>
     {{> nav}}
     {{{body}}}
+
+    {{#if message}}
+      {{> messages}}
+    {{/if}}
+
   </body>
 </html>
