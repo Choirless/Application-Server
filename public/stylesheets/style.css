@@ -786,6 +786,7 @@ body#dashboard main section#choirInfo table tr[data-collapsed="true"]{
 body#dashboard main section#choirInfo table tr td{
   padding: 0.5em;
   border-bottom: 1px solid rgba(0,0,0,0.2);
+  border-right: 0px solid transparent;
 }
 
 body#dashboard main section#choirInfo table tbody tr td{
