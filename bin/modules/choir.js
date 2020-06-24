@@ -102,6 +102,53 @@ function getAKnownChoir(choirId){
 
 }
 
+function joinAnExistingChoir(choirId, userId, name, memberType){
+
+    if(!choirId){
+        return Promise.reject("No choirId was passed to function");
+    }
+    
+    if(!userId){
+        return Promise.reject("No userId was passed to function");
+    }
+    
+    if(!name){
+        return Promise.reject("No name was passed to function");
+    }
+
+    if(!memberType){
+        return Promise.reject("No memberType was passed to function");
+    }
+
+    const details = {
+        choirId : choirId,
+        userId : userId,
+        name : name,
+        memberType : memberType
+    };
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/join?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+        method : "POST",
+        headers : {
+            "Content-Type" : "application/json"
+        },
+        body : JSON.stringify(details)
+    })
+    .then(res => {
+        if(res.ok){
+            return res.json();
+        } else {
+            throw res;
+        }
+    })
+    .catch(err => {
+        debug("createANewChoir Err:", err);
+        throw err;
+    })
+;
+
+}
+
 function getAnExistingSongInAChoir(choirId, songId){
 
     if(!choirId){
@@ -375,7 +422,6 @@ function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
 
                             return retrievedUserDetails.map( (details, idx) => {
 
-                                details = details.user;
                                 response.members[idx].info = details;
 
                                 return response.members[idx];
@@ -402,9 +448,24 @@ function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
 
 }
 
-function getAnInvitationById(invitationId){
+function getAnInvitationById(inviteId){
 
-    return Promise.resolve();
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/invitation?apikey=${process.env.CHOIRLESS_API_KEY}&inviteId=${inviteId}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.invitation;
+        })
+        .catch(err => {
+            debug('getAnInvitationById err:', err);
+            throw err;
+        })
+    ;        
 
 }
 
@@ -459,6 +520,7 @@ module.exports = {
     create : createANewChoir,
     update : updateAnExistingChoir,
     get : getAKnownChoir,
+    join : joinAnExistingChoir,
     songs : {
         get : getAnExistingSongInAChoir,
         add : addANewSongToAChoir,

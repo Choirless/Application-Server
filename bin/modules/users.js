@@ -11,6 +11,9 @@ function getSpecificUserByID(userId){
                 throw res;
             }
         })
+        .then(response => {
+            return response.user;
+        })
         .catch(err => {
             debug('Get user error:', err);
             throw err;

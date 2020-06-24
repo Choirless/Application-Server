@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const choirInterface = require(`${__dirname}/../bin/modules/choir`);
+const usersInterface = require(`${__dirname}/../bin/modules/users`);
 
 router.post('/create', (req, res, next) => {
 
@@ -110,7 +111,7 @@ router.post('/create-song', (req, res, next) => {
 
             })
             .then(songId => {
-                res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}`)
+                res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}`);
             })
             .catch(err => {
                 debug('/create-song err:', err);
@@ -120,6 +121,43 @@ router.post('/create-song', (req, res, next) => {
         ;
 
     }
+
+});
+
+router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
+
+    const informationRequests = [];
+
+    informationRequests.push( usersInterface.get.byID( req.session.user ) );
+    informationRequests.push( choirInterface.members.invitations.get( req.params.INVITEID ) );
+
+    Promise.all(informationRequests)
+        .then(results => {
+
+            const userInfo = results[0];
+            const invitationInfo = results[1];
+
+            debug(userInfo);
+            debug(invitationInfo);
+
+            if(userInfo.email === invitationInfo.invitee){
+               return choirInterface.join(req.params.CHOIRID, req.session.user, userInfo.name, "member")
+            } else {
+                throw Error('User is not the user invited');
+            }
+
+        })
+        .then(function(){
+
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}`);
+
+        })
+        .catch(err => {
+            debug('/join/:CHOIRID/:INVITEID err:', err);
+            res.status(500);
+            next();
+        })
+    ;
 
 });
 
