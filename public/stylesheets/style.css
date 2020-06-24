@@ -644,9 +644,9 @@ body#dashboard main section#choirMenu ul li a.selected::after{
   background: #2a93e4;
   position: absolute;
   top: 50%;
-  left: 95%;
+  left: 100%;
   margin-top: -0.5em;
-  transform: rotate(45deg);
+  transform: translateX(-50%) rotate(45deg);
 }
 
 body#dashboard main section#choirMenu button.cta-button{
