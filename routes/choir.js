@@ -171,12 +171,12 @@ router.post('/add-member', (req, res, next) => {
         res.redirect('/dashboard?err=nochoir');
     } else {
 
-        choirInterface.get(req.body.choirId)
-            .then(choirData => {
-                
-                debug(choirData.createdByUserId, req.session.user);
+        choirInterface.members.get(req.body.choirId)
+            .then(members => {
 
-                if(choirData.createdByUserId === req.session.user){
+                const thisMembersDetails = members.filter(member => member.userId === req.session.user)[0];
+
+                if(thisMembersDetails.memberType === "leader"){
 
                     choirInterface.members.invitations.create(req.body.choirId, req.session.user, req.body.email)
                         .then(inviteId => {
