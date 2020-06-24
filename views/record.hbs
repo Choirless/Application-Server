@@ -161,7 +161,7 @@
                     leadVideo.play();
                 }
 
-                mR = new MediaRecorder(performanceStream);
+                mR = new MediaRecorder(performanceStream, { mimeType: 'video/webm; codecs=vp9' });
 
                 mR.ondataavailable = function(e){
                     performanceData.push(e.data);
