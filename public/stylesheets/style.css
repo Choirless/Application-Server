@@ -939,6 +939,12 @@ body#error main{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
+}
+
+body#error main video{
+  margin-bottom: 2em;
+  width: 80%;
 }
 
 /*Animation key frames*/

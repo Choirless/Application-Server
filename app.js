@@ -55,7 +55,7 @@ app.use('/performance', [checkSession], require(`${__dirname}/routes/performance
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-	next(createError(404));
+	next(createError(404, `We can't find that resource`));
 });
 
 // error handler
@@ -67,7 +67,8 @@ app.use(function(err, req, res, next) {
 	// render the error page
 	res.status(err.status || 500);
 	res.render('error', {
-		bodyid : 'error'
+		bodyid : 'error',
+		loggedIn : !!req.session.user
 	});
 });
 
