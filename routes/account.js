@@ -104,7 +104,7 @@ router.post('/create', (req, res, next) => {
 					if(req.query.redirect){
 						res.redirect(decodeURIComponent(req.query.redirect));
 					} else {
-						res.redirect('/dashboard');
+						res.redirect('/dashboard?msg=Account created! Welcome to Choirless :)&msgtype=success');
 					}
 
 				} else {

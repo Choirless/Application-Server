@@ -18,7 +18,7 @@ router.post('/create', (req, res, next) => {
             .then((response) => {
                 
                 debug(response);
-                res.redirect(`/dashboard?msg=Choir "${req.body.name}" has been created.&msgtype=success`);
+                res.redirect(`/dashboard/choir/${response.choirId}?msg=Choir "${req.body.name}" has been created.&msgtype=success`);
 
             })
             .catch(err => {
