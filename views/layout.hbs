@@ -15,8 +15,9 @@
     {{> nav}}
     {{{body}}}
 
-    {{#if message}}
-      {{> messages}}
+    {{#if msg}}
+      <h1>{{msg}}</h1>
+      {{> msg}}
     {{/if}}
 
   </body>

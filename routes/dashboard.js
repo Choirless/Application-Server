@@ -108,8 +108,8 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         view : req.params.VIEW,
                         memberType : memberType,
                         loggedIn : !!req.session.user,
-                        message : req.query.msg ? decodeURIComponent(req.query.msg) : undefined,
-                        messageType : req.query.msgtype
+                        msg : req.query.msg ? decodeURIComponent(req.query.msg) : undefined,
+                        msgType : req.query.msgtype
                     });
                 }
     

@@ -36,8 +36,9 @@ app.use( logger('dev') );
 app.use(express.json( { limit: '150mb'} ) );
 app.use(express.urlencoded( { extended: false } ) );
 app.use( cookieParser() );
-app.use( express.static( path.join(__dirname, 'public' ), { maxAge: (60 * 60 * 1000).toString()} ) );
 
+const staticCaching = process.env.NODE_ENV === "production" ? { maxAge: (60 * 60 * 1000).toString()} : {maxAge : 0}
+app.use( express.static( path.join(__dirname, 'public' ), staticCaching ));
 
 app.use(cookieSession({
 	name: 'choirless-session',
@@ -65,7 +66,9 @@ app.use(function(err, req, res, next) {
 
 	// render the error page
 	res.status(err.status || 500);
-	res.render('error');
+	res.render('error', {
+		bodyid : 'error'
+	});
 });
 
 module.exports = app;

@@ -931,6 +931,16 @@ body#dashboard .no-info{
   border-radius: 0 0 3px 3px;
 }
 
+
+/*Error page styles*/
+
+body#error main{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 /*Animation key frames*/
 @keyframes pulse {
   0% { opacity: 1; }
