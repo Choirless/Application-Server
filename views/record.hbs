@@ -440,7 +440,6 @@
             }
 
             req.upload.onprogress = function(e){
-                console.log(e);
                 uploadProgressIndicator.style.width = (e.loaded / e.total) * 100 + "%";
             }
 
