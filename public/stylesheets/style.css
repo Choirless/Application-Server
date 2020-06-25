@@ -293,12 +293,18 @@ footer div p:last-of-type{
   box-shadow: 0 1px 2px black;
   padding: 1em;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .global-dialog .dialog-content a.cta-button{
   background: black;
   color: white;
   display: block;
+  width: 100%;
+  max-width: 50%;
 }
 
 .modal{
@@ -399,7 +405,7 @@ body#record .video-dialog img{
   width: 25px;
 }
 
-body#record .video-dialog #progress{
+body#record .progress{
   width: 200px;
   height: 10px;
   border: 1px solid white;
@@ -407,11 +413,24 @@ body#record .video-dialog #progress{
   background-color: transparent;
 }
 
-body#record .video-dialog #progress #indicator{
+body#record .progress.inverted{
+  border: 1px solid black;
+}
+
+body#record .progress .indicator{
   height: 100%;
   background: white;
   width: 0px;
   display: block;
+  animation-duration: 4s;
+  animation-name: pulse;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  transition: width 0.5s;
+}
+
+body#record .progress .indicator.inverted{
+  background: black;
 }
 
 body#record #videos .half h3{
@@ -900,4 +919,11 @@ body#dashboard .no-info{
   padding: 1em;
   box-sizing: border-box;
   border-radius: 0 0 3px 3px;
+}
+
+/*Animation key frames*/
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }

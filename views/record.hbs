@@ -7,8 +7,8 @@
 
         <div id="lead-loading" class="video-dialog">
             <h2>Loading Lead Video</h2>
-            <div id="progress">
-                <span id="indicator"></span>
+            <div class="progress">
+                <span class="indicator"></span>
             </div>
         </div>
 
@@ -42,7 +42,10 @@
 <div id="uploadDialog" class="global-dialog" data-active="false">
     <div class="dialog-content">
         <h3 id="heading">Saving performance</h3>
-        <p id="message">Sending your performance to the Choirless servers.<br/><br/>Please don't leave this page until the upload has finished.<br/><br/>Your lead will be notified when the video is ready to be used.</p>
+        <p id="message">Sending your performance to the Choirless servers.<br/><br/>Please don't leave this page until the upload has finished.</p>
+        <div class="progress inverted" data-active="true">
+            <span class="indicator inverted"></span>
+        </div>
         <a class="cta-button" id="action" data-active="false" href="/dashboard/choir/{{choirId}}/song/{{songId}}">OK</a>
     </div>
 </div>
@@ -62,7 +65,7 @@
 
         var leadView = isLeadRecording ? null : document.querySelector('.half#lead');
         var leadVideo = isLeadRecording ? null : leadView.querySelector('video');
-        var progressIndicator = isLeadRecording ? null : leadView.querySelector('#indicator');
+        var downloadProgressIndicator = isLeadRecording ? null : leadView.querySelector('.indicator');
 
         var performanceView = document.querySelector('.half#performance');;
         var performanceVideo = performanceView.querySelector('video');
@@ -76,6 +79,7 @@
         var saveBtn = document.querySelector('#controls button.save');
 
         var uploadDialog = document.querySelector('#uploadDialog');
+        var uploadProgressIndicator = uploadDialog.querySelector('.indicator');
 
         var performanceData = [];
         var performanceStream;
@@ -349,33 +353,31 @@
 
             var fd = new FormData();
             fd.append('video', recordedVideo, 'video.webm');
+            
+            var req = new XMLHttpRequest();
+            req.open('POST', '/performance/save/{{this.choirId}}/{{this.songId}}/{{this.partNameId}}');
+            req.withCredentials = true;
+            
+            req.onload = function() {
 
-            fetch('/performance/save/{{this.choirId}}/{{this.songId}}/{{this.partNameId}}', {
-                    method: 'POST',
-                    body: fd , // with our form data packaged above
-                    headers: new Headers({
-                        'enctype': 'multipart/form-data' // the enctype is important to work with multer on the server
-                    })
-                })
-                .then(function(res){
-                    if(res.ok){
-                        console.log("All sent!");
-                        return;
-                    } else {
-                        throw res;
-                    }
-                })
-                .then(function(){
+                uploadProgressIndicator.parentNode.dataset.active = "false";
+                uploadDialog.querySelector('.dialog-content #heading').textContent = "Performance saved!";
+                uploadDialog.querySelector('.dialog-content p').textContent = "Your performance has been saved to Choirless. Thanks!";
+                uploadDialog.querySelector('#action').dataset.active = "true";
 
-                    uploadDialog.querySelector('.dialog-content #heading').textContent = "Performance saved!";
-                    uploadDialog.querySelector('.dialog-content p').textContent = "Your performance has been saved to Choirless. Thanks!";
-                    uploadDialog.querySelector('#action').dataset.active = "true";
+            }
 
-                })
-                .catch(function(err){
-                    console.log('Upload err:', err);
-                })
-            ;
+            req.onerror = function(err) {
+                // Error
+                console.log(err);
+            }
+
+            req.upload.onprogress = function(e){
+                console.log(e);
+                uploadProgressIndicator.style.width = (e.loaded / e.total) * 100 + "%";
+            }
+
+            req.send(fd);
 
         }, false);
 
@@ -420,7 +422,7 @@
 
                     req.onprogress = function(e){
                         console.log(e);
-                        progressIndicator.style.width = (e.loaded / sizeOfFile) * 100 + "%";
+                        downloadProgressIndicator.style.width = (e.loaded / sizeOfFile) * 100 + "%";
                     }
 
                     req.send();

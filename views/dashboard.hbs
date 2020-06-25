@@ -79,6 +79,10 @@
         {{> dashboard/add_member }}
         {{/ifEquals}}
 
+        {{#ifEquals memberType "leader"}}
+        {{> dashboard/add_song_part }}
+        {{/ifEquals}}
+
     </section>
 
 </main>

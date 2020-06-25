@@ -97,8 +97,7 @@ router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), functio
 		choirId : req.params.CHOIRID,
 		songId : req.params.SONGID,
 		partNameId : req.params.SECTIONID,
-		userId : req.session.user,
-		userName : "TEST"
+		userId : req.session.user
 	};
 
 	choir.songs.recordings.add(recordingData)

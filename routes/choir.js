@@ -65,52 +65,25 @@ router.post('/create-song', (req, res, next) => {
             description : req.body.description
         };
 
-        songData.userId = req.session.user;
+        const sectionsToCreate = [];
 
+        Object.keys(req.body).forEach(key => {
+            if(key.indexOf('part-') > -1){
+
+                if(req.body[key] === "Lead (default)"){
+                    sectionsToCreate.push('Lead');
+                } else if(req.body[key] !== "") {
+                    sectionsToCreate.push(req.body[key]);
+                }
+
+            }
+        });
+
+        songData.partNames = sectionsToCreate;
+        
         choirInterface.songs.add(songData)
             .then(songId => {
-
                 debug('Song successfully created:', songId);
-
-                const sectionsToCreate = [];
-
-                Object.keys(req.body).forEach(key => {
-                    if(key.indexOf('part-') > -1){
-
-                        if(req.body[key] === "Lead (default)"){
-                            sectionsToCreate.push('Lead');
-                        } else if(req.body[key] !== "") {
-                            sectionsToCreate.push(req.body[key]);
-                        }
-
-                    }
-                })
-
-                const createProcesses = sectionsToCreate.map((part, idx) => {
-
-                    return new Promise( (resolve, reject) => {
-                        setTimeout(function(){
-                            choirInterface.songs.sections.add(req.body.choirId, songId, part)
-                                .then(result => {
-                                    resolve(result);
-                                })
-                                .catch(err => {
-                                    reject(err);
-                                })
-                        }, idx * 100);
-
-                    } );
-
-                });
-
-                return Promise.all(createProcesses)
-                    .then(function(){
-                        return songId;
-                    })
-                ;
-
-            })
-            .then(songId => {
                 res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}`);
             })
             .catch(err => {
@@ -121,6 +94,56 @@ router.post('/create-song', (req, res, next) => {
         ;
 
     }
+
+});
+
+router.post('/add-song-part', (req, res, next) => {
+
+    let errMsg;
+    
+    if(!req.body.name){
+        errMsg = "Sorry, no name was passed to the server for the part.";
+    } else if(!req.body.choirId){
+        errMsg = "Sorry, a valid choir was not passed for that operation.";
+    } else if(!req.body.songId){
+        errMsg = "Sorry, a valid song was not passed for that operation.";
+    }
+
+    if(errMsg){
+        res.status(422);
+        res.redirect(`/dashboard?msg=${errMsg}&msgtype=error`);
+    } else {
+        
+        choirInterface.members.check(req.body.choirId, req.session.user)
+            .then(userInfo => {
+
+                if(userInfo){
+
+                    if(userInfo.memberType === "leader"){
+                        return choirInterface.songs.sections.add(req.body.choirId, req.body.songId, req.body.name);
+                    } else {
+                        const errMsg = `Sorry, only leaders of choirs can add new parts to a song.`;
+                        res.redirect(`/dashboard/choir/${req.body.choirId}?msg=${errMsg}&msgtype=error`);
+                    }
+
+                } else {
+                    const errMsg = `Sorry, you have to be a member of this choir to make changes.`;
+                    res.redirect(`/dashboard/choir/${req.body.choirId}?msg=${errMsg}&msgtype=error`);
+                }
+
+            })
+            .then(songId => {
+                res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}`)
+            })
+            .catch(err => {
+                debug('/add-song-part err:', err);
+                res.status(500);
+                next(err);
+            })
+
+
+    }
+
 
 });
 
