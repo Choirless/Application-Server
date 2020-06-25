@@ -106,7 +106,7 @@ router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), functio
 	choir.songs.recordings.add(recordingData)
 		.then(partId => {
 
-			const filename = `${req.params.CHOIRID}:${req.params.SONGID}:${partId}.webm`
+			const filename = `${req.params.CHOIRID}+${req.params.SONGID}+${partId}.webm`
 		
 			storage.put(filename, req.file.buffer)
 				.then(() => {
