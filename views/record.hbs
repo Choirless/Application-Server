@@ -88,6 +88,8 @@
 
         var calibrateInputsDialog = document.querySelector('#calibrate-stream');
         var calibrateInputsBtn = calibrateInputsDialog.querySelector('#beginCalibration');
+        var offsetCalibrated = false;
+        var streamOffset = 0;
 
         var listenBtn = isLeadRecording ? null : document.querySelector('#controls button.listen');
         var recordBtn = document.querySelector('#controls button.record');
@@ -100,8 +102,6 @@
         var performanceData = [];
         var performanceStream;
         var mR;
-
-        var streamOffset = 0;
 
         function download(chunks) {
 
@@ -351,12 +351,11 @@
                                     //}, {once : true});
 
                                     if(leadVideo){
-
-                                        if(leadVideo.readyState === 4){
+                                        if(leadVideo.readyState === 4 && offsetCalibrated){
                                             recordBtn.dataset.active = "true";
                                         }
 
-                                    } else {
+                                    } else if(offsetCalibrated){
                                         recordBtn.dataset.active = "true";
                                     }
 
@@ -377,11 +376,13 @@
             this.classList.add('loading');
 
             offset_analyser.enable("/assets/audio/test_chimes.wav");
-            offset_analyser.create();
+            offset_analyser.create( { fftSize : 2048 } );
             offset_analyser.src(performanceStream);
             offset_analyser.connect();
             offset_analyser.find(3)
                 .then(function(result){
+                    
+                    offsetCalibrated = true;
 
                     if(result){
                         streamOffset = result;
@@ -389,6 +390,14 @@
 
                     console.log(result);
                     performanceView.dataset.videoloaded = "true";
+
+                    if(leadVideo){
+                        if(leadVideo.readyState === 4){
+                            recordBtn.dataset.active = "true";
+                        }
+                    } else {
+                        recordBtn.dataset.active = "true";
+                    }
 
                     return result;
                 })

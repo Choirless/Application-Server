@@ -6,7 +6,7 @@
 
         let analysisInitialised = -1;
         let audioPlaying = false;
-        const sequenceFrequencies = [260, 330, 400, 550];
+        const sequenceFrequencies = [260, 330, 400, 520];
         const detectedFrequenciesSequence = [];
         let firstDetection;
 
@@ -158,7 +158,7 @@
             attempt = attempt || 1;
 
             if(attempt > 1){
-                nodes.gain.gain.value = nodes.gain.gain.value * 1.1;
+                nodes.gain.gain.value = nodes.gain.gain.value * 1.25;
             } else {
                 nodes.gain.gain.value = initialGainValue;
             }
