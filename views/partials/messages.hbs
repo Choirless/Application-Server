@@ -1,0 +1,41 @@
+<div id="notice" class="{{messageType}}" data-active="true">
+    {{#ifEquals messageType "success"}}
+    <h5>Success!</h5>
+    {{/ifEquals}}
+
+    {{#ifEquals messageType "general"}}
+    <h5>Notice</h5>
+    {{/ifEquals}}
+
+    {{#ifEquals messageType "error"}}
+    <h5>Error</h5>
+    {{/ifEquals}}
+
+    <p>{{message}}</p>
+    <button class="cta-button">OK</button>
+</div>
+
+<script>
+
+    (function(){
+        'use strict';
+
+        const notificationBox = document.querySelector('#notice');
+        const okBtn = notificationBox.querySelector('button');
+
+        okBtn.addEventListener('click', function(){
+            this.parentNode.dataset.active = "false";
+
+            var pageQueryParameters = new URLSearchParams(window.location.search);
+            pageQueryParameters.delete('msg');
+            pageQueryParameters.delete('msgtype');
+
+            var ammendedQueryString = pageQueryParameters.toString();
+
+            window.history.replaceState({}, document.title, window.location.pathname + ammendedQueryString !== "" ? "?" + ammendedQueryString : "");
+
+        }, {once : true});
+
+    }());
+
+</script>

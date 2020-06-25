@@ -78,7 +78,7 @@ router.get('/video/:VIDEOIDENTIFIER', (req, res, next) => {
 		.then(existence => {
 			debug(existence);
 			if(existence){
-				res.set('Content-Type', 'video/webm')
+				res.set('Content-Type', 'video/webm');
 				storage.getStream(req.params.VIDEOIDENTIFIER).pipe(res)
 			} else {
 				res.status(404);
@@ -98,8 +98,7 @@ router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), functio
 		choirId : req.params.CHOIRID,
 		songId : req.params.SONGID,
 		partNameId : req.params.SECTIONID,
-		userId : req.session.user,
-		userName : "TEST"
+		userId : req.session.user
 	};
 
 	choir.songs.recordings.add(recordingData)

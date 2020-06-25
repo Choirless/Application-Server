@@ -92,13 +92,60 @@ function getAKnownChoir(choirId){
             }
         })
         .then(choirData => {
-            return choirData.choir
+            return choirData.choir;
         })
         .catch(err => {
             debug('getAKnownChoir Err:', err);
             throw err;
         })
     ;
+
+}
+
+function joinAnExistingChoir(choirId, userId, name, memberType){
+
+    if(!choirId){
+        return Promise.reject("No choirId was passed to function");
+    }
+    
+    if(!userId){
+        return Promise.reject("No userId was passed to function");
+    }
+    
+    if(!name){
+        return Promise.reject("No name was passed to function");
+    }
+
+    if(!memberType){
+        return Promise.reject("No memberType was passed to function");
+    }
+
+    const details = {
+        choirId : choirId,
+        userId : userId,
+        name : name,
+        memberType : memberType
+    };
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/join?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+        method : "POST",
+        headers : {
+            "Content-Type" : "application/json"
+        },
+        body : JSON.stringify(details)
+    })
+    .then(res => {
+        if(res.ok){
+            return res.json();
+        } else {
+            throw res;
+        }
+    })
+    .catch(err => {
+        debug("createANewChoir Err:", err);
+        throw err;
+    })
+;
 
 }
 
@@ -277,7 +324,7 @@ function getAllOfTheSectionsForASong(choirId, songId){
 
 function addARecordingToASongInAChoir(data){
 
-    const mandatoryParameters = ['choirId', 'songId', 'partNameId', 'userId', 'userName'];
+    const mandatoryParameters = ['choirId', 'songId', 'partNameId', 'userId'];
     const missingParameters = mandatoryParameters.filter(parameter => {
         return !data[parameter];
     });
@@ -286,22 +333,26 @@ function addARecordingToASongInAChoir(data){
         return Promise.reject(`Missing parameters in data object: "${missingParameters.join('", "')}"`);
     }
 
-    debug(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}`);
-    debug(data);
+    return users.get.byID(data.userId)
+        .then(userInformation => {
+            
+            data.userName = userInformation.name;
 
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}`, {
-            method : "POST",
-            headers : {
-                "Content-Type" : "application/json"
-            },
-            body : JSON.stringify(data)
-        })
-        .then(res => {
-            if(res.ok){
-                return res.json();
-            } else {
-                throw res;
-            }
+            return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+                method : "POST",
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify(data)
+            })
+            .then(res => {
+                if(res.ok){
+                    return res.json();
+                } else {
+                    throw res;
+                }
+            })
+
         })
         .then(response => {
             return response.partId;
@@ -375,7 +426,6 @@ function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
 
                             return retrievedUserDetails.map( (details, idx) => {
 
-                                details = details.user;
                                 response.members[idx].info = details;
 
                                 return response.members[idx];
@@ -402,10 +452,108 @@ function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
 
 }
 
+function getAnInvitationById(inviteId){
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/invitation?apikey=${process.env.CHOIRLESS_API_KEY}&inviteId=${inviteId}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.invitation;
+        })
+        .catch(err => {
+
+            debug('getAnInvitationById err:', err);
+
+            if(err.status === 498){
+                return { expired : true };
+            } else {
+                throw err;
+            }
+
+        })
+    ;        
+
+}
+
+function createAnInvitationForAUserToJoinAChoir(choirId, creatorId, inviteeEmail){
+
+    if(!choirId){
+        return Promise.reject(`No "choirId" was passed to function`);
+    }
+
+    if(!creatorId){
+        return Promise.reject(`No "creatorId" was passed to function`);
+    }
+
+    if(!inviteeEmail){
+        return Promise.reject(`No "inviteeEmail" was passed to function`);
+    }
+
+    const details = {
+        creator : creatorId,
+        invitee : inviteeEmail,
+        choirId : choirId,
+        sendMail : false
+    };
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/invitation?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(details)
+        })
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.id;
+        })
+        .catch(err => {
+            debug('createAnInvitationForAUserToJoinAChoir err:', err);
+            throw err;
+        })
+    ;
+
+}
+
+function checkUserIsAMemberOfAChoir(choirId, userId){
+
+    if(!choirId){
+        return Promise.reject('No choirId was passed to function.');  
+    }
+
+    if(!userId){
+        return Promise.reject('No userId was passed to function');
+    }
+
+    return getAllOfTheMembersOfAChoir(choirId)
+        .then(members => {
+            debug(members);
+            return members.filter(member => member.userId === userId)[0];
+        })
+        .catch(err => {
+            debug('checkUserIsAMemberOfAChoir err:', err);
+            throw err;
+        })
+    ;
+
+}
+
 module.exports = {
     create : createANewChoir,
     update : updateAnExistingChoir,
     get : getAKnownChoir,
+    join : joinAnExistingChoir,
     songs : {
         get : getAnExistingSongInAChoir,
         add : addANewSongToAChoir,
@@ -421,6 +569,11 @@ module.exports = {
         }
     },
     members : {
-        get : getAllOfTheMembersOfAChoir
+        get : getAllOfTheMembersOfAChoir,
+        invitations : {
+            get : getAnInvitationById,
+            create : createAnInvitationForAUserToJoinAChoir
+        },
+        check : checkUserIsAMemberOfAChoir
     }
 };

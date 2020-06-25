@@ -1,19 +1,20 @@
-<div id="addMember" class="modal" data-active="false">
+<div id="addPart" class="modal" data-active="false">
     <div class="container">
         
         <div class="content">
-            <h2>Add member to choir</h2>
+            <h2>Add a new part to the song</h2>
 
-            <form method="POST" action="/choir/add-member">
+            <form method="POST" action="/choir/add-song-part">
 
                 <input type="text" hidden value="{{choirInfo.choirId}}" name="choirId" />
+                <input type="text" hidden value="{{songInformation.songId}}" name="songId" />
 
-                <label for="name" class="required">Email Address</label>
-                <input id="name" type="email" placeholder="alex@choirless.com" name="email" required/>
+                <label for="name" class="required">Part name</label>
+                <input id="name" type="text" placeholder="Soprano / Alto / Tenor / Drums / Bagpipes etc." name="name" required/>
                 
                 <div class="side-by-side">
                     <button type="button" class="cta-button red cancel">Cancel</button>
-                    <button type="submit" class="cta-button light-blue">Send Invitation</button>
+                    <button type="submit" class="cta-button light-blue">Add part</button>
                 </div>       
 
             </form>
@@ -28,7 +29,7 @@
 
         'use strict';
 
-        var form = document.querySelector('#addMember form');
+        var form = document.querySelector('#addPart form');
         var cancelBtn = form.querySelector('.cancel');
 
         cancelBtn.addEventListener('click', function(e){
@@ -37,7 +38,7 @@
             e.stopImmediatePropagation();
 
             form.reset();
-            document.querySelector('#addMember').dataset.active="false";
+            document.querySelector('#addPart').dataset.active = "false";
 
         }, false);
 

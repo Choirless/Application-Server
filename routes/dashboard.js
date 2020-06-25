@@ -48,13 +48,10 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
     
         apiRequests.push(users.get.choirs(req.session.user).then(data => { requiredData.userChoirInfo = data }) );
         apiRequests.push(choir.get(req.params.CHOIRID).then(data => { requiredData.choirInfo = data }) );
+        apiRequests.push(choir.members.get(req.params.CHOIRID, true).then(data => { requiredData.choirMembers = data }) );
         
         if(req.params.VIEW === "songs"){
             apiRequests.push(choir.songs.getAll(req.params.CHOIRID).then(data => { requiredData.choirSongs = data }) );
-        }
-    
-        if(req.params.VIEW === "members"){
-            apiRequests.push(choir.members.get(req.params.CHOIRID, true).then(data => { requiredData.choirMembers = data }) );
         }
 
         if(req.params.VIEW === "song"){
@@ -88,10 +85,13 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
 
                         return section;
                     });
-                }
+                };
 
+                const userChoirInfoIndex = choirMembers.map(member => member.userId).indexOf(req.session.user);
+                const userIsMemberOfChoir = userChoirInfoIndex > -1;
+                const memberType = userIsMemberOfChoir ? choirMembers[userChoirInfoIndex].memberType : null;
 
-                if(choirInfo.createdByUserId !== req.session.user){
+                if(choirInfo.createdByUserId !== req.session.user && !userIsMemberOfChoir){
                     res.status(401);
                     next();
                 } else {
@@ -106,7 +106,10 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         songSections : songSections,
                         leadRecorded : !!songRecordings ? songRecordings.length !== 0 : false,
                         view : req.params.VIEW,
-                        loggedIn : !!req.session.user
+                        memberType : memberType,
+                        loggedIn : !!req.session.user,
+                        message : req.query.msg ? decodeURIComponent(req.query.msg) : undefined,
+                        messageType : req.query.msgtype
                     });
                 }
     

@@ -1,13 +1,14 @@
+{{#ifEquals memberType "leader"}}
 <div class="tableActions" id="songActions">
     <button id="addANewPart" class="cta-button light-blue" data-active="true">Add a part</button>
 </div>
+{{/ifEquals}}
 
 <table id="songs" data-active="true">
     
     <thead>
         <tr>
-            <td>Contributor</td>
-            <td></td>
+            <td colspan="2">Contributor</td>
         </tr>
     </thead>
 
@@ -89,6 +90,30 @@
 
 
         });
+
+    }());
+
+    (function(){
+
+        'use strict';
+
+        var tableActions = document.querySelector('.tableActions#songActions');
+
+        if(tableActions){
+
+            var addNewSongPart = tableActions.querySelector('button#addANewPart');
+
+            if(addNewSongPart){
+
+                addNewSongPart.addEventListener('click', function(){
+                    
+                    document.querySelector('#addPart.modal').dataset.active = "true";
+
+                }, false);
+
+            }
+
+        }
 
     }());
 

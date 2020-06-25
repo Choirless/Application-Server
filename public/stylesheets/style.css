@@ -109,6 +109,45 @@ nav section a{
   font-weight: 500;
 }
 
+#notice{
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 1em;
+  border-radius: 0 0 2px 2px;
+  box-shadow: 0 0 15px black;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+  width: 25%;
+}
+
+#notice.success{
+  background: #0ec155;
+}
+
+#notice.general{
+  background: #1a76c5;
+}
+
+#notice.error{
+  background: #bd3636;
+}
+
+#notice h5{
+  margin-bottom: 0.5em;
+}
+
+#notice p{
+  font-size: 0.8em;
+}
+
+#notice .cta-button{
+  min-width: 30%;
+  border-bottom: 1px solid black;
+  padding: 0.8em;
+}
+
 body#home header{
   display: flex;
   width: 100%;
@@ -258,12 +297,18 @@ footer div p:last-of-type{
   box-shadow: 0 1px 2px black;
   padding: 1em;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .global-dialog .dialog-content a.cta-button{
   background: black;
   color: white;
   display: block;
+  width: 100%;
+  max-width: 50%;
 }
 
 .modal{
@@ -369,7 +414,7 @@ body#record .video-dialog img{
   width: 25px;
 }
 
-body#record .video-dialog #progress{
+body#record .progress{
   width: 200px;
   height: 10px;
   border: 1px solid white;
@@ -377,11 +422,24 @@ body#record .video-dialog #progress{
   background-color: transparent;
 }
 
-body#record .video-dialog #progress #indicator{
+body#record .progress.inverted{
+  border: 1px solid black;
+}
+
+body#record .progress .indicator{
   height: 100%;
   background: white;
   width: 0px;
   display: block;
+  animation-duration: 4s;
+  animation-name: pulse;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  transition: width 0.5s;
+}
+
+body#record .progress .indicator.inverted{
+  background: black;
 }
 
 body#record #videos .half h3{
@@ -615,9 +673,9 @@ body#dashboard main section#choirMenu ul li a.selected::after{
   background: #2a93e4;
   position: absolute;
   top: 50%;
-  left: 95%;
+  left: 100%;
   margin-top: -0.5em;
-  transform: rotate(45deg);
+  transform: translateX(-50%) rotate(45deg);
 }
 
 body#dashboard main section#choirMenu button.cta-button{
@@ -757,6 +815,7 @@ body#dashboard main section#choirInfo table tr[data-collapsed="true"]{
 body#dashboard main section#choirInfo table tr td{
   padding: 0.5em;
   border-bottom: 1px solid rgba(0,0,0,0.2);
+  border-right: 0px solid transparent;
 }
 
 body#dashboard main section#choirInfo table tbody tr td{
@@ -842,7 +901,7 @@ body#dashboard .modal .container .content form div.side-by-side button{
 }
 
 
-body#dashboard .modal .container .content form input[type="text"]{
+body#dashboard .modal .container .content form input[type="text"], body#dashboard .modal .container .content form input[type="email"]{
   background: #e2e2e2;
   color: black;
 }
@@ -870,4 +929,11 @@ body#dashboard .no-info{
   padding: 1em;
   box-sizing: border-box;
   border-radius: 0 0 3px 3px;
+}
+
+/*Animation key frames*/
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
