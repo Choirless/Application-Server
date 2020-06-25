@@ -161,7 +161,12 @@
                     leadVideo.play();
                 }
 
-                mR = new MediaRecorder(performanceStream);
+                // Oh Firefox, why you gotta do me like this?
+                if(navigator.userAgent.indexOf("Firefox") === -1){
+                    mR = new MediaRecorder(performanceStream, { mimeType: 'video/webm; codecs=vp9' } );
+                } else {
+                    mR = new MediaRecorder(performanceStream);
+                }
 
                 mR.ondataavailable = function(e){
                     performanceData.push(e.data);
