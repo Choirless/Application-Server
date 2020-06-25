@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www"
   },
+  "license": "MIT",
   "dependencies": {
     "@cloudant/cloudant": "^4.2.4",
     "aws-sdk": "^2.668.0",
