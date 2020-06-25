@@ -1,13 +1,13 @@
-<div id="notice" class="{{messageType}}" data-active="true">
-    {{#ifEquals msgType "success"}}
+<div id="notice" class="{{msgtype}}" data-active="true">
+    {{#ifEquals msgtype "success"}}
     <h5>Success!</h5>
     {{/ifEquals}}
 
-    {{#ifEquals msgType "general"}}
+    {{#ifEquals msgtype "general"}}
     <h5>Notice</h5>
     {{/ifEquals}}
 
-    {{#ifEquals msgType "error"}}
+    {{#ifEquals msgtype "error"}}
     <h5>Error</h5>
     {{/ifEquals}}
 

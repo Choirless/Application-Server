@@ -107,9 +107,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         leadRecorded : !!songRecordings ? songRecordings.length !== 0 : false,
                         view : req.params.VIEW,
                         memberType : memberType,
-                        loggedIn : !!req.session.user,
-                        msg : req.query.msg ? decodeURIComponent(req.query.msg) : undefined,
-                        msgType : req.query.msgtype
+                        loggedIn : !!req.session.user
                     });
                 }
     

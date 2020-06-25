@@ -118,18 +118,15 @@ router.post('/create', (req, res, next) => {
 				
 				if(err.status === 409){
 					// Account exists with this email address;
-					res.status(409);
-					res.json({
-						status : "err",
-						msg : "An account already exists with that email account"
-					});
+					const errMsg = `Sorry, we couldn't create that account.`;
+					res.status(422);
+					res.redirect(`/account/create?msg=${errMsg}&msgtype=error`);
 				} else {
 					
+					const errMsg = `Sorry, an error ocurred during the creation of this account.`;
+					
 					res.status(err.status);
-					res.json({
-						status : "err",
-						msg : "Could not create account with that username."
-					});
+					res.redirect(`/account/create?msg=${errMsg}&msgtype=error`);
 
 				}
 

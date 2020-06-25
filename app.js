@@ -10,6 +10,7 @@ const compress = require('compression');
 const cookieSession = require('cookie-session');
 
 const checkSession = require(`./bin/middleware/check-session`);
+const messages = require(`./bin/middleware/messages`);
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use( logger('dev') );
 app.use(express.json( { limit: '150mb'} ) );
 app.use(express.urlencoded( { extended: false } ) );
 app.use( cookieParser() );
+app.use( messages );
 
 const staticCaching = process.env.NODE_ENV === "production" ? { maxAge: (60 * 60 * 1000).toString()} : {maxAge : 0}
 app.use( express.static( path.join(__dirname, 'public' ), staticCaching ));
