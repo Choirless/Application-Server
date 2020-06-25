@@ -18,7 +18,7 @@ router.post('/create', (req, res, next) => {
             .then((response) => {
                 
                 debug(response);
-                res.redirect('/dashboard');
+                res.redirect(`/dashboard/choir/${response.choirId}?msg=Choir "${req.body.name}" has been created.&msgtype=success`);
 
             })
             .catch(err => {
@@ -38,7 +38,7 @@ router.post('/update/:CHOIRID', (req, res, next) => {
     choirInterface.update(req.session.user, req.params.CHOIRID, req.body)
         .then(result => {
             debug('result');
-            res.redirect(`/dashboard/choir/${req.params.CHOIRID}`);
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}?msg=Choir details have been successfully updated&msgtype=success`);
         })
         .catch(err => {
             debug(`/choir/update/:CHOIRID err`, err);
@@ -84,7 +84,7 @@ router.post('/create-song', (req, res, next) => {
         choirInterface.songs.add(songData)
             .then(songId => {
                 debug('Song successfully created:', songId);
-                res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}`);
+                res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}?msg=New song "${songData.name}" added to choir&msgtype=success`);
             })
             .catch(err => {
                 debug('/create-song err:', err);
@@ -175,7 +175,7 @@ router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
         })
         .then(function(){
 
-            res.redirect(`/dashboard/choir/${req.params.CHOIRID}`);
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}?msg=You've joined the choir!&msgtype=success`);
 
         })
         .catch(err => {
@@ -191,10 +191,10 @@ router.post('/add-member', (req, res, next) => {
 
     if(!req.body.email){
         res.status(422);
-        res.redirect(`/dashboard/choir/${req.body.choirId}/members?err=noemail`);
+        res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=No email was passed to invite a new member&msgtype=error`);
     } else if(!req.body.choirId){
         res.status(422);
-        res.redirect('/dashboard?err=nochoir');
+        res.redirect('/dashboard?msg=No choir ID was passed to invite a user to&msgtype=error');
     } else {
 
         choirInterface.members.get(req.body.choirId)

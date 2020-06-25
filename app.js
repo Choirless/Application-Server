@@ -10,6 +10,7 @@ const compress = require('compression');
 const cookieSession = require('cookie-session');
 
 const checkSession = require(`./bin/middleware/check-session`);
+const messages = require(`./bin/middleware/messages`);
 
 const app = express();
 
@@ -36,8 +37,10 @@ app.use( logger('dev') );
 app.use(express.json( { limit: '150mb'} ) );
 app.use(express.urlencoded( { extended: false } ) );
 app.use( cookieParser() );
-app.use( express.static( path.join(__dirname, 'public' ), { maxAge: (60 * 60 * 1000).toString()} ) );
+app.use( messages );
 
+const staticCaching = process.env.NODE_ENV === "production" ? { maxAge: (60 * 60 * 1000).toString()} : {maxAge : 0}
+app.use( express.static( path.join(__dirname, 'public' ), staticCaching ));
 
 app.use(cookieSession({
 	name: 'choirless-session',
@@ -54,7 +57,7 @@ app.use('/performance', [checkSession], require(`${__dirname}/routes/performance
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-	next(createError(404));
+	next(createError(404, `We can't find that resource`));
 });
 
 // error handler
@@ -65,7 +68,10 @@ app.use(function(err, req, res, next) {
 
 	// render the error page
 	res.status(err.status || 500);
-	res.render('error');
+	res.render('error', {
+		bodyid : 'error',
+		loggedIn : !!req.session.user
+	});
 });
 
 module.exports = app;

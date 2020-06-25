@@ -1,17 +1,17 @@
-<div id="notice" class="{{messageType}}" data-active="true">
-    {{#ifEquals messageType "success"}}
+<div id="notice" class="{{msgtype}}" data-active="true">
+    {{#ifEquals msgtype "success"}}
     <h5>Success!</h5>
     {{/ifEquals}}
 
-    {{#ifEquals messageType "general"}}
+    {{#ifEquals msgtype "general"}}
     <h5>Notice</h5>
     {{/ifEquals}}
 
-    {{#ifEquals messageType "error"}}
+    {{#ifEquals msgtype "error"}}
     <h5>Error</h5>
     {{/ifEquals}}
 
-    <p>{{message}}</p>
+    <p>{{msg}}</p>
     <button class="cta-button">OK</button>
 </div>
 

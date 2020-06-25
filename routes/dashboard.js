@@ -93,7 +93,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
 
                 if(choirInfo.createdByUserId !== req.session.user && !userIsMemberOfChoir){
                     res.status(401);
-                    next();
+                    res.redirect(`/dashboard?msg=Sorry, you're not a registered as a member of that choir.&msgtype=error`);
                 } else {
                     res.render('dashboard', { 
                         title : "Choirless | My Dashboard", 
@@ -107,9 +107,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         leadRecorded : !!songRecordings ? songRecordings.length !== 0 : false,
                         view : req.params.VIEW,
                         memberType : memberType,
-                        loggedIn : !!req.session.user,
-                        message : req.query.msg ? decodeURIComponent(req.query.msg) : undefined,
-                        messageType : req.query.msgtype
+                        loggedIn : !!req.session.user
                     });
                 }
     
