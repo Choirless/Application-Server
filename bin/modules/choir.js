@@ -92,7 +92,7 @@ function getAKnownChoir(choirId){
             }
         })
         .then(choirData => {
-            return choirData.choir
+            return choirData.choir;
         })
         .catch(err => {
             debug('getAKnownChoir Err:', err);
@@ -522,6 +522,28 @@ function createAnInvitationForAUserToJoinAChoir(choirId, creatorId, inviteeEmail
 
 }
 
+function checkUserIsAMemberOfAChoir(choirId, userId){
+
+    if(!choirId){
+        return Promise.reject('No choirId was passed to function.');  
+    }
+
+    if(!userId){
+        return Promise.reject('No userId was passed to function');
+    }
+
+    return getAllOfTheMembersOfAChoir(choirId)
+        .then(members => {
+            debug(members);
+            return members.filter(member => member.userId === userId)[0];
+        })
+        .catch(err => {
+            debug('checkUserIsAMemberOfAChoir err:', err);
+            throw err;
+        })
+    ;
+
+}
 
 module.exports = {
     create : createANewChoir,
@@ -547,6 +569,7 @@ module.exports = {
         invitations : {
             get : getAnInvitationById,
             create : createAnInvitationForAUserToJoinAChoir
-        }
+        },
+        check : checkUserIsAMemberOfAChoir
     }
 };

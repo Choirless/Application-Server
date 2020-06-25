@@ -1,0 +1,47 @@
+<div id="addPart" class="modal" data-active="false">
+    <div class="container">
+        
+        <div class="content">
+            <h2>Add a new part to the song</h2>
+
+            <form method="POST" action="/choir/add-song-part">
+
+                <input type="text" hidden value="{{choirInfo.choirId}}" name="choirId" />
+                <input type="text" hidden value="{{songInformation.songId}}" name="songId" />
+
+                <label for="name" class="required">Part name</label>
+                <input id="name" type="text" placeholder="Soprano / Alto / Tenor / Drums / Bagpipes etc." name="name" required/>
+                
+                <div class="side-by-side">
+                    <button type="button" class="cta-button red cancel">Cancel</button>
+                    <button type="submit" class="cta-button light-blue">Add part</button>
+                </div>       
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        var form = document.querySelector('#addPart form');
+        var cancelBtn = form.querySelector('.cancel');
+
+        cancelBtn.addEventListener('click', function(e){
+            
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            form.reset();
+            document.querySelector('#addPart').dataset.active = "false";
+
+        }, false);
+
+    }());
+
+</script>
