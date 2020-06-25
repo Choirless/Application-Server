@@ -2,45 +2,46 @@ var CACHE_NAME = 'CHOIRLESS';
 
 self.addEventListener('fetch', function(event) {
 
-	event.respondWith(
-		caches.open(CACHE_NAME).then(function(cache) {
-			return cache.match(event.request)
-				.then(function(response) {
-
-					console.log(event.request.url, "Match?", response);
-
-                    var result;
-
-                    if(!response){
-
-                        result = fetchPromise = fetch(event.request)
-                            .then(function(networkResponse) {
+    if(event.request.method === 'GET' && event.request.url.indexOf('.webm') > -1){
+        
+        event.respondWith(
+            caches.open(CACHE_NAME).then(function(cache) {
+                return cache.match(event.request)
+                    .then(function(response) {
     
-                                if(event.request.method === 'GET'){
+                        console.log(event.request.url, "Match?", response);
     
-                                    if(event.request.url.indexOf('.webm') > -1){
-                                        console.log('Caching request:', event.request.url);
-                                        cache.put(event.request, networkResponse.clone());
-                                    }
+                        var result;
     
-                                }
+                        if(!response){
     
-                                return networkResponse;
+                            result = fetchPromise = fetch(event.request)
+                                .then(function(networkResponse) {        
+
+                                    console.log('Caching request:', event.request.url);
+                                    cache.put(event.request, networkResponse.clone());
+        
+                                    return networkResponse;
+                                
+                                })
                             
-                            })
-                        
-                        ;
+                            ;
+    
+                        } else {
+                            result = response;
+                        }
+    
+                    
+                    return result;
+                
+                })
+            })
+        );
 
-                    } else {
-                        result = response;
-                    }
+    } else {
+        return;
+    }
 
-				
-				return result;
-			
-			})
-		})
-	);
 });
 
 self.addEventListener('activate', function(event){
