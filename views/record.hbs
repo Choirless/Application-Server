@@ -247,7 +247,7 @@
 
                 playbackBtn.textContent = "Stop Playback";
 
-                recordedVideo.currentTime = 0;
+                recordedVideo.currentTime = streamOffset / 1000;
                 recordedVideo.play()
 
                 if(leadVideo){
@@ -419,6 +419,7 @@
 
             var fd = new FormData();
             fd.append('video', recordedVideo, 'video.webm');
+            fd.append('offset', streamOffset / 1000);
             
             var req = new XMLHttpRequest();
             req.open('POST', '/performance/save/{{this.choirId}}/{{this.songId}}/{{this.partNameId}}');
