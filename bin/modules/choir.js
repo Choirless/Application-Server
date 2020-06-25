@@ -324,7 +324,7 @@ function getAllOfTheSectionsForASong(choirId, songId){
 
 function addARecordingToASongInAChoir(data){
 
-    const mandatoryParameters = ['choirId', 'songId', 'partNameId', 'userId', 'userName'];
+    const mandatoryParameters = ['choirId', 'songId', 'partNameId', 'userId'];
     const missingParameters = mandatoryParameters.filter(parameter => {
         return !data[parameter];
     });
@@ -333,22 +333,26 @@ function addARecordingToASongInAChoir(data){
         return Promise.reject(`Missing parameters in data object: "${missingParameters.join('", "')}"`);
     }
 
-    debug(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}`);
-    debug(data);
+    return users.get.byID(data.userId)
+        .then(userInformation => {
+            
+            data.userName = userInformation.name;
 
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}`, {
-            method : "POST",
-            headers : {
-                "Content-Type" : "application/json"
-            },
-            body : JSON.stringify(data)
-        })
-        .then(res => {
-            if(res.ok){
-                return res.json();
-            } else {
-                throw res;
-            }
+            return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+                method : "POST",
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify(data)
+            })
+            .then(res => {
+                if(res.ok){
+                    return res.json();
+                } else {
+                    throw res;
+                }
+            })
+
         })
         .then(response => {
             return response.partId;
