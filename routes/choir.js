@@ -65,52 +65,25 @@ router.post('/create-song', (req, res, next) => {
             description : req.body.description
         };
 
-        songData.userId = req.session.user;
+        const sectionsToCreate = [];
 
+        Object.keys(req.body).forEach(key => {
+            if(key.indexOf('part-') > -1){
+
+                if(req.body[key] === "Lead (default)"){
+                    sectionsToCreate.push('Lead');
+                } else if(req.body[key] !== "") {
+                    sectionsToCreate.push(req.body[key]);
+                }
+
+            }
+        });
+
+        songData.partNames = sectionsToCreate;
+        
         choirInterface.songs.add(songData)
             .then(songId => {
-
                 debug('Song successfully created:', songId);
-
-                const sectionsToCreate = [];
-
-                Object.keys(req.body).forEach(key => {
-                    if(key.indexOf('part-') > -1){
-
-                        if(req.body[key] === "Lead (default)"){
-                            sectionsToCreate.push('Lead');
-                        } else if(req.body[key] !== "") {
-                            sectionsToCreate.push(req.body[key]);
-                        }
-
-                    }
-                })
-
-                const createProcesses = sectionsToCreate.map((part, idx) => {
-
-                    return new Promise( (resolve, reject) => {
-                        setTimeout(function(){
-                            choirInterface.songs.sections.add(req.body.choirId, songId, part)
-                                .then(result => {
-                                    resolve(result);
-                                })
-                                .catch(err => {
-                                    reject(err);
-                                })
-                        }, idx * 100);
-
-                    } );
-
-                });
-
-                return Promise.all(createProcesses)
-                    .then(function(){
-                        return songId;
-                    })
-                ;
-
-            })
-            .then(songId => {
                 res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}`);
             })
             .catch(err => {
