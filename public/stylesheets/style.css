@@ -821,6 +821,10 @@ body#dashboard main section#choirInfo table tr[data-collapsed="true"]{
   display: none;
 }
 
+body#dashboard main section#choirInfo table tbody tr:nth-child(even) {
+  background: #f7f7f7;
+}
+
 body#dashboard main section#choirInfo table tr td{
   padding: 0.5em;
   border-bottom: 1px solid rgba(0,0,0,0.2);
