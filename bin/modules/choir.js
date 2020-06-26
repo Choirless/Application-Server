@@ -171,7 +171,7 @@ function getAnExistingSongInAChoir(choirId, songId){
             return response.song;
         })
         .catch(err => {
-            debug('getAllOfTheSongsForAChoir err:', err);
+            debug('getAnExistingSongInAChoir err:', err);
             throw err;
         })
     ;
@@ -212,7 +212,7 @@ function addANewSongToAChoir(data){
 
 }
 
-function getAllOfTheSongsForAChoir(choirId){
+function getAllOfTheSongsForAChoir(choirId, getRecordingsToo = false){
 
     if(!choirId){
 
@@ -229,7 +229,21 @@ function getAllOfTheSongsForAChoir(choirId){
                 }
             })
             .then(response => {
-                return response.songs;
+
+                if(getRecordingsToo){
+
+                    return Promise.all(response.songs.map( song => { 
+                        return getAllRecordingsForASongInAChoir(choirId, song.songId)
+                            .then(recordings => {
+                                song.recordings = recordings;
+                                return song;
+                            })
+                    } ) );
+
+                } else {
+                    return response.songs;
+                }
+
             })
             .catch(err => {
                 debug('getAllOfTheSongsForAChoir err:', err);

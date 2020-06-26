@@ -788,7 +788,7 @@ body#dashboard main section#choirInfo #management div.tableActions h3{
   margin-bottom: 0;
   position: absolute;
   left: 0.5em;
-  text-shadow: 0 0 1px black;
+text-shadow: 0 1px 1px rgba(0, 0, 0, 0.65);
 }
 
 body#dashboard main section#choirInfo #management div.tableActions button{
@@ -819,6 +819,10 @@ body#dashboard main section#choirInfo table thead td{
 
 body#dashboard main section#choirInfo table tr[data-collapsed="true"]{
   display: none;
+}
+
+body#dashboard main section#choirInfo table tbody tr:nth-child(even) {
+  background: #f7f7f7;
 }
 
 body#dashboard main section#choirInfo table tr td{
