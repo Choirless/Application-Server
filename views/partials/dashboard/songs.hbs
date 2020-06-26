@@ -15,7 +15,7 @@
         <thead>
             <tr>
                 <td>Title</td>
-                <td>Members</td>
+                <td>Number of Sections</td>
                 <td>Performances Recorded</td>
                 <td>Created (DD/MM/YYYY)</td>
             </tr>
@@ -33,8 +33,8 @@
             {{#each songs}}
             <tr>
                 <td><a href="/dashboard/choir/{{this.choirId}}/song/{{this.songId}}">{{this.name}}</a></td>
-                <td>16 Members</td>
-                <td>8 / 16</td>
+                <td><strong>{{{this.numberOfSections}}}</strong></td>
+                <td><strong>{{{this.numberOfRecordings}}}</strong></td>
                 <td>{{#humantime}}{{this.createdOn}}{{/humantime}}</td>
             </tr>
             {{/each}}

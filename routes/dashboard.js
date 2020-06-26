@@ -51,7 +51,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
         apiRequests.push(choir.members.get(req.params.CHOIRID, true).then(data => { requiredData.choirMembers = data }) );
         
         if(req.params.VIEW === "songs"){
-            apiRequests.push(choir.songs.getAll(req.params.CHOIRID).then(data => { requiredData.choirSongs = data }) );
+            apiRequests.push(choir.songs.getAll(req.params.CHOIRID, true).then(data => { requiredData.choirSongs = data.map(song => {song.numberOfSections = song.partNames.length || 0; song.numberOfRecordings = song.recordings.length || 0; return song;}) }));
         }
 
         if(req.params.VIEW === "song"){
@@ -61,12 +61,10 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
     
         Promise.all(apiRequests)
             .then(function(){
-                
-                debug('requiredData:', requiredData);
     
                 const userChoirInfo = requiredData.userChoirInfo;
                 const choirInfo = requiredData.choirInfo;
-                const choirSongs = requiredData.choirSongs;
+                let choirSongs = requiredData.choirSongs;
                 const choirMembers = requiredData.choirMembers;
                 const songInformation = requiredData.songInformation;
                 let songSections;
@@ -86,7 +84,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         return section;
                     });
                 };
-
+                
                 const userChoirInfoIndex = choirMembers.map(member => member.userId).indexOf(req.session.user);
                 const userIsMemberOfChoir = userChoirInfoIndex > -1;
                 const memberType = userIsMemberOfChoir ? choirMembers[userChoirInfoIndex].memberType : null;
