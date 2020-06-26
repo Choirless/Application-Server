@@ -93,7 +93,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                     res.redirect(`/dashboard?msg=Sorry, you're not a registered as a member of that choir.&msgtype=error`);
                 } else {
                     res.render('dashboard', { 
-                        title : "Choirless | My Dashboard", 
+                        title : `Choirless | My Dashboard ${choirInfo ? `| ${choirInfo.name} ` : ""} ${songInformation ? `| ${songInformation.name}` : "" }`, 
                         bodyid: "dashboard",
                         userChoirs : userChoirInfo,
                         choirInfo : choirInfo,
