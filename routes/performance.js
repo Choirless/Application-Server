@@ -38,7 +38,6 @@ router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 					res.render('record', { 
 						title: 'Choirless | Record Piece', 
 						bodyid : "record",
-						loggedIn : !!req.session.user,
 						choirId : req.params.CHOIRID,
 						songId : req.params.SONGID,
 						partNameId : req.params.SECTIONID,
@@ -99,7 +98,7 @@ router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), functio
 		choirId : req.params.CHOIRID,
 		songId : req.params.SONGID,
 		partNameId : req.params.SECTIONID,
-		userId : req.session.user,
+		userId : res.locals.user,
 		offset : req.body.offset
 	};
 

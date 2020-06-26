@@ -2,8 +2,8 @@
     <a href="/" id="logo">Choirless</a>
     <section>
         <a href="/">Home</a>
-        {{#if loggedIn}}<a href="/dashboard">Dashboard</a>{{/if}}
-        {{#if loggedIn}}<a href="/account/logout">Log Out</a>{{else}}<a href="/account/login">Log In</a>{{/if}}
+        {{#if user}}<a href="/dashboard">Dashboard</a>{{/if}}
+        {{#if user}}<a href="/account/logout">Log Out</a>{{else}}<a href="/account/login">Log In</a>{{/if}}
 
     </section>
 </nav>
