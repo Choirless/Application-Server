@@ -26,7 +26,7 @@ router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 				getLeadVideoIdentifier = choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID)
 					.then(recordings => {
 						const leadVideo = recordings.filter(recording => recording.partNameId === leadSection.partNameId)[0];
-						return `${leadVideo.choirId}:${leadVideo.songId}:${leadVideo.partId}`;
+						return `${leadVideo.choirId}+${leadVideo.songId}+${leadVideo.partId}`;
 					})
 				;
 			}
