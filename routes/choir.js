@@ -7,14 +7,14 @@ const usersInterface = require(`${__dirname}/../bin/modules/users`);
 
 router.post('/create', (req, res, next) => {
 
-    debug('CREATE CHOIR:', req.session.user, req.body.name, req.body.description);
+    debug('CREATE CHOIR:', res.locals.user, req.body.name, req.body.description);
 
     if(!req.body.name || req.body.name === ""){
         res.status(500);
         next();
     } else {
 
-        choirInterface.create(req.session.user, req.body.name, req.body.description)
+        choirInterface.create(res.locals.user, req.body.name, req.body.description)
             .then((response) => {
                 
                 debug(response);
@@ -35,7 +35,7 @@ router.post('/create', (req, res, next) => {
 
 router.post('/update/:CHOIRID', (req, res, next) => {
 
-    choirInterface.update(req.session.user, req.params.CHOIRID, req.body)
+    choirInterface.update(res.locals.user, req.params.CHOIRID, req.body)
         .then(result => {
             debug('result');
             res.redirect(`/dashboard/choir/${req.params.CHOIRID}?msg=Choir details have been successfully updated&msgtype=success`);
@@ -59,7 +59,7 @@ router.post('/create-song', (req, res, next) => {
     } else {
 
         const songData = {
-            userId : req.session.user,
+            userId : res.locals.user,
             choirId : req.body.choirId,
             name : req.body.name,
             description : req.body.description
@@ -114,7 +114,7 @@ router.post('/add-song-part', (req, res, next) => {
         res.redirect(`/dashboard?msg=${errMsg}&msgtype=error`);
     } else {
         
-        choirInterface.members.check(req.body.choirId, req.session.user)
+        choirInterface.members.check(req.body.choirId, res.locals.user)
             .then(userInfo => {
 
                 if(userInfo){
@@ -151,7 +151,7 @@ router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
 
     const informationRequests = [];
 
-    informationRequests.push( usersInterface.get.byID( req.session.user ) );
+    informationRequests.push( usersInterface.get.byID( res.locals.user ) );
     informationRequests.push( choirInterface.members.invitations.get( req.params.INVITEID ) );
 
     Promise.all(informationRequests)
@@ -167,7 +167,7 @@ router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
                 const expiredMsg = "Sorry, that invitation has expired. Please ask the choir leader to send another";
                 res.redirect(`/dashboard?msg=${expiredMsg}&msgtype=error`);
             } else if(userInfo.email === invitationInfo.invitee){
-               return choirInterface.join(req.params.CHOIRID, req.session.user, userInfo.name, "member")
+               return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member")
             } else {
                 throw Error('User is not the user invited');
             }
@@ -200,13 +200,13 @@ router.post('/add-member', (req, res, next) => {
         choirInterface.members.get(req.body.choirId)
             .then(members => {
 
-                const thisMembersDetails = members.filter(member => member.userId === req.session.user)[0];
+                const thisMembersDetails = members.filter(member => member.userId === res.locals.user)[0];
 
                 if(thisMembersDetails.memberType === "leader"){
 
-                    choirInterface.members.invitations.create(req.body.choirId, req.session.user, req.body.email)
+                    choirInterface.members.invitations.create(req.body.choirId, res.locals.user, req.body.email)
                         .then(inviteId => {
-                            debug(`Invitation (${inviteId}) created by ${req.session.userId} for ${req.body.email} to join ${req.body.choirId}`);
+                            debug(`Invitation (${inviteId}) created by ${res.locals.user} for ${req.body.email} to join ${req.body.choirId}`);
                             const successMessage = `Invitation to "${req.body.email}" has been sent. If they accept, they will have access to your choir and appear here.`;
                             res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${successMessage}&msgtype=success`);
                         })

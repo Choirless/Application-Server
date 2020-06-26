@@ -7,7 +7,7 @@ const choir = require(`../bin/modules/choir`);
 
 router.get('/', (req, res, next) => {
 
-    users.get.choirs(req.session.user)
+    users.get.choirs(res.locals.user)
         .then(userChoirs => {
 
             debug("userChoirs:", userChoirs);
@@ -15,8 +15,7 @@ router.get('/', (req, res, next) => {
             res.render('dashboard', { 
                 title : "Choirless | My Dashboard", 
                 bodyid: "dashboard",
-                userChoirs : userChoirs,
-                loggedIn : !!req.session.user
+                userChoirs : userChoirs
             });
 
         })
@@ -46,7 +45,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
         
         const apiRequests = [];
     
-        apiRequests.push(users.get.choirs(req.session.user).then(data => { requiredData.userChoirInfo = data }) );
+        apiRequests.push(users.get.choirs(res.locals.user).then(data => { requiredData.userChoirInfo = data }) );
         apiRequests.push(choir.get(req.params.CHOIRID).then(data => { requiredData.choirInfo = data }) );
         apiRequests.push(choir.members.get(req.params.CHOIRID, true).then(data => { requiredData.choirMembers = data }) );
         
@@ -85,11 +84,11 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                     });
                 };
                 
-                const userChoirInfoIndex = choirMembers.map(member => member.userId).indexOf(req.session.user);
+                const userChoirInfoIndex = choirMembers.map(member => member.userId).indexOf(res.locals.user);
                 const userIsMemberOfChoir = userChoirInfoIndex > -1;
                 const memberType = userIsMemberOfChoir ? choirMembers[userChoirInfoIndex].memberType : null;
 
-                if(choirInfo.createdByUserId !== req.session.user && !userIsMemberOfChoir){
+                if(choirInfo.createdByUserId !== res.locals.user && !userIsMemberOfChoir){
                     res.status(401);
                     res.redirect(`/dashboard?msg=Sorry, you're not a registered as a member of that choir.&msgtype=error`);
                 } else {
@@ -105,7 +104,6 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         leadRecorded : !!songRecordings ? songRecordings.length !== 0 : false,
                         view : req.params.VIEW,
                         memberType : memberType,
-                        loggedIn : !!req.session.user
                     });
                 }
     

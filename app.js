@@ -10,6 +10,7 @@ const compress = require('compression');
 const cookieSession = require('cookie-session');
 
 const checkSession = require(`./bin/middleware/check-session`);
+const protectRoute = require(`./bin/middleware/protect-route`);
 const messages = require(`./bin/middleware/messages`);
 
 const app = express();
@@ -49,11 +50,13 @@ app.use(cookieSession({
 	secure : process.env.NODE_ENV === "production"
 }));
 
+app.use('*', checkSession);
+
 app.use('/', require(`${__dirname}/routes/index`));
 app.use('/account', require(`${__dirname}/routes/account`));
-app.use('/dashboard', [checkSession], require(`${__dirname}/routes/dashboard`));
-app.use('/choir', [checkSession], require(`${__dirname}/routes/choir`));
-app.use('/performance', [checkSession], require(`${__dirname}/routes/performance`));
+app.use('/dashboard', [protectRoute], require(`${__dirname}/routes/dashboard`));
+app.use('/choir', [protectRoute], require(`${__dirname}/routes/choir`));
+app.use('/performance', [protectRoute], require(`${__dirname}/routes/performance`));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -69,8 +72,7 @@ app.use(function(err, req, res, next) {
 	// render the error page
 	res.status(err.status || 500);
 	res.render('error', {
-		bodyid : 'error',
-		loggedIn : !!req.session.user
+		bodyid : 'error'
 	});
 });
 
