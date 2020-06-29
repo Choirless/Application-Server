@@ -1,6 +1,8 @@
+{{#ifEquals memberType "leader"}}
 <div class="tableActions" id="songsActions">
     <button id="createNewSong" class="cta-button light-blue" data-active="true">Create a song</button>
 </div>
+{{/ifEquals}}
 
 {{#unless songs}}
     <div class="no-info" data-target="songs">

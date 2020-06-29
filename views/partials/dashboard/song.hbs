@@ -20,7 +20,9 @@
                 <td>{{this.name}}</td>
                 <td>
                     {{#ifEquals this.name "Lead"}}
-                        <a href="/performance/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.partNameId}}" class="recordPart blue cta-button">Record this part</a>
+                        {{#ifEquals memberType "leader"}}
+                            <a href="/performance/record/{{../choirInfo.choirId}}/{{../songInformation.songId}}/{{this.partNameId}}" class="recordPart blue cta-button">Record this part</a>
+                        {{/ifEquals}}
                     {{/ifEquals}}
 
                     {{#ifEquals ../this.leadRecorded true }}

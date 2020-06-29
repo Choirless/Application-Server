@@ -2,7 +2,9 @@
     <ol>
         <li {{#ifEquals view "songs"}}class="active"{{/ifEquals}}><a href="/dashboard/choir/{{choirInfo.choirId}}/songs">Songs</a></li>
         <li {{#ifEquals view "members"}}class="active"{{/ifEquals}}><a href="/dashboard/choir/{{choirInfo.choirId}}/members">Members</a></li>
+        {{#ifEquals memberType 'leader'}}
         <li {{#ifEquals view "settings"}}class="active"{{/ifEquals}}><a href="/dashboard/choir/{{choirInfo.choirId}}/settings">Settings</a></li>
+        {{/ifEquals}}
         {{!-- <li><button id="settingsTabBtn" data-target="settings">Settings</button></li> --}}
     </ol>
 </div>
