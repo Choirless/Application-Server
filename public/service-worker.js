@@ -13,7 +13,7 @@ self.addEventListener('fetch', function(event) {
     
                         var result;
     
-                        if(!response){
+                        if(!response || response.status !== 200){
     
                             result = fetchPromise = fetch(event.request)
                                 .then(function(networkResponse) {        
