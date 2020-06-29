@@ -147,6 +147,27 @@ router.post('/add-song-part', (req, res, next) => {
 
 });
 
+router.get('/join/choirless-alpha', (req, res, next) => {
+
+    const ALPHA_CHOIRID = process.env.CHOIRLESS_ALPHA_ID;
+
+    return usersInterface.get.byID( res.locals.user )
+        .then(userInfo => {
+
+            return choirInterface.join(ALPHA_CHOIRID, res.locals.user, userInfo.name, "member")
+                .then(function(){
+                    res.redirect(`/dashboard/choir/${ALPHA_CHOIRID}?msg=You've joined the choir!&msgtype=success`);
+                })
+            ;
+        })
+        .catch(err => {
+            debug('/join/choirless-alpha err:', err);
+        })
+    ;
+
+
+});
+
 router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
 
     const informationRequests = [];
