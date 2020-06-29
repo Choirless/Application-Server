@@ -37,7 +37,7 @@ router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 					debug(leadVideoIdentifier);
 					res.render('record', { 
 						title: 'Choirless | Record Piece', 
-						bodyid : "record",
+						bodyid : 'record',
 						choirId : req.params.CHOIRID,
 						songId : req.params.SONGID,
 						partNameId : req.params.SECTIONID,
@@ -55,6 +55,65 @@ router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 			next();
 		})
 	;
+
+});
+
+router.get('/preview/:CHOIRID/:SONGID', (req, res, next) => {
+
+	choir.members.check(req.params.CHOIRID, res.locals.user)
+		.then(userInformation => {
+			
+			if(!userInformation){
+				res.status(422);
+				next()
+			} else {
+
+				const apiRequests = [];
+
+				apiRequests.push(choir.songs.sections.getAll(req.params.CHOIRID, req.params.SONGID));
+				apiRequests.push(choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID));
+
+				Promise.all(apiRequests)
+					.then(results => {
+						
+						const sections = results[0].map(section => {
+							section.recordings = [];
+							return section;
+						});
+						const recordings = results[1];
+						
+						debug('sections:', sections);
+						debug('recordings:', recordings);
+
+						recordings.forEach(recording => {
+
+							for(let x = 0; x < sections.length; x += 1){
+								if(recording.partNameId === sections[x].partNameId){
+									sections[x].recordings.push(recording);
+									break;
+								}
+							}
+
+						});
+
+						debug('adjusted sections:', sections);
+
+						res.render('preview', {
+							title : 'Choirless | Preview song',
+							bodyid : 'preview',
+							choirId : req.params.CHOIRID,
+							songId : req.params.SONGID,
+							sections : sections
+						});
+
+					})
+				;
+
+				
+			}
+
+		})
+
 
 });
 
@@ -88,7 +147,7 @@ router.get('/video/:VIDEOIDENTIFIER', (req, res, next) => {
 
 });
 
-router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), function(req, res, next) {
+router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), function(req, res) {
   
 	debug(req.file)
 	debug(req.params.CHOIRID, req.params.SONGID, req.params.SECTIONID);
@@ -105,48 +164,55 @@ router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), functio
 			const recordingInformation = results[0];
 			const userInformation = results[1];
 
-			let recordingType;
+			if(!userInformation){
+				res.status(401);
+				next();
+			} else {
 
-			// If it's the first part laid down it's: 'backing'
-			// If the person uploading is a leader it's: 'reference'
-			// Otherwise, it's: 'rendition'
+				let recordingType;
+	
+				// If it's the first part laid down it's: 'backing'
+				// If the person uploading is a leader it's: 'reference'
+				// Otherwise, it's: 'rendition'
+	
+				if(recordingInformation.length === 0){
+					recordingType = 'backing';
+				} else if(userInformation.memberType === 'leader'){
+					recordingType = 'reference';
+				} else{
+					recordingType = 'rendition';
+				}
+	
+				const recordingData = {
+					choirId : req.params.CHOIRID,
+					songId : req.params.SONGID,
+					partNameId : req.params.SECTIONID,
+					userId : res.locals.user,
+					offset : req.body.offset,
+					partType : recordingType
+				};
+			
+				choir.songs.recordings.add(recordingData)
+					.then(partId => {
+			
+						const filename = `${req.params.CHOIRID}+${req.params.SONGID}+${partId}.webm`
+					
+						storage.put(filename, req.file.buffer)
+							.then(() => {
+								debug(`Video ${filename} stored :D`);
+								res.end();
+							})
+							.catch(err => {
+								debug("Storage err:", err);
+								res.status(500);
+								res.end();
+							})
+						;
+			
+					})
+				;
 
-			if(recordingInformation.length === 0){
-				recordingType = 'backing';
-			} else if(userInformation.memberType === 'leader'){
-				recordingType = 'reference';
-			} else{
-				recordingType = 'rendition';
 			}
-
-			const recordingData = {
-				choirId : req.params.CHOIRID,
-				songId : req.params.SONGID,
-				partNameId : req.params.SECTIONID,
-				userId : res.locals.user,
-				offset : req.body.offset,
-				partType : recordingType
-			};
-		
-			choir.songs.recordings.add(recordingData)
-				.then(partId => {
-		
-					const filename = `${req.params.CHOIRID}+${req.params.SONGID}+${partId}.webm`
-				
-					storage.put(filename, req.file.buffer)
-						.then(() => {
-							debug(`Video ${filename} stored :D`);
-							res.end();
-						})
-						.catch(err => {
-							debug("Storage err:", err);
-							res.status(500);
-							res.end();
-						})
-					;
-		
-				})
-			;
 
 		})
 		.catch(err => {

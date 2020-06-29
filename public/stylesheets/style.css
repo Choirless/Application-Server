@@ -606,12 +606,12 @@ body#accountLogin main section form button, #createAccountBtn{
 
 /* Dashboard styles */
 
-body#dashboard{
+body#dashboard, body#preview{
   background-image: url('/assets/images/background_blurred.jpg');
   background-size: cover;
 }
 
-body#dashboard main{
+body#dashboard main, body#preview main{
   display: flex;
   padding: 0;
   height: 100%;
@@ -619,7 +619,7 @@ body#dashboard main{
   max-width: 100%;
 }
 
-body#dashboard main section{
+body#dashboard main section#choirInfo{
   display: flex;
   margin: 0;
   padding: 0;
@@ -629,43 +629,44 @@ body#dashboard main section{
   width: 15%;
 }
 
-body#dashboard main section#choirMenu{
+section.sidebar{
   flex-direction: column;
   background: white;
   padding: 1em;
   color: black;
+  min-width: 12%;
 }
 
-body#dashboard main section#choirMenu ul{
+section.sidebar ul{
   margin-bottom: 1em;
 }
 
-body#dashboard main section#choirMenu ul li{
+section.sidebar ul li{
   margin-bottom: 0.5em;
   color: black;
 }
 
-body#dashboard main section#choirMenu ul li:hover{
+section.sidebar ul li:hover{
   color: white;
   background-color: #424242;
 
 }
 
-body#dashboard main section#choirMenu ul li a{
+section.sidebar ul li a{
   text-decoration: none;
   color: inherit;
   display: block;
   padding: 0.5em;
 }
 
-body#dashboard main section#choirMenu ul li a.selected{
+section.sidebar ul li a.selected{
   background-color: #2a93e4;
   color: white;
   position: relative;
   font-weight: 600;
 }
 
-body#dashboard main section#choirMenu ul li a.selected::after{
+section.sidebar ul li a.selected::after{
   content: '';
   display: block;
   width: 1em;
@@ -678,7 +679,7 @@ body#dashboard main section#choirMenu ul li a.selected::after{
   transform: translateX(-50%) rotate(45deg);
 }
 
-body#dashboard main section#choirMenu button.cta-button{
+section.sidebar button.cta-button{
   width: 100%;
 }
 
@@ -946,6 +947,64 @@ body#dashboard .no-info{
   border-radius: 0 0 3px 3px;
 }
 
+/* Preview page styles */
+
+body#preview main section#recordings{
+  margin: 0;
+  position: relative;
+  flex-grow: 1;
+  max-width: 100%;
+  flex-direction: column;
+  text-align: left;
+  align-items: flex-start;
+  max-height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 1em;
+  box-sizing: border-box;
+}
+
+body#preview main section#recordings section#recording-sections{
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  height: auto;
+  flex-direction: column;
+  background: rgba(0,0,0,0.75);
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  margin-bottom: 1em;
+  border-radius: 0 0 3px 3px;
+}
+
+body#preview main section#recordings section#recording-sections:nth-child(odd){
+  background: rgba(0,0,0,0.5);
+}
+
+body#preview main section#recordings section#recording-sections h3{
+  margin: 0;
+  padding: 0.3em;
+  width: 100%;
+  background: black;
+  color: white;
+  box-sizing: border-box;
+}
+
+body#preview main section#recordings section#recording-sections .videos{
+  display: flex;
+  width: 100%;
+  overflow-x: scroll;
+  align-items: flex-start;
+  padding: 1em;
+}
+
+body#preview main section#recordings section#recording-sections video{
+  width: 25%;
+  float: left;
+  margin-right: 1em;
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.9);
+}
 
 /*Error page styles*/
 

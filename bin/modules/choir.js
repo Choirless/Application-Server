@@ -540,7 +540,7 @@ function createAnInvitationForAUserToJoinAChoir(choirId, creatorId, inviteeEmail
 
 }
 
-function checkUserIsAMemberOfAChoir(choirId, userId, getUserInfoToo = False){
+function checkUserIsAMemberOfAChoir(choirId, userId, getUserInfoToo = false){
 
     if(!choirId){
         return Promise.reject('No choirId was passed to function.');  

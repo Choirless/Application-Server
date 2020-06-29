@@ -1,0 +1,53 @@
+<main>
+
+<section class="sidebar">
+	<h2>Sections</h2>
+
+	<ul>
+		<!--<li><a href="#">The People's Front of Judea</a></li>-->
+		{{#each sections}}
+			<li><a>{{this.name}}</a></li>
+		{{/each}}
+	</ul>
+
+
+</section>
+
+<section id="recordings">
+
+	{{#each sections}}
+
+		<section id="recording-sections">
+			
+			<h3>{{this.name}}</h3>
+			
+			<div class="videos">
+				{{#each this.recordings}}
+				<video loop src="/performance/video/{{this.choirId}}:{{this.songId}}:{{this.partId}}.webm"></video>
+				{{/each}}
+			</div>
+
+		
+		</section>
+
+	{{/each}}
+
+</section>
+
+<script>
+
+	(function(){
+		'use strict';
+
+		/*window.addEventListener('click', function(){
+
+			Array.from(document.querySelectorAll('video')).forEach(video => {
+				video.currentTime = 0;
+				video.play();
+			});
+
+		}, false);*/
+
+	}());
+
+</script>
