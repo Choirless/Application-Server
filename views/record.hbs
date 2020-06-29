@@ -185,7 +185,7 @@
 
                 // Oh Firefox, why you gotta do me like this?
                 if(navigator.userAgent.indexOf("Firefox") === -1){
-                    mR = new MediaRecorder(performanceStream, { mimeType: 'video/webm; codecs=vp9' } );
+                    mR = new MediaRecorder(performanceStream, { mimeType: 'video/webm;codecs=vp8,opus', bitsPerSecond : 8388608  } );
                 } else {
                     mR = new MediaRecorder(performanceStream);
                 }
@@ -317,7 +317,29 @@
             navigator.mediaDevices.enumerateDevices()
                 .then( function(listOfDevices){
 
-                    var constraints = { video: {width: { min: 640, ideal: 1280, max: 1280 }, height: { min: 400, ideal: 720 } },  audio: true };
+                    var constraints = { 
+                        video: {
+                            width: { 
+                                min: 640, ideal: 1280, max: 1280 
+                            }, 
+                            height: { 
+                                min: 400, ideal: 720 
+                            } 
+                        },
+                        audio: {
+                            autoGainControl: false,
+                            channelCount: 2,
+                            echoCancellation: false,
+                            noiseSuppression: false,
+                            sampleRate: 44100,
+                            sampleSize: 16
+                        } 
+                    };
+
+                    /*var constraints = {
+                        video : true,
+                        audio: true
+                    }*/
 
                     navigator.mediaDevices.getUserMedia(constraints)
                         .then(function(stream) {
