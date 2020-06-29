@@ -540,7 +540,7 @@ function createAnInvitationForAUserToJoinAChoir(choirId, creatorId, inviteeEmail
 
 }
 
-function checkUserIsAMemberOfAChoir(choirId, userId){
+function checkUserIsAMemberOfAChoir(choirId, userId, getUserInfoToo = False){
 
     if(!choirId){
         return Promise.reject('No choirId was passed to function.');  
@@ -550,7 +550,7 @@ function checkUserIsAMemberOfAChoir(choirId, userId){
         return Promise.reject('No userId was passed to function');
     }
 
-    return getAllOfTheMembersOfAChoir(choirId)
+    return getAllOfTheMembersOfAChoir(choirId, getUserInfoToo)
         .then(members => {
             debug(members);
             return members.filter(member => member.userId === userId)[0];
