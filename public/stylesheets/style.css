@@ -791,9 +791,11 @@ body#dashboard main section#choirInfo #management div.tableActions h3{
 text-shadow: 0 1px 1px rgba(0, 0, 0, 0.65);
 }
 
-body#dashboard main section#choirInfo #management div.tableActions button{
+body#dashboard main section#choirInfo #management div.tableActions button, body#dashboard main section#choirInfo #management div.tableActions a.cta-button{
   border: 1px solid #ffffffb8;
   box-shadow: 0 1px 1px #00000047;
+  line-height: inherit;
+  margin-left: 1em;
 }
 
 body#dashboard main section#choirInfo table{
