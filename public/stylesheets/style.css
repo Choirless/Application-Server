@@ -996,12 +996,14 @@ body#preview main section#recordings section#recording-sections .videos{
   overflow-x: scroll;
   align-items: flex-start;
   padding: 1em;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 body#preview main section#recordings section#recording-sections video{
   width: 25%;
   float: left;
-  margin-right: 1em;
+  margin: 0.5em;
   border-radius: 2px;
   border: 1px solid rgba(255,255,255,0.9);
 }
