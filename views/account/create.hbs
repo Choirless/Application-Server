@@ -7,7 +7,7 @@
 
     <section>
 
-        <form id="loginForm" method="POST" action="/account/create">
+        <form id="loginForm" method="POST" action="/account/create{{#if redirect}}?redirect={{#encodeURL}}{{this.redirect}}{{/encodeURL}}{{/if}}">
             
             <h2>Account Details</h2>
             <input type="text" placeholder="Name" name="name" required/>

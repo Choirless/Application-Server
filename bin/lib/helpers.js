@@ -25,4 +25,8 @@ module.exports = (Handlebars) => {
         return (arg1 == arg2) ? options.inverse(this) : options.fn(this);
     });
 
+    Handlebars.registerHelper("encodeURL", function(options) {
+        return new Handlebars.SafeString(encodeURIComponent(options.fn(this)));
+    });
+
 }

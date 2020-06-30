@@ -69,7 +69,7 @@ router.post('/login', (req, res, next) => {
 router.get('/create', function(req, res, next) {
 
 	if(!req.session.user){
-		res.render('account/create', { title: "Choirless | All the world's a stage", bodyid: "accountCreate" });
+		res.render('account/create', { title: "Choirless | All the world's a stage", bodyid: "accountCreate", redirect : req.query.redirect });
 	} else {
 		res.redirect('/');
 	}
@@ -88,6 +88,8 @@ router.post('/create', (req, res, next) => {
 			res.status(422);
 			res.send('Password and repeated password did not match');
 		}
+
+		debug(req.query.redirect)
 
 		users.add({
 				name : req.body.name,
@@ -119,13 +121,13 @@ router.post('/create', (req, res, next) => {
 					// Account exists with this email address;
 					const errMsg = `Sorry, we couldn't create that account.`;
 					res.status(422);
-					res.redirect(`/account/create?msg=${errMsg}&msgtype=error`);
+					res.redirect(`/account/create?msg=${errMsg}&msgtype=error&redirect=${req.query.redirect}`);
 				} else {
 					
 					const errMsg = `Sorry, an error ocurred during the creation of this account.`;
 					
 					res.status(err.status);
-					res.redirect(`/account/create?msg=${errMsg}&msgtype=error`);
+					res.redirect(`/account/create?msg=${errMsg}&msgtype=error&redirect=${req.query.redirect}`);
 
 				}
 
