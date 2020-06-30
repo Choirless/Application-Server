@@ -20,6 +20,36 @@
 			{{> display_message}}
 		{{/if}}
 
+
+
+	<div id="safariWarning" class="global-dialog" data-active="false">
+		<div class="dialog-content">
+			<h3 id="heading">Hello, Safari user!</h3>
+			<p>We're sorry, but Safari doesn't have the advanced technologies that Choirless uses to record songs.</p>
+			<p>That said, Choirless works fantastically in Chrome, Firefox, and Edge. If you open up the link in one of those browsers, everything (should) be great.</p>
+		</div>
+	</div>
+
+	<script>
+
+		(function(){
+
+			'use strict';
+
+			const safariWarning = document.querySelector('#safariWarning');
+
+			var ua = navigator.userAgent.toLowerCase(); 
+			if (ua.indexOf('safari') !== -1) { 
+				if (ua.indexOf('chrome') > -1) {
+				} else {
+					safariWarning.dataset.active = "true";
+				}
+			}
+
+		}());
+
+	</script>
+
 	<script>
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
