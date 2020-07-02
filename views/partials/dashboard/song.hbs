@@ -1,9 +1,15 @@
-{{#ifEquals memberType "leader"}}
+
 <div class="tableActions" id="songActions">
     <h3>{{songInformation.name}}</h3>
+    
+    {{#if render}}
+    <a href="{{render}}" class="cta-button dark-green" >See latest render</a>
+    {{/if}}
+
+    {{#ifEquals memberType "leader"}}
     <button id="addANewPart" class="cta-button light-blue" data-active="true">Add a part</button>
+    {{/ifEquals}}
 </div>
-{{/ifEquals}}
 
 <table id="songs" data-active="true">
     

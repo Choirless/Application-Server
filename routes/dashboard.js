@@ -4,6 +4,7 @@ const router = express.Router();
 
 const users = require(`../bin/modules/users`);
 const choir = require(`../bin/modules/choir`);
+const storage = require('../bin/lib/storage');
 
 router.get('/', (req, res, next) => {
 
@@ -56,6 +57,8 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
         if(req.params.VIEW === "song"){
             apiRequests.push(choir.songs.get(req.params.CHOIRID, req.params.SONGID).then(data => { requiredData.songInformation = data }) );
             apiRequests.push(choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID).then(data => { requiredData.recordings = data }) );
+            apiRequests.push(storage.check(`${req.params.CHOIRID}+${req.params.SONGID}+final.mp4`, process.env.COS_RENDER_BUCKET).then(data => {requiredData.render = data}));
+
         }
     
         Promise.all(apiRequests)
@@ -68,6 +71,8 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                 const songInformation = requiredData.songInformation;
                 let songSections;
                 const songRecordings = requiredData.recordings;
+
+                const renderURL = requiredData.render ? `${process.env.COS_PUBLIC_STORAGE_URL}/${req.params.CHOIRID}+${req.params.SONGID}+final.mp4?ts=${Number(Date.now())}` : undefined;
 
                 if(songInformation){
                     songSections = songInformation.partNames.map(section => {
@@ -104,6 +109,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         leadRecorded : !!songRecordings ? songRecordings.length !== 0 : false,
                         view : req.params.VIEW,
                         memberType : memberType,
+                        render : renderURL
                     });
                 }
     

@@ -225,7 +225,13 @@ a.cta-button.green, button.cta-button.green{
   color: white !important;
 }
 
-a.cta-button.green:hover, button.cta-button.green:hover{
+a.cta-button.dark-green, button.cta-button.dark-green{
+  background-color: #6db12f;
+  color: white !important;
+}
+
+
+a.cta-button.green:hover, button.cta-button.green:hover, a.cta-button.dark-green:hover, button.cta-button.dark-green:hover{
   background-color: #98ea4c;
 }
 
@@ -791,7 +797,7 @@ body#dashboard main section#choirInfo #management div.tableActions h3{
 text-shadow: 0 1px 1px rgba(0, 0, 0, 0.65);
 }
 
-body#dashboard main section#choirInfo #management div.tableActions button{
+body#dashboard main section#choirInfo #management div.tableActions .cta-button{
   border: 1px solid #ffffffb8;
   box-shadow: 0 1px 1px #00000047;
 }
