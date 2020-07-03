@@ -942,6 +942,20 @@ body#dashboard .modal .container .content form#songCreation #songparts .songpart
   height: 100%;
 }
 
+body#dashboard .modal#renderPlayback .container .content{
+  flex-direction: column;
+}
+
+body#dashboard .modal#renderPlayback .container .content video{
+  width: 100%;
+  outline: 0px solid transparent;
+}
+
+body#dashboard .modal#renderPlayback .container .content button {
+  align-self: flex-end;
+  margin-top: 1em;
+}
+
 body#dashboard .no-info{
   width: 100%;
   background: white;
