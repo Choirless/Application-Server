@@ -9,7 +9,7 @@ router.get('/login', function(req, res, next) {
 
 	if(!req.session.user){
 		res.render('account/login', { 
-			title: "Choirless | All the world's a stage", 
+			title: "Choirless | Bringing people together, even when they're not together.", 
 			bodyid: "accountLogin",
 			redirect: req.query.redirect
 		});
@@ -20,8 +20,6 @@ router.get('/login', function(req, res, next) {
 });
 
 router.post('/login', (req, res, next) => {
-
-	debug("SESH:", req.session);
 
 	if(req.session.user){
 		res.redirect('/');
@@ -34,7 +32,7 @@ router.post('/login', (req, res, next) => {
 				
 					if(data.ok !== true){
 						res.status(401);
-						res.send("user/pass mismatch");
+						res.redirect(`/account/login?msg=Sorry, those credentials are incorrect.&msgtype=error`);
 					} else {
 
 						debug(data);
@@ -55,10 +53,7 @@ router.post('/login', (req, res, next) => {
 			.catch(err => {
 				debug('Login err:', err);
 				res.status(err.status || 422);
-				res.json({
-					status : "err",
-					msg : "Could not login with email/pass combination"
-				});
+				res.redirect('/account/login?msg=Sorry, an error occurred during login.&msgtype=error');
 			})
 		;
 
@@ -73,7 +68,7 @@ router.post('/login', (req, res, next) => {
 router.get('/create', function(req, res, next) {
 
 	if(!req.session.user){
-		res.render('account/create', { title: "Choirless | All the world's a stage", bodyid: "accountCreate", redirect : req.query.redirect });
+		res.render('account/create', { title: "Choirless | Bringing people together, even when they're not together.", bodyid: "accountCreate", redirect : req.query.redirect });
 	} else {
 		res.redirect('/');
 	}
@@ -82,15 +77,13 @@ router.get('/create', function(req, res, next) {
 
 router.post('/create', (req, res, next) => {
 
-	debug('/create', req.body);
-
 	if(req.session.user){
 		res.redirect('/');
 	} else if(req.body.name && req.body.email && req.body.password && req.body.repeat_password){
 
 		if(req.body.password !== req.body.repeat_password){
 			res.status(422);
-			res.send('Password and repeated password did not match');
+			res.redirect('/account/create?msg=Password and repeated password did not match.&msgtype=error');
 		}
 
 		debug(req.query.redirect)
