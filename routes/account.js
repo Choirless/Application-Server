@@ -3,7 +3,7 @@ const router = express.Router();
 const debug = require('debug')("routes:account");
 
 const users = require(`${__dirname}/../bin/modules/users`);
-const mail = require(`${__dirname}/../bin/modules/email`);
+const mail = require(`${__dirname}/../bin/modules/emails`);
 
 router.get('/login', function(req, res, next) {
 
