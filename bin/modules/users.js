@@ -75,7 +75,11 @@ function loginUserToChoirlessService(email, password){
         })
         .catch(err => {
             debug("loginUserToChoirlessService error:", err);
-            throw err;
+            if(err.status === 403){
+                return {ok : false};
+            } else {
+                throw err;
+            }
         })
     ;
 
