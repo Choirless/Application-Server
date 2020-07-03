@@ -105,8 +105,10 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                         view : req.params.VIEW,
                         memberType : memberType,
                     });
+
+                    debug('UN:', res.locals.name);
+
                 }
-    
     
             })
             .catch(err => {

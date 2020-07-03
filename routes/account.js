@@ -35,7 +35,10 @@ router.post('/login', (req, res, next) => {
 						res.status(401);
 						res.send("user/pass mismatch");
 					} else {
+
+						debug(data);
 						req.session.user = data.user.userId;
+						req.session.name = data.user.name;
 
 						if(req.query.redirect){
 							res.redirect(decodeURIComponent(req.query.redirect));

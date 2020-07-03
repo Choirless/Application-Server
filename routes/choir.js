@@ -4,6 +4,7 @@ const router = express.Router();
 
 const choirInterface = require(`${__dirname}/../bin/modules/choir`);
 const usersInterface = require(`${__dirname}/../bin/modules/users`);
+const mailInterface = require(`${__dirname}/../bin/modules/emails`);
 
 router.post('/create', (req, res, next) => {
 
@@ -223,23 +224,59 @@ router.post('/add-member', (req, res, next) => {
 
                 const thisMembersDetails = members.filter(member => member.userId === res.locals.user)[0];
 
-                if(thisMembersDetails.memberType === "leader"){
+                if(!thisMembersDetails){
+
+                    res.redirect(`/dashboard?msg=Sorry, you are not a member of this choir.&msgtype=error`);
+
+                } else if(thisMembersDetails.memberType === "leader"){
 
                     choirInterface.members.invitations.create(req.body.choirId, res.locals.user, req.body.email)
                         .then(inviteId => {
+
                             debug(`Invitation (${inviteId}) created by ${res.locals.user} for ${req.body.email} to join ${req.body.choirId}`);
+                            
+                            return choirInterface.get(req.body.choirId)
+                                .then(choirDetails => {
+
+                                    const emailDetails = {
+                                        to : req.body.email,
+                                        subject : "You've been invited to join a Choirless choir.",
+                                        info : {
+                                            creator : res.locals.name,
+                                            choirName : choirDetails.name,
+                                            invitationURL : `${process.env.SERVICE_URL}/choir/join/${req.body.choirId}/${inviteId}`
+                                        }
+                                    };
+        
+                                    return mailInterface.send(emailDetails, 'invitation')
+                                        .then(function(){
+                                            debug(`Email for invitation "${inviteId}" successfully dispatched.`);
+                                        })
+                                    ;
+
+                                })
+                            ;
+                            
+                        })
+                        .then(() => {
+                            
                             const successMessage = `Invitation to "${req.body.email}" has been sent. If they accept, they will have access to your choir and appear here.`;
                             res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${successMessage}&msgtype=success`);
+                            
                         })
                         .catch(err => {
+                            debug('/add-member err:', err);
                             res.status(500);
                             next();
+
                         })
                     ;
 
                 } else {
-                    const errMsg = ``
+
+                    const errMsg = `Sorry, we could not create that invitation. You must be a leader of this choir to send invitations`;
                     res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${errMsg}&msgtype=error`);
+
                 }
 
             })
