@@ -3,7 +3,7 @@
     <h3>{{songInformation.name}}</h3>
     
     {{#if render}}
-    <a href="{{render}}" class="cta-button dark-green" >See latest render</a>
+    <button id="previewRenderBtn" class="cta-button dark-green" >See latest render</button>
     {{/if}}
 
     {{#ifEquals memberType "leader"}}
@@ -74,6 +74,10 @@
 
 </table>
 
+{{#if render}}
+    {{> dashboard/render_playback}}
+{{/if}}
+
 <script>
 
     (function(){
@@ -119,6 +123,17 @@
                     document.querySelector('#addPart.modal').dataset.active = "true";
 
                 }, false);
+
+            }
+
+            var previewRenderBtn = tableActions.querySelector('button#previewRenderBtn');
+
+            if(previewRenderBtn){
+
+                previewRenderBtn.addEventListener('click', function(){
+                    document.querySelector('#renderPlayback').dataset.active = "true";
+                }, false);
+
 
             }
 

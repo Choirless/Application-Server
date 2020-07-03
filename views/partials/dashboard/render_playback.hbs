@@ -1,0 +1,36 @@
+<div id="renderPlayback" class="modal" data-active="false">
+    <div class="container">
+        
+        <div class="content">
+            
+            <h2>{{songInformation.name}}</h2>
+
+            <video controls src="{{render}}"></video>
+
+            <button type="button" class="cta-button red cancel">Close</button>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        const renderPlayback = document.querySelector('#renderPlayback');
+        const renderPlaybackBtn = renderPlayback.querySelector('.container .content button');
+        const video = renderPlayback.querySelector('video');
+
+        renderPlaybackBtn.addEventListener('click', function(){
+
+            video.pause();
+            document.querySelector('#renderPlayback').dataset.active = "false";
+            video.currentTime = 0;
+
+        }, false);
+
+    }());
+
+</script>
