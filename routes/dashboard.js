@@ -11,13 +11,16 @@ router.get('/', (req, res, next) => {
     users.get.choirs(res.locals.user)
         .then(userChoirs => {
 
-            debug("userChoirs:", userChoirs);
+            if(userChoirs.length === 1){
+                res.redirect(`/dashboard/choir/${userChoirs[0].choirId}`);
+            } else {
+                res.render('dashboard', { 
+                    title : "Choirless | My Dashboard", 
+                    bodyid: "dashboard",
+                    userChoirs : userChoirs
+                });
+            }
 
-            res.render('dashboard', { 
-                title : "Choirless | My Dashboard", 
-                bodyid: "dashboard",
-                userChoirs : userChoirs
-            });
 
         })
         .catch(err => {
