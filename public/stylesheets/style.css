@@ -260,6 +260,8 @@ footer{
   font-size: 0.8em;
   padding: 0 2em;
   box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
 }
 
 footer div{
