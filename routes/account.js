@@ -3,6 +3,7 @@ const router = express.Router();
 const debug = require('debug')("routes:account");
 
 const users = require(`${__dirname}/../bin/modules/users`);
+const mail = require(`${__dirname}/../bin/modules/email`);
 
 router.get('/login', function(req, res, next) {
 
@@ -35,7 +36,10 @@ router.post('/login', (req, res, next) => {
 						res.status(401);
 						res.send("user/pass mismatch");
 					} else {
+
+						debug(data);
 						req.session.user = data.user.userId;
+						req.session.name = data.user.name;
 
 						if(req.query.redirect){
 							res.redirect(decodeURIComponent(req.query.redirect));
@@ -101,6 +105,21 @@ router.post('/create', (req, res, next) => {
 				if(response.ok === true){
 					req.session = {};
 					req.session.user = response.userId;
+					req.session.name = req.body.name;
+
+					const welcomeInfo = {
+						to : req.body.email,
+						subject : "Welcome to Choirless!",
+						info : {
+							name : req.body.name
+						}
+					};
+
+					mail.send(welcomeInfo, 'welcome')
+						.catch(err => {
+							debug('An error occurred trying to send the welcome email.', err);
+						})
+					;
 
 					if(req.query.redirect){
 						res.redirect(decodeURIComponent(req.query.redirect));
