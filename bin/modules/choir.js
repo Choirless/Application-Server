@@ -2,6 +2,7 @@ const debug = require('debug')("bin:modules:choir");
 const fetch = require('node-fetch');
 
 const users = require(`${__dirname}/users`);
+const invitations = require(`${__dirname}/invitations`)
 
 function createANewChoir(userId, choirName, choirDescription = ""){
 
@@ -467,31 +468,7 @@ function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
 }
 
 function getAnInvitationById(inviteId){
-
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/invitation?apikey=${process.env.CHOIRLESS_API_KEY}&inviteId=${inviteId}`)
-        .then(res => {
-            if(res.ok){
-                return res.json();
-            } else {
-                throw res;
-            }
-        })
-        .then(response => {
-            return response.invitation;
-        })
-        .catch(err => {
-
-            debug('getAnInvitationById err:', err);
-
-            if(err.status === 498){
-                return { expired : true };
-            } else {
-                throw err;
-            }
-
-        })
-    ;        
-
+    return invitations.get(inviteId);
 }
 
 function createAnInvitationForAUserToJoinAChoir(choirId, creatorId, inviteeEmail){
@@ -508,35 +485,11 @@ function createAnInvitationForAUserToJoinAChoir(choirId, creatorId, inviteeEmail
         return Promise.reject(`No "inviteeEmail" was passed to function`);
     }
 
-    const details = {
-        creator : creatorId,
-        invitee : inviteeEmail,
+    return invitations.create(creatorId, {
         choirId : choirId,
-        sendMail : false
-    };
-
-    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/invitation?apikey=${process.env.CHOIRLESS_API_KEY}`, {
-            method : "POST",
-            headers : {
-                "Content-Type" : "application/json"
-            },
-            body : JSON.stringify(details)
-        })
-        .then(res => {
-            if(res.ok){
-                return res.json();
-            } else {
-                throw res;
-            }
-        })
-        .then(response => {
-            return response.id;
-        })
-        .catch(err => {
-            debug('createAnInvitationForAUserToJoinAChoir err:', err);
-            throw err;
-        })
-    ;
+        creator : creatorId,
+        invitee : inviteeEmail
+    }, 'choir');
 
 }
 

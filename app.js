@@ -57,6 +57,7 @@ app.use('/account', require(`${__dirname}/routes/account`));
 app.use('/dashboard', [protectRoute], require(`${__dirname}/routes/dashboard`));
 app.use('/choir', [protectRoute], require(`${__dirname}/routes/choir`));
 app.use('/performance', [protectRoute], require(`${__dirname}/routes/performance`));
+app.use('/admin', [protectRoute], require(`${__dirname}/routes/admin`));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

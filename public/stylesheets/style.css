@@ -94,7 +94,7 @@ nav a {
 }
 
 nav a#logo::after {
-  content: 'alpha';
+  content: 'beta';
   font-weight: 100;
   font-size: 0.75em;
   position: relative;
@@ -148,6 +148,11 @@ nav section a{
   padding: 0.8em;
 }
 
+main form input[type="text"], main form input[type="email"], main form input[type="password"]{
+  background: #e2e2e2;
+  color: black;
+}
+
 body#home header{
   display: flex;
   width: 100%;
@@ -172,7 +177,7 @@ body#home header h4{
   margin-bottom: 2em;
 }
 
-a.cta-button, button.cta-button{
+a.cta-button, button.cta-button, input[type="submit"].cta-button{
   padding: 1em;
   box-sizing: border-box;
   color: black;
@@ -183,6 +188,7 @@ a.cta-button, button.cta-button{
   text-decoration: none;
   cursor: pointer;
   border: 0 solid transparent;
+  max-width: 200px;
 }
 
 a.cta-button{
@@ -193,54 +199,54 @@ button{
   font-family: 'Montserrat';
 }
 
-a.cta-button.blue, button.cta-button.blue{
-  background-color: #46649f;
+.cta-button.blue{
+  background-color: #46649f !important;
   color: white !important;
 }
 
-a.cta-button.blue:hover, button.cta-button.blue:hover{
-  background-color: #5679bd;
+.cta-button.blue:hover{
+  background-color: #5679bd !important;
 }
 
-a.cta-button.light-blue, button.cta-button.light-blue{
-  background-color:#2a93e4;
+.cta-button.light-blue{
+  background-color:#2a93e4 !important;
   color: white !important;
 }
 
-a.cta-button.light-blue:hover, button.cta-button.light-blue:hover{
-  background-color:#56acef;
+.cta-button.light-blue:hover{
+  background-color:#56acef !important;
 }
 
-a.cta-button.red, button.cta-button.red{
-  background-color: #c34343;;
+.cta-button.red{
+  background-color: #c34343 !important;
   color: white !important;
 }
 
-a.cta-button.red:hover, button.cta-button.red:hover{
-  background-color: #e05252;;
+.cta-button.red:hover{
+  background-color: #e05252 !important;
 }
 
-a.cta-button.green, button.cta-button.green{
-  background-color: #7dce33;
+.cta-button.green{
+  background-color: #7dce33 !important;
   color: white !important;
 }
 
-a.cta-button.dark-green, button.cta-button.dark-green{
-  background-color: #6db12f;
+.cta-button.dark-green{
+  background-color: #6db12f !important;
   color: white !important;
 }
 
 
-a.cta-button.green:hover, button.cta-button.green:hover, a.cta-button.dark-green:hover, button.cta-button.dark-green:hover{
-  background-color: #98ea4c;
+.cta-button.green:hover{
+  background-color: #98ea4c !important;
 }
 
-a.cta-button.black, button.cta-button.black{
-  background-color: black;
+.cta-button.black{
+  background-color: black !important;
   color:white !important;
 }
 
-a.cta-button.loading, button.cta-button.loading{
+.cta-button.loading{
   background-image: url("/assets/images/loader.gif");
   background-size: 60% auto ;
   background-position: 50% 45%;
@@ -248,7 +254,7 @@ a.cta-button.loading, button.cta-button.loading{
   color: transparent !important;
 }
 
-a.cta-button.loading.dark, button.cta-button.loading.dark{
+.cta-button.loading.dark{
   background-image: url("/assets/images/loader_dark.gif");
 }
 
@@ -923,12 +929,6 @@ body#dashboard .modal .container .content form div.side-by-side button{
   margin-left: 1em;
 }
 
-
-body#dashboard .modal .container .content form input[type="text"], body#dashboard .modal .container .content form input[type="email"]{
-  background: #e2e2e2;
-  color: black;
-}
-
 body#dashboard .modal .container .content form#songCreation #songparts .songpart{
   display: flex;
   margin-bottom: 1em;
@@ -982,6 +982,16 @@ body#error main{
 body#error main video{
   margin-bottom: 2em;
   width: 80%;
+}
+
+/*Admin Styles*/
+body#admin main section form{
+  background: white;
+  padding: 1em;
+  color: black;
+  max-width: 50%;
+  border-radius: 2px;
+  margin-bottom: 2em;
 }
 
 /*Animation key frames*/
