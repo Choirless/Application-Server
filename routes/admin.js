@@ -49,7 +49,7 @@ router.post('/invite-beta-user', (req, res, next) => {
                     to : req.body.email,
                     subject : "Choirless Beta Invitation",
                     info : {
-                        inviteLink : `${process.env.SERVICE_URL}/join`
+                        inviteLink : `${process.env.SERVICE_URL}/account/create/${inviteId}`
                     }
                 };
 
