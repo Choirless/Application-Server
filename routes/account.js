@@ -1,6 +1,6 @@
+const debug = require('debug')("routes:account");
 const express = require('express');
 const router = express.Router();
-const debug = require('debug')("routes:account");
 
 const users = require(`${__dirname}/../bin/modules/users`);
 const mail = require(`${__dirname}/../bin/modules/emails`);
@@ -68,7 +68,14 @@ router.post('/login', (req, res, next) => {
 router.get('/create', function(req, res, next) {
 
 	if(!req.session.user){
-		res.render('account/create', { title: "Choirless | Bringing people together, even when they're not together.", bodyid: "accountCreate", redirect : req.query.redirect });
+
+		res.render('account/create', { 
+			title: "Choirless | Bringing people together, even when they're not together.", 
+			bodyid: "accountCreate", 
+			redirect : req.query.redirect
+		});
+
+
 	} else {
 		res.redirect('/');
 	}
