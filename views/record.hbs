@@ -178,7 +178,7 @@
                 recordedVideo.pause();
                 recordedVideo.src = "";
 
-                if(leadVideo){
+                if(!isLeadRecording){
                     leadVideo.currentTime = 0;
                     leadVideo.play();
                 }
@@ -206,7 +206,7 @@
                 recording = false;
                 recordBtn.textContent = "Re-Record Performance";
 
-                if(leadVideo){
+                if(!isLeadRecording){
                     leadVideo.pause();
                     leadVideo.currentTime = 0;
                 }
@@ -250,7 +250,7 @@
                 recordedVideo.currentTime = streamOffset / 1000;
                 recordedVideo.play()
 
-                if(leadVideo){
+                if(!isLeadRecording){
                     leadVideo.currentTime = 0;
                     leadVideo.play();
                 }
@@ -265,7 +265,7 @@
                 leadVideo.pause();
 
                 recordedVideo.currentTime = 0;
-                if(leadVideo){
+                if(!isLeadRecording){
                     leadVideo.currentTime = 0;
                 }
 
@@ -273,7 +273,7 @@
 
         }, false);
 
-        if(leadVideo){
+        if(!isLeadRecording){
 
             leadVideo.addEventListener('ended', function(){
                 playingLead = false;
@@ -293,7 +293,7 @@
 
             if(showingPerformance){
 
-                if(leadVideo){
+                if(!isLeadRecording){
 
                     if(leadVideo.paused === true){
                         showingPerformance = false;
@@ -317,7 +317,6 @@
             navigator.mediaDevices.enumerateDevices()
                 .then( function(listOfDevices){
 
-                    //var constraints = { video: {width: { min: 640, ideal: 1280, max: 1280 }, height: { min: 400, ideal: 720 } },  audio: true };
                     var constraints = { video: true,  audio: true };
 
                     navigator.mediaDevices.getUserMedia(constraints)
@@ -342,22 +341,21 @@
                                 if(performanceVideo.paused){
                                     performanceVideo.play();
 
-                                    //performanceVideo.addEventListener('canplaythrough', function(){
+                                    activateCameraDialog.dataset.active = "false";
 
-                                        activateCameraDialog.dataset.active = "false";
-                                        calibrateInputsDialog.dataset.active = "true";
+                                    if(!isLeadRecording){
 
                                         performanceView.classList.add('inverted');
+                                        calibrateInputsDialog.dataset.active = "true";
 
-                                    //}, {once : true});
-
-                                    if(leadVideo){
                                         if(leadVideo.readyState === 4 && offsetCalibrated){
                                             recordBtn.dataset.active = "true";
                                         }
 
-                                    } else if(offsetCalibrated){
+                                    } else {
                                         recordBtn.dataset.active = "true";
+                                        performanceView.dataset.videoloaded = "true";
+
                                     }
 
                                 }
@@ -392,12 +390,10 @@
                     console.log(result);
                     performanceView.dataset.videoloaded = "true";
 
-                    if(leadVideo){
+                    if(!isLeadRecording){
                         if(leadVideo.readyState === 4){
                             recordBtn.dataset.active = "true";
                         }
-                    } else {
-                        recordBtn.dataset.active = "true";
                     }
 
                     return result;
