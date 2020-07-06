@@ -278,7 +278,7 @@ router.post('/add-member', (req, res, next) => {
                         .then(() => {
                             
                             const successMessage = `Invitation to "${req.body.email}" has been sent. If they accept, they will have access to your choir and appear here.`;
-                            res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${successMessage}&msgtype=success`);
+                            res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${encodeURIComponent(successMessage)}&msgtype=success`);
                             
                         })
                         .catch(err => {

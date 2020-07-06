@@ -1,3 +1,4 @@
+const debug = require('debug')('app');
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -51,6 +52,15 @@ app.use(cookieSession({
 }));
 
 app.use('*', checkSession);
+
+app.get('/choir/join/choirless-alpha', (req, res, next) => {
+
+	
+	req.query.inviteId = process.env.CHOIRLESS_ALPHA_ID;
+	debug(req.query);
+	next();
+
+});
 
 app.use('/', require(`${__dirname}/routes/index`));
 app.use('/account', require(`${__dirname}/routes/account`));

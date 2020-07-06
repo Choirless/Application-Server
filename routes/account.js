@@ -70,7 +70,6 @@ router.post('/login', (req, res, next) => {
 
 router.get('/create/:INVITEID?', function(req, res, next) {
 
-
 	const inviteId = req.params.INVITEID || req.query.inviteId;
 
 	if(!req.session.user){
@@ -78,8 +77,16 @@ router.get('/create/:INVITEID?', function(req, res, next) {
 		if(!inviteId){
 			res.redirect('/?msg=Sorry, Choirless account creations are by invitation only at this time&msgtype=general');
 		} else {
+
+			let invitationData;
+
+			if(inviteId === process.env.CHOIRLESS_ALPHA_ID){
+				invitationData = Promise.resolve({});
+			} else {
+				invitationData = invitations.get(inviteId);
+			}
 			
-			invitations.get(inviteId)
+			invitationData
 				.then(invitation => {
 					
 					if(!invitation){
@@ -126,7 +133,18 @@ router.post('/create', (req, res, next) => {
 
 		debug(req.query.redirect);
 
-		invitations.get(req.body.inviteId)
+		let invitationData;
+
+		if(req.body.inviteId === process.env.CHOIRLESS_ALPHA_ID){
+			invitationData = Promise.resolve({
+				choirId : process.env.CHOIRLESS_ALPHA_ID,
+				invitee : req.body.email
+			});
+		} else {
+			invitationData = invitations.get(req.body.inviteId);
+		}
+
+		invitationData
 			.then(invitation => {
 
 				if(!invitation){
@@ -135,47 +153,54 @@ router.post('/create', (req, res, next) => {
 					res.redirect(`/?msg=Sorry, that invitation has expired. Please ask the sender for another.&msgtype=error`);
 				} else {
 
-					const userType = invitation.choirId ? "regular" : "admin";
+					if(invitation.invitee !== req.body.email){
+						res.status(401);
+						res.redirect(`/?msg=Sorry, the email you tried to create the account with doesn't match the address the invitation was sent to&msgtype=error`);
+					} else {
 
-					return users.add({
-						name : req.body.name,
-						email : req.body.email,
-						password : req.body.password,
-						userType : userType
-					})
-					.then(response => {
-		
-						if(response.ok === true){
-							req.session = {};
-							req.session.user = response.userId;
-							req.session.name = req.body.name;
-							req.session.userType = userType;
-		
-							const welcomeInfo = {
-								to : req.body.email,
-								subject : "Welcome to Choirless!",
-								info : {
-									name : req.body.name
+						const userType = invitation.choirId ? "regular" : "admin";
+						return users.add({
+							name : req.body.name,
+							email : req.body.email,
+							password : req.body.password,
+							userType : userType
+						})
+						.then(response => {
+			
+							if(response.ok === true){
+								req.session = {};
+								req.session.user = response.userId;
+								req.session.name = req.body.name;
+								req.session.userType = userType;
+			
+								const welcomeInfo = {
+									to : req.body.email,
+									subject : "Welcome to Choirless!",
+									info : {
+										name : req.body.name
+									}
+								};
+			
+								mail.send(welcomeInfo, 'welcome')
+									.catch(err => {
+										debug('An error occurred trying to send the welcome email.', err);
+									})
+								;
+			
+								if(req.query.redirect){
+									res.redirect(decodeURIComponent(req.query.redirect));
+								} else {
+									res.redirect('/dashboard?msg=Account created! Welcome to Choirless :)&msgtype=success');
 								}
-							};
-		
-							mail.send(welcomeInfo, 'welcome')
-								.catch(err => {
-									debug('An error occurred trying to send the welcome email.', err);
-								})
-							;
-		
-							if(req.query.redirect){
-								res.redirect(decodeURIComponent(req.query.redirect));
+			
 							} else {
-								res.redirect('/dashboard?msg=Account created! Welcome to Choirless :)&msgtype=success');
+								throw response;
 							}
-		
-						} else {
-							throw response;
-						}
-		
-					})
+	
+						});
+							
+					}
+					
 
 				}
 
