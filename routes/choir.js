@@ -244,7 +244,7 @@ router.post('/add-member', (req, res, next) => {
                                         info : {
                                             creator : res.locals.name,
                                             choirName : choirDetails.name,
-                                            invitationURL : `${process.env.SERVICE_URL}/choir/join/${req.body.choirId}/${inviteId}`
+                                            invitationURL : `${process.env.SERVICE_URL}/choir/join/${req.body.choirId}/${inviteId}?inviteId=${inviteId}`
                                         }
                                     };
         

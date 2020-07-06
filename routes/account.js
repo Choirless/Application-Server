@@ -4,6 +4,7 @@ const router = express.Router();
 
 const users = require(`${__dirname}/../bin/modules/users`);
 const mail = require(`${__dirname}/../bin/modules/emails`);
+const invitations = require(`${__dirname}/../bin/modules/invitations`);
 
 router.get('/login', function(req, res, next) {
 
@@ -11,7 +12,8 @@ router.get('/login', function(req, res, next) {
 		res.render('account/login', { 
 			title: "Choirless | Bringing people together, even when they're not together.", 
 			bodyid: "accountLogin",
-			redirect: req.query.redirect
+			redirect: req.query.redirect,
+			inviteId : req.query.inviteId
 		});
 	} else {
 		res.redirect('/');
@@ -69,12 +71,37 @@ router.get('/create', function(req, res, next) {
 
 	if(!req.session.user){
 
-		res.render('account/create', { 
-			title: "Choirless | Bringing people together, even when they're not together.", 
-			bodyid: "accountCreate", 
-			redirect : req.query.redirect
-		});
+		if(!req.query.inviteId){
+			res.redirect('/?msg=Sorry, Choirless account creations are by invitation only at this time&msgtype=general');
+		} else {
+			
+			invitations.get(req.query.inviteId)
+				.then(invitation => {
+					
+					if(!invitation){
+						res.redirect(`/?msg=Sorry, we couldn't find that invitation.&msgtype=error`);
+					} else if(invitation.expired){
+						res.redirect(`/?msg=Sorry, that invitation has expired. Please ask the sender for another.&msgtype=error`);
+					} else {
+						
+						res.render('account/create', { 
+							title: "Choirless | Bringing people together, even when they're not together.", 
+							bodyid: "accountCreate", 
+							redirect : req.query.redirect,
+							inviteId : req.query.inviteId
+						});
 
+					}
+
+				})
+				.catch(err => {
+					debug('/account/create err:', err);
+					res.status(500);
+					next();
+				})
+			;
+			
+		}
 
 	} else {
 		res.redirect('/');
@@ -86,7 +113,7 @@ router.post('/create', (req, res, next) => {
 
 	if(req.session.user){
 		res.redirect('/');
-	} else if(req.body.name && req.body.email && req.body.password && req.body.repeat_password){
+	} else if(req.body.name && req.body.email && req.body.password && req.body.repeat_password && req.body.inviteId){
 
 		if(req.body.password !== req.body.repeat_password){
 			res.status(422);

@@ -607,6 +607,26 @@ body main #share pre{
   border-radius: 3px;
 }
 
+body#accountCreate main section{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+body#accountCreate main section form{
+  width: 50%;
+}
+
+body#accountCreate main section form h2{
+  text-align: center;
+}
+
+body#accountCreate main section form input[type="submit"]{
+  margin-top: 1em;
+}
+
 /* Login styles */
 
 body#accountLogin main section form{
