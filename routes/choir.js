@@ -306,4 +306,8 @@ router.post('/add-member', (req, res, next) => {
 
 });
 
+router.post('/create-open-invitation',  (req, res, next) => {
+
+});
+
 module.exports = router;

@@ -353,6 +353,41 @@ footer div p:last-of-type{
   padding: 1em;
 }
 
+.modal .container p{
+  margin-top: 0;
+}
+
+.modal .container pre{
+  background: #424242;
+  padding: 1em;
+  color: white;
+  font-weight: 600;
+  overflow: scroll;
+  font-size: 1.2em;
+}
+
+.modal .modal-tabs{
+  margin-bottom: 2em;
+  border-bottom: 1px solid black;
+}
+
+.modal button.tab{
+  padding: 1em;
+  border-radius: 0;
+  border: 0px solid transparent;
+  background: white;
+  color: black;
+  cursor: pointer;
+  outline: 0px solid transparent;
+}
+
+.modal button.tab[data-selected="true"], .modal button.tab:hover{
+  background: black;
+  color: white;
+  font-weight: 600;
+}
+
+
 .side-by-side{
   display: flex;
   flex-direction: row;
