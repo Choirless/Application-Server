@@ -15,12 +15,29 @@ router.post('/create', (req, res, next) => {
         next();
     } else {
 
-        choirInterface.create(res.locals.user, req.body.name, req.body.description)
-            .then((response) => {
+        usersInterface.get.byID(res.locals.user)
+            .then(userInformation => {
                 
-                debug(response);
-                res.redirect(`/dashboard/choir/${response.choirId}?msg=Choir "${req.body.name}" has been created.&msgtype=success`);
+                if(userInformation.userType !== 'admin'){
 
+                    res.status(401);
+                    res.json({
+                        status : "err",
+                        msg : "Only Choirless 'admin' users can create choirs at this time."
+                    });
+
+                } else {
+
+                    return choirInterface.create(res.locals.user, req.body.name, req.body.description)
+                        .then((response) => {
+                            
+                            debug(response);
+                            res.redirect(`/dashboard/choir/${response.choirId}?msg=Choir "${req.body.name}" has been created.&msgtype=success`);
+            
+                        })
+                    ;
+
+                }
             })
             .catch(err => {
                 res.status(500);
@@ -244,7 +261,7 @@ router.post('/add-member', (req, res, next) => {
                                         info : {
                                             creator : res.locals.name,
                                             choirName : choirDetails.name,
-                                            invitationURL : `${process.env.SERVICE_URL}/choir/join/${req.body.choirId}/${inviteId}`
+                                            invitationURL : `${process.env.SERVICE_URL}/choir/join/${req.body.choirId}/${inviteId}?inviteId=${inviteId}`
                                         }
                                     };
         
@@ -261,7 +278,7 @@ router.post('/add-member', (req, res, next) => {
                         .then(() => {
                             
                             const successMessage = `Invitation to "${req.body.email}" has been sent. If they accept, they will have access to your choir and appear here.`;
-                            res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${successMessage}&msgtype=success`);
+                            res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${encodeURIComponent(successMessage)}&msgtype=success`);
                             
                         })
                         .catch(err => {

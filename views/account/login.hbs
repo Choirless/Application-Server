@@ -17,8 +17,12 @@
 
         </form>
 
-        <p class="center-text">Don't have an account? No worries! you can <a href="/account/create{{#if redirect}}?redirect={{#encodeURL}}{{this.redirect}}{{/encodeURL}}{{/if}}">create one here</a>.</p>
+        {{#if inviteId}}
+
+        <p class="center-text">Don't have an account? No worries! you can <a href="/account/create?inviteId={{inviteId}}{{#if redirect}}&redirect={{#encodeURL}}{{this.redirect}}{{/encodeURL}}{{/if}}">create one here</a>.</p>
         
+        {{/if}}
+
     </section>
 
 </main>

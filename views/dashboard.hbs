@@ -19,9 +19,12 @@
 
             {{/if}}
         </ul>
+
+        {{#ifEquals userType "admin"}}
         <div class="center-text">
             <button class="cta-button black" id="choirCreationCTA">Create a Choir</button>
         </div>
+        {{/ifEquals}}
 
     </section>
 
@@ -71,7 +74,9 @@
 
         </section>
         
+        {{#ifEquals userType "admin"}}
         {{> dashboard/create_choir }}
+        {{/ifEquals}}
 
         {{> dashboard/create_song }}
 
@@ -93,13 +98,17 @@
 
         'use strict';
 
-        var createChoirModel = document.querySelector('#createChoir.modal');
+        var createChoirModal = document.querySelector('#createChoir.modal');
 
-        document.querySelector('#choirCreationCTA').addEventListener('click', function(){
+        if(createChoirModal){
+            
+            document.querySelector('#choirCreationCTA').addEventListener('click', function(){
 
-            createChoirModel.dataset.active = "true";
+                createChoirModal.dataset.active = "true";
 
-        }, false);
+            }, false);
+
+        }
 
     }());
 
