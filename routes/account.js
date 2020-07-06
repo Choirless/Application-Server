@@ -40,6 +40,7 @@ router.post('/login', (req, res, next) => {
 						debug(data);
 						req.session.user = data.user.userId;
 						req.session.name = data.user.name;
+						req.session.type = data.user.userType;
 
 						if(req.query.redirect){
 							res.redirect(decodeURIComponent(req.query.redirect));
@@ -134,13 +135,13 @@ router.post('/create', (req, res, next) => {
 					res.redirect(`/?msg=Sorry, that invitation has expired. Please ask the sender for another.&msgtype=error`);
 				} else {
 
-					const memberType = invitation.choirId ? "regular" : "admin";
+					const userType = invitation.choirId ? "regular" : "admin";
 
 					return users.add({
 						name : req.body.name,
 						email : req.body.email,
 						password : req.body.password,
-						memberType : memberType
+						userType : userType
 					})
 					.then(response => {
 		
@@ -148,6 +149,7 @@ router.post('/create', (req, res, next) => {
 							req.session = {};
 							req.session.user = response.userId;
 							req.session.name = req.body.name;
+							req.session.type = userType;
 		
 							const welcomeInfo = {
 								to : req.body.email,
