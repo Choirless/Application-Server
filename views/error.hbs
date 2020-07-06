@@ -1,0 +1,16 @@
+<main>
+    <h1>Sorry, something's gone wrong.</h1>
+    
+    {{#ifEquals error.status 404}}
+        <video src="/assets/videos/404.mp4" autoplay loop muted></video>
+    {{/ifEquals}}
+
+    <h2>{{message}}</h2>
+
+
+    <pre>{{error.stack}}</pre>
+
+    <p>{{banana}}</p>
+
+
+</main>

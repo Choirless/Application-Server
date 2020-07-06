@@ -40,7 +40,7 @@ router.post('/login', (req, res, next) => {
 						debug(data);
 						req.session.user = data.user.userId;
 						req.session.name = data.user.name;
-						req.session.type = data.user.userType;
+						req.session.userType = data.user.userType;
 
 						if(req.query.redirect){
 							res.redirect(decodeURIComponent(req.query.redirect));
@@ -149,7 +149,7 @@ router.post('/create', (req, res, next) => {
 							req.session = {};
 							req.session.user = response.userId;
 							req.session.name = req.body.name;
-							req.session.type = userType;
+							req.session.userType = userType;
 		
 							const welcomeInfo = {
 								to : req.body.email,

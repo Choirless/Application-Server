@@ -15,12 +15,29 @@ router.post('/create', (req, res, next) => {
         next();
     } else {
 
-        choirInterface.create(res.locals.user, req.body.name, req.body.description)
-            .then((response) => {
+        usersInterface.get.byID(res.locals.user)
+            .then(userInformation => {
                 
-                debug(response);
-                res.redirect(`/dashboard/choir/${response.choirId}?msg=Choir "${req.body.name}" has been created.&msgtype=success`);
+                if(userInformation.userType !== 'admin'){
 
+                    res.status(401);
+                    res.json({
+                        status : "err",
+                        msg : "Only Choirless 'admin' users can create choirs at this time."
+                    });
+
+                } else {
+
+                    return choirInterface.create(res.locals.user, req.body.name, req.body.description)
+                        .then((response) => {
+                            
+                            debug(response);
+                            res.redirect(`/dashboard/choir/${response.choirId}?msg=Choir "${req.body.name}" has been created.&msgtype=success`);
+            
+                        })
+                    ;
+
+                }
             })
             .catch(err => {
                 res.status(500);
