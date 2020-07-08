@@ -128,6 +128,8 @@ function joinAnExistingChoir(choirId, userId, name, memberType){
         memberType : memberType
     };
 
+    debug(details);
+
     return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/join?apikey=${process.env.CHOIRLESS_API_KEY}`, {
         method : "POST",
         headers : {
@@ -143,7 +145,7 @@ function joinAnExistingChoir(choirId, userId, name, memberType){
         }
     })
     .catch(err => {
-        debug("createANewChoir Err:", err);
+        debug("joinAnExistingChoir Err:", err);
         throw err;
     })
 ;

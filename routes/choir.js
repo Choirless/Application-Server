@@ -49,7 +49,6 @@ router.post('/create', (req, res, next) => {
 
     }
 
-
 });
 
 router.post('/update/:CHOIRID', (req, res, next) => {
@@ -207,7 +206,7 @@ router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
                 const expiredMsg = "Sorry, that invitation has expired. Please ask the choir leader to send another";
                 res.redirect(`/dashboard?msg=${expiredMsg}&msgtype=error`);
             } else if(!invitationInfo.invitee || userInfo.email === invitationInfo.invitee){ 
-               return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member")
+               return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member");
             } else { // If this person is the wrong person, throw them out.
                 throw Error('User is not the user invited');
             }
