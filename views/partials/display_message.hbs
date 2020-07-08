@@ -1,15 +1,7 @@
-<div id="notice" class="{{msgtype}}" data-active="true">
-    {{#ifEquals msgtype "success"}}
-    <h5>Success!</h5>
-    {{/ifEquals}}
+<div id="notice" class="" data-active="false">
 
-    {{#ifEquals msgtype "general"}}
-    <h5>Notice</h5>
-    {{/ifEquals}}
-
-    {{#ifEquals msgtype "error"}}
     <h5>Error</h5>
-    {{/ifEquals}}
+    <h5></h5>
 
     <p>{{msg}}</p>
     <button class="cta-button">OK</button>
@@ -17,25 +9,82 @@
 
 <script>
 
-    (function(){
-        'use strict';
+    var __global_message = (function(){
 
-        const notificationBox = document.querySelector('#notice');
-        const okBtn = notificationBox.querySelector('button');
+        var notificationBox = document.querySelector('#notice');
+        var title = notificationBox.querySelector('h5');
+        var contentElement = notificationBox.querySelector('p');
+        var okBtn = notificationBox.querySelector('button');
 
-        okBtn.addEventListener('click', function(){
-            this.parentNode.dataset.active = "false";
+        var types = {
+            "general" : {
+                "titleText" : "Notice"
+            },
+            "success" : {
+                "titleText" : "Success!"
+            },
+            "error" : {
+                "titleText" : "Error"
+            }
+        }
 
-            var pageQueryParameters = new URLSearchParams(window.location.search);
-            pageQueryParameters.delete('msg');
-            pageQueryParameters.delete('msgtype');
+        function displayAGlobalMessage(information){
+            
+            if(!information){
+                console.log("No information was passed to __global_message.display()");
+            } else if(notificationBox.dataset.active === "true"){
+                console.log("Message is already displaying. It cannot be reset until closed by user");
+            } else {
 
-            var ammendedQueryString = pageQueryParameters.toString();
+                var messageType = information.type || "general";
+                var resetParameters = information.resetParameters || false;
 
-            window.history.replaceState({}, document.title, window.location.pathname + ammendedQueryString !== "" ? "?" + ammendedQueryString : "");
+                if(!Object.keys(types).includes(messageType)){
+                    console.log('Invalid message type passed. Defaulting to general');
+                    messageType = "general";
+                }
 
-        }, {once : true});
+                notificationBox.classList.add(messageType);
+                title.textContent = types[messageType].titleText;
+                contentElement.textContent = information.content;
 
-    }());
+                okBtn.addEventListener('click', function(){
+                    this.parentNode.dataset.active = "false";
+
+                    if(resetParameters){
+                        var pageQueryParameters = new URLSearchParams(window.location.search);
+                        pageQueryParameters.delete('msg');
+                        pageQueryParameters.delete('msgtype');
+
+                        var ammendedQueryString = pageQueryParameters.toString();
+
+                        window.history.replaceState({}, document.title, window.location.pathname + ammendedQueryString !== "" ? "?" + ammendedQueryString : "");
+                    }
+
+                    notificationBox.classList = "";
+
+                }, {once : true});
+
+                notificationBox.dataset.active = "true";
+
+            }
+
+        }
+
+        return {
+            display : displayAGlobalMessage
+        }
+
+    })();
+
+    {{#if msg}}
+
+    __global_message.display({
+        content : "{{msg}}",
+        type : "{{msgType}}",
+        resetParameters : true
+    });
+
+    {{/if}}
 
 </script>
