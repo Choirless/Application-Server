@@ -12,7 +12,38 @@
             </div>
         </div>
 
+        <button class="cta-button white" id="otherPerformancesTrigger">See Other Performances</button>
+
         <h3>Lead</h3>
+
+        <div class="modal" data-active="false">
+            <div class="container">
+                <div class="content">
+                    <h2>See other performances</h2>
+                    
+                    <ul>
+                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+
+                    </ul>
+
+                    <div class="side-by-side">
+                        <button type="button" class="cta-button red cancel">Cancel</button>
+                        <button type="submit" class="cta-button light-blue">Load Videos</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 
     {{/ifNotEquals}}
@@ -78,6 +109,8 @@
         var leadView = isLeadRecording ? null : document.querySelector('.half#lead');
         var leadVideo = isLeadRecording ? null : leadView.querySelector('video');
         var downloadProgressIndicator = isLeadRecording ? null : leadView.querySelector('.indicator');
+        var moreVideosTrigger = isLeadRecording ? null : leadView.querySelector('button#otherPerformancesTrigger');
+        var otherPerformancesModal = isLeadRecording ? null : leadView.querySelector('.modal');
 
         var performanceView = document.querySelector('.half#performance');;
         var performanceVideo = performanceView.querySelector('video');
@@ -500,6 +533,18 @@
             ;
 
         }
+
+        moreVideosTrigger.addEventListener('click', function(e){
+            console.log('click');
+
+            var closeOtherPerformancesModalButton = otherPerformancesModal.querySelector('button.cancel');
+
+            closeOtherPerformancesModalButton.addEventListener('click', function(e){
+                otherPerformancesModal.dataset.active = "false";    
+            }, {once : true} );
+            otherPerformancesModal.dataset.active = "true";
+
+        }, false);
 
     }());
 
