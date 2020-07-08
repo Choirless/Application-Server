@@ -364,6 +364,7 @@ footer div p:last-of-type{
   font-weight: 600;
   overflow: scroll;
   font-size: 1.2em;
+  margin: 0;
 }
 
 .modal .modal-tabs{
@@ -385,6 +386,7 @@ footer div p:last-of-type{
   background: black;
   color: white;
   font-weight: 600;
+  border-radius: 2px 2px 0 0;
 }
 
 
