@@ -109,6 +109,11 @@ nav section a{
   font-weight: 500;
 }
 
+nav .cta-button{
+  padding: 0.5em 1em !important;
+}
+
+
 #notice{
   position: fixed;
   top: 0;
@@ -250,6 +255,11 @@ button{
 .cta-button.black{
   background-color: black !important;
   color:white !important;
+}
+
+.cta-button.yellow{
+  background: #ffe563;
+  color: black;
 }
 
 .cta-button.loading{

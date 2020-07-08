@@ -4,6 +4,8 @@
         <a href="/">Home</a>
         {{#if user}}<a href="/dashboard">Dashboard</a>{{/if}}
         {{#if user}}<a href="/account/logout">Log Out</a>{{else}}<a href="/account/login">Log In</a>{{/if}}
-
+        {{#ifEquals userType "admin"}}
+        <a href="/admin" class="cta-button yellow">Admin</a>
+        {{/ifEquals}}
     </section>
 </nav>
