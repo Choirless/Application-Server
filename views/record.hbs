@@ -571,6 +571,7 @@
                         var btn = document.createElement('button');
 
                         li.dataset.selected = "false";
+                        li.dataset.partid = recording.partId;
                         a.textContent = recording.userName;
                         
                         btn.textContent = "Select Video";
@@ -597,8 +598,6 @@
 
                         btn.addEventListener('mouseenter', function(){
 
-                            console.log('ENTER');
-
                             if(this.parentNode.dataset.selected === "true"){
                                 this.textContent = "Remove Video";
                                 this.classList.add('red');
@@ -609,7 +608,6 @@
 
                         btn.addEventListener('mouseleave', function(){
 
-                            console.log('LEAVE');
                             if(this.parentNode.dataset.selected === "true"){
                                 this.textContent = "Video Selected";
                                 this.classList.add('dark-green');
@@ -628,12 +626,27 @@
                     performancesListElement.appendChild(listFragment);
 
                     var closeOtherPerformancesModalButton = otherPerformancesModal.querySelector('button.cancel');
+                    var loadOtherPerformancesModalButton = otherPerformancesModal.querySelector('button[type="submit"]');
 
                     closeOtherPerformancesModalButton.addEventListener('click', function(e){
-                        otherPerformancesModal.dataset.active = "false";    
+                        otherPerformancesModal.dataset.active = "false";
                     }, {once : true} );
-                    otherPerformancesModal.dataset.active = "true";
+                    
+                    loadOtherPerformancesModalButton.addEventListener('click', function(e){
 
+                        var videosToLoad = Array.from(performancesListElement.querySelectorAll('li')).filter(function(li){
+                            console.log(li);
+                            return li.dataset.selected === "true"
+                        }).map(function(li){
+                            return li.dataset.partid;
+                        });
+
+                        console.log('videosToLoad', videosToLoad);
+
+                        otherPerformancesModal.dataset.active = "false";
+                    }, {once : true} );
+
+                    otherPerformancesModal.dataset.active = "true";
 
                 })
                 .catch(function(err){
