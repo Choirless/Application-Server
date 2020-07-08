@@ -10,6 +10,7 @@ const hsts = require('hsts');
 const compress = require('compression');
 const cookieSession = require('cookie-session');
 
+const serverStarted = require(`./bin/middleware/server-started`);
 const checkSession = require(`./bin/middleware/check-session`);
 const protectRoute = require(`./bin/middleware/protect-route`);
 const messages = require(`./bin/middleware/messages`);
@@ -51,11 +52,11 @@ app.use(cookieSession({
 	secure : process.env.NODE_ENV === "production"
 }));
 
+app.use('*', serverStarted);
 app.use('*', checkSession);
 
 app.get('/choir/join/choirless-alpha', (req, res, next) => {
 
-	
 	req.query.inviteId = process.env.CHOIRLESS_ALPHA_ID;
 	debug(req.query);
 	next();
