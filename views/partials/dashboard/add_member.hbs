@@ -32,7 +32,7 @@
 
                 <div class="side-by-side shareable-link" data-active="false">
                     <pre>https://choirless.com/choir/join/CHOIRID/INVITEID</pre>
-                    {{!-- <button class="cta-button black" type="button">Copy Link</button> --}}
+                    <button class="cta-button black copy" type="button">Copy Link</button>
                 </div>
 
                 <div class="side-by-side">
@@ -56,6 +56,17 @@
         var tabs = modal.querySelectorAll('.modal-tabs button.tab');
         var forms = modal.querySelectorAll('form');
         var openInviteForm = modal.querySelector('#add-many');
+
+        var copyLinkBtn = openInviteForm.querySelector('.copy');
+
+        copyLinkBtn.addEventListener('click', function(){
+            navigator.clipboard.writeText(openInviteForm.querySelector('pre').textContent);
+            __global_message.display({
+                type : "success",
+                content : "Link successfully copied to clipboard"
+            });
+        }, false);
+        
 
         Array.from(tabs).forEach(function(tab){
 
