@@ -1,20 +1,44 @@
 <div id="addMember" class="modal" data-active="false">
     <div class="container">
-        
-        <div class="content">
-            <h2>Add member to choir</h2>
 
-            <form method="POST" action="/choir/add-member">
+        <div class="content">
+            <h2>Add people to this choir</h2>
+
+            <div class="modal-tabs">
+                <button class="tab" data-selected="true" data-target="add-individual">Add Individual</button>
+                <button class="tab" data-target="add-many">Add Many</button>
+            </div>
+
+            <form method="POST" action="/choir/add-member" id="add-individual">
 
                 <input type="text" hidden value="{{choirInfo.choirId}}" name="choirId" />
 
                 <label for="name" class="required">Email Address</label>
                 <input id="name" type="email" placeholder="alex@choirless.com" name="email" required/>
-                
+
                 <div class="side-by-side">
                     <button type="button" class="cta-button red cancel">Cancel</button>
                     <button type="submit" class="cta-button light-blue">Send Invitation</button>
-                </div>       
+                </div>
+
+            </form>
+
+            <form method="POST" action="/choir/create-open-invitation" id="add-many" data-active="false">
+                <input type="text" hidden value="{{choirInfo.choirId}}" name="choirId" />
+
+                <p>This will create an invitation that anybody will be able to use to join this choir for 24 hours.</p>
+                <p>This option is best used when you already have a real-world choir or group set up, and you want to be able to on-board them as quickly as possible without sending a bunch of individual emails.</p>
+                <p>If you click "Create Link", a URL will be generated that you can send to your choir members however you choose.</p>
+
+                <div class="side-by-side shareable-link" data-active="false">
+                    <pre>https://choirless.com/choir/join/CHOIRID/INVITEID</pre>
+                    {{!-- <button class="cta-button black" type="button">Copy Link</button> --}}
+                </div>
+
+                <div class="side-by-side">
+                    <button type="button" class="cta-button red cancel">Cancel</button>
+                    <button type="submit" class="cta-button light-blue">Create Link</button>
+                </div>
 
             </form>
 
@@ -28,18 +52,84 @@
 
         'use strict';
 
-        var form = document.querySelector('#addMember form');
-        var cancelBtn = form.querySelector('.cancel');
+        var modal = document.querySelector('#addMember');
+        var tabs = modal.querySelectorAll('.modal-tabs button.tab');
+        var forms = modal.querySelectorAll('form');
+        var openInviteForm = modal.querySelector('#add-many');
 
-        cancelBtn.addEventListener('click', function(e){
-            
+        Array.from(tabs).forEach(function(tab){
+
+            tab.addEventListener('click', function(){
+
+                Array.from(tabs).forEach(function(tab){
+                    tab.dataset.selected = "false";
+                    document.querySelector('#' + tab.dataset.target).dataset.active = "false";
+
+                });
+
+                this.dataset.selected = "true";
+                document.querySelector('#' + this.dataset.target).dataset.active = "true";
+
+            }, false);
+
+        });
+
+        Array.from(forms).forEach(function(form){
+
+            var cancelBtn = form.querySelector('.cancel');
+
+            cancelBtn.addEventListener('click', function(e){
+
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                Array.from(forms).forEach(function(form){
+                    form.reset();
+                });
+
+                document.querySelector('#addMember').dataset.active="false";
+
+            }, false);
+
+        });
+
+        modal.querySelector('form#add-many').addEventListener('submit', function(e){
             e.preventDefault();
-            e.stopImmediatePropagation();
 
-            form.reset();
-            document.querySelector('#addMember').dataset.active="false";
+            var form = this;
+            var submitBtn = form.querySelector('button[type="submit"]');
+
+            submitBtn.classList.add('loading');
+
+            fetch('/choir/create-open-invitation/{{choirInfo.choirId}}', {
+                    method : "POST",
+                    credentials : "include"
+                })
+                .then(function(res){
+                    if(res.ok){
+                        return res.json();
+                    } else {
+                        throw res;
+                    }
+                })
+                .then(function(response){
+                    console.log(response);
+                    var shareableLink = form.querySelector('.shareable-link');
+                    var pre = shareableLink.querySelector('pre');
+                    
+                    pre.textContent = response.link;
+                    shareableLink.dataset.active = "true";
+                    
+                    submitBtn.classList.remove('loading');
+                })
+                .catch(function(err){
+                    console.log('/choir/create-open-invitation/{{choirInfo.choirId}} err:', err);
+                    submitBtn.classList.remove('remove');
+                })
+            ;
 
         }, false);
+
 
     }());
 

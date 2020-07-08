@@ -5,6 +5,7 @@ const router = express.Router();
 const choirInterface = require(`${__dirname}/../bin/modules/choir`);
 const usersInterface = require(`${__dirname}/../bin/modules/users`);
 const mailInterface = require(`${__dirname}/../bin/modules/emails`);
+const invitationsInterface = require(`${__dirname}/../bin/modules/invitations`);
 
 router.post('/create', (req, res, next) => {
 
@@ -17,7 +18,7 @@ router.post('/create', (req, res, next) => {
 
         usersInterface.get.byID(res.locals.user)
             .then(userInformation => {
-                
+
                 if(userInformation.userType !== 'admin'){
 
                     res.status(401);
@@ -30,10 +31,10 @@ router.post('/create', (req, res, next) => {
 
                     return choirInterface.create(res.locals.user, req.body.name, req.body.description)
                         .then((response) => {
-                            
+
                             debug(response);
                             res.redirect(`/dashboard/choir/${response.choirId}?msg=Choir "${req.body.name}" has been created.&msgtype=success`);
-            
+
                         })
                     ;
 
@@ -47,7 +48,6 @@ router.post('/create', (req, res, next) => {
         ;
 
     }
-
 
 });
 
@@ -98,7 +98,7 @@ router.post('/create-song', (req, res, next) => {
         });
 
         songData.partNames = sectionsToCreate;
-        
+
         choirInterface.songs.add(songData)
             .then(songId => {
                 debug('Song successfully created:', songId);
@@ -118,7 +118,7 @@ router.post('/create-song', (req, res, next) => {
 router.post('/add-song-part', (req, res, next) => {
 
     let errMsg;
-    
+
     if(!req.body.name){
         errMsg = "Sorry, no name was passed to the server for the part.";
     } else if(!req.body.choirId){
@@ -131,7 +131,7 @@ router.post('/add-song-part', (req, res, next) => {
         res.status(422);
         res.redirect(`/dashboard?msg=${errMsg}&msgtype=error`);
     } else {
-        
+
         choirInterface.members.check(req.body.choirId, res.locals.user)
             .then(userInfo => {
 
@@ -202,12 +202,12 @@ router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
             debug(userInfo);
             debug(invitationInfo);
 
-            if(invitationInfo.expired){
+            if(invitationInfo.expired){ // Invite is now invalud
                 const expiredMsg = "Sorry, that invitation has expired. Please ask the choir leader to send another";
                 res.redirect(`/dashboard?msg=${expiredMsg}&msgtype=error`);
-            } else if(userInfo.email === invitationInfo.invitee){
-               return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member")
-            } else {
+            } else if(!invitationInfo.invitee || userInfo.email === invitationInfo.invitee){ 
+               return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member");
+            } else { // If this person is the wrong person, throw them out.
                 throw Error('User is not the user invited');
             }
 
@@ -251,7 +251,7 @@ router.post('/add-member', (req, res, next) => {
                         .then(inviteId => {
 
                             debug(`Invitation (${inviteId}) created by ${res.locals.user} for ${req.body.email} to join ${req.body.choirId}`);
-                            
+
                             return choirInterface.get(req.body.choirId)
                                 .then(choirDetails => {
 
@@ -264,7 +264,7 @@ router.post('/add-member', (req, res, next) => {
                                             invitationURL : `${process.env.SERVICE_URL}/choir/join/${req.body.choirId}/${inviteId}?inviteId=${inviteId}`
                                         }
                                     };
-        
+
                                     return mailInterface.send(emailDetails, 'invitation')
                                         .then(function(){
                                             debug(`Email for invitation "${inviteId}" successfully dispatched.`);
@@ -273,13 +273,13 @@ router.post('/add-member', (req, res, next) => {
 
                                 })
                             ;
-                            
+
                         })
                         .then(() => {
-                            
+
                             const successMessage = `Invitation to "${req.body.email}" has been sent. If they accept, they will have access to your choir and appear here.`;
                             res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${encodeURIComponent(successMessage)}&msgtype=success`);
-                            
+
                         })
                         .catch(err => {
                             debug('/add-member err:', err);
@@ -303,6 +303,52 @@ router.post('/add-member', (req, res, next) => {
         ;
 
     }
+
+});
+
+router.post('/create-open-invitation/:CHOIRID',  (req, res, next) => {
+
+    choirInterface.members.check(req.params.CHOIRID, res.locals.user)
+        .then(memberInfo => {
+            debug(memberInfo);
+
+            if(memberInfo.memberType !== "leader"){
+
+                res.status(401);
+                res.json({
+                    status : "err",
+                    msg : "Only choir leaders can create open invitations for their choirs."
+                });
+
+            } else {
+
+                const inviteInformation = {
+                    choirId : req.params.CHOIRID,
+                    creator : res.locals.user
+                };
+
+                return invitationsInterface.create(res.locals.user, inviteInformation, 'choir');
+            }
+
+        })
+        .then(invitationId => {
+            
+            res.json({
+                status : "ok",
+                invitationId : invitationId,
+                link : `${process.env.SERVICE_URL}/choir/join/${req.params.CHOIRID}/${invitationId}`
+            });
+
+        })
+        .catch(err => {
+            debug('/create-open-invitation err:', err);
+            res.status(500);
+            res.json({
+                status : "err",
+                msg : "Sorry, something went wrong with the server"
+            });
+        })
+    ;
 
 });
 
