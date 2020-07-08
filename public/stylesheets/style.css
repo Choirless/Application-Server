@@ -189,6 +189,12 @@ a.cta-button, button.cta-button, input[type="submit"].cta-button{
   cursor: pointer;
   border: 0 solid transparent;
   max-width: 200px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 a.cta-button{
