@@ -58,6 +58,21 @@ router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 
 });
 
+router.get('/list-performances/:CHOIRID/:SONGID', (req, res, next) => {
+
+	choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID)
+		.then(recordings => {
+			debug('Recordings:', recordings);
+			res.json(recordings);
+		})
+		.catch(err => {
+			debug('/list-performances/:CHOIRID/:SONGID err:', err);
+			res.end();
+		})
+	;
+
+});
+
 router.head('/video/:VIDEOIDENTIFIER', (req, res, next) => {
 	storage.check(req.params.VIDEOIDENTIFIER)
 		.then(data => {
@@ -155,8 +170,6 @@ router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), functio
 			res.end();
 		})
 	;
-
-
 
 });
 

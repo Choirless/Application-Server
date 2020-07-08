@@ -197,6 +197,21 @@ main form input[type="text"], main form input[type="email"], main form input[typ
   border-bottom: 1px solid #dadada;
   margin-top: 0.5em !important;
   padding-bottom: 0.5em !important;
+  padding-left: 0.5em !important;
+}
+
+.modal .container .content ul li.heading{
+  background: #636363;
+  color: white;
+  background: #636363;
+  color: white;
+  margin: 0 !important;
+  padding: 0.5em;
+  font-weight: 600;
+}
+
+.modal .container .content ul li button.cta-button{
+  min-width: 100px;
 }
 
 .modal .container .content ul li a{

@@ -16,16 +16,17 @@
 
         <h3>Lead</h3>
 
-        <div class="modal" data-active="false">
+        <div class="modal" data-active="false" id="peformanceSelector">
             <div class="container">
                 <div class="content">
                     <h2>See other performances</h2>
                     
-                    <ul>
+                    <ul id="performances-list">
+                        <li class="heading">Lead</li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button green">Default</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button red">Remove Video</button></li>
                         <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button green">Video Selected</button></li>
                         <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
                         <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
                         <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
@@ -537,12 +538,102 @@
         moreVideosTrigger.addEventListener('click', function(e){
             console.log('click');
 
-            var closeOtherPerformancesModalButton = otherPerformancesModal.querySelector('button.cancel');
+            var performancesListElement = otherPerformancesModal.querySelector('ul#performances-list');
 
-            closeOtherPerformancesModalButton.addEventListener('click', function(e){
-                otherPerformancesModal.dataset.active = "false";    
-            }, {once : true} );
-            otherPerformancesModal.dataset.active = "true";
+            fetch('/performance/list-performances/{{choirId}}/{{songId}}')
+                .then(function(res){
+                    if(res.ok){
+                        return res.json();
+                    } else {
+                        throw res;
+                    }
+                })
+                .then(function(recordings){
+
+                    console.log(recordings);
+                    
+                    performancesListElement.innerHTML = "";
+                    var listFragment = document.createDocumentFragment();
+
+                    // <li><a>Sean M. Tracey</a><button class="cta-button green">Default</button></li>
+                    recordings.forEach(function(recording){
+
+                        console.log(recording);
+                        var li = document.createElement('li');
+                        var a = document.createElement('a');
+                        var btn = document.createElement('button');
+
+                        li.dataset.selected = "false";
+                        a.textContent = recording.userName;
+                        
+                        btn.textContent = "Select Video";
+                        btn.classList.add('cta-button');
+                        btn.classList.add('blue');
+
+                        btn.addEventListener('click', function(){
+
+                            this.parentNode.dataset.selected = this.parentNode.dataset.selected === "true" ? "false"  : "true";
+
+                            if(this.parentNode.dataset.selected === "true"){
+                                this.textContent = "Video Selected";
+                                this.classList.add('dark-green');
+                                this.classList.remove('blue');
+                            } else {
+                                this.textContent = "Select Video";
+                                this.classList.add('blue');
+                                this.classList.remove('dark-green');
+                            }
+                            
+                            this.classList.remove('red');
+
+                        }, false);
+
+                        btn.addEventListener('mouseenter', function(){
+
+                            console.log('ENTER');
+
+                            if(this.parentNode.dataset.selected === "true"){
+                                this.textContent = "Remove Video";
+                                this.classList.add('red');
+                                this.classList.remove('dark-green');
+                            }
+
+                        }, false);
+
+                        btn.addEventListener('mouseleave', function(){
+
+                            console.log('LEAVE');
+                            if(this.parentNode.dataset.selected === "true"){
+                                this.textContent = "Video Selected";
+                                this.classList.add('dark-green');
+                                this.classList.remove('red');
+                            }
+
+                        }, false);
+
+                        li.appendChild(a);
+                        li.appendChild(btn);
+
+                        listFragment.appendChild(li);
+                    
+                    });
+
+                    performancesListElement.appendChild(listFragment);
+
+                    var closeOtherPerformancesModalButton = otherPerformancesModal.querySelector('button.cancel');
+
+                    closeOtherPerformancesModalButton.addEventListener('click', function(e){
+                        otherPerformancesModal.dataset.active = "false";    
+                    }, {once : true} );
+                    otherPerformancesModal.dataset.active = "true";
+
+
+                })
+                .catch(function(err){
+                    console.log('list performances err:', err);
+                })
+            ;
+
 
         }, false);
 
