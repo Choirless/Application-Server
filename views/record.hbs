@@ -537,16 +537,23 @@
 
         moreVideosTrigger.addEventListener('click', function(e){
             console.log('click');
-
+            
+            moreVideosTrigger.classList.add('loading');
+            moreVideosTrigger.classList.add('dark');
             var performancesListElement = otherPerformancesModal.querySelector('ul#performances-list');
 
             fetch('/performance/list-performances/{{choirId}}/{{songId}}')
                 .then(function(res){
+
+                    moreVideosTrigger.classList.remove('loading');
+                    moreVideosTrigger.classList.remove('dark');
+                    
                     if(res.ok){
                         return res.json();
                     } else {
                         throw res;
                     }
+
                 })
                 .then(function(recordings){
 
@@ -583,7 +590,7 @@
                                 this.classList.add('blue');
                                 this.classList.remove('dark-green');
                             }
-                            
+
                             this.classList.remove('red');
 
                         }, false);

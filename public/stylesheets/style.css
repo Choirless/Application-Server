@@ -210,6 +210,10 @@ main form input[type="text"], main form input[type="email"], main form input[typ
   font-weight: 600;
 }
 
+.modal .container .content ul li:last-of-type{
+  border-bottom: inherit;
+}
+
 .modal .container .content ul li button.cta-button{
   min-width: 100px;
 }
@@ -321,6 +325,10 @@ button{
 .cta-button.yellow{
   background: #ffe563;
   color: black;
+}
+
+.cta-button.yellow:hover{
+  background: #fff1ad;
 }
 
 .cta-button.loading{
