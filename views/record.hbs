@@ -190,6 +190,8 @@
 
             </div>*/
 
+            document.body.dataset.performances = document.body.dataset.performances ? Number(document.body.dataset.performances) + 1 : "1";
+
             var contentContainer = document.createElement('div');
             var videoElement = document.createElement('video');
             var loadingContainer = document.createElement('div');
@@ -604,7 +606,6 @@
             var leadVideoAddr = "/performance/video/{{leadVideoIdentifier}}.webm";
             var videoSize = 0;
 
-            loadVideo(leadVideoAddr);
             loadVideo(leadVideoAddr);
 
         }

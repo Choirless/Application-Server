@@ -560,6 +560,16 @@ body#record[data-performances="2"] div.videoContainer{
   width: 100%;
 }
 
+body#record[data-performances="3"] .half#lead, body#record[data-performances="4"] .half#lead{
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+body#record[data-performances="3"] div.videoContainer, body#record[data-performances="4"] div.videoContainer{
+  width:50%;
+  height: 50%;
+}
+
 body#record .video-dialog{
   text-align: center;
   max-width: 50%;
