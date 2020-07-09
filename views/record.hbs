@@ -228,6 +228,25 @@
 
                 leadView.insertBefore(contentContainer, moreVideosTrigger);
 
+                videoElement.addEventListener('ended', function(){
+                    
+                    var allVideosHaveFinishedPlayback = checkIfAllOfTheVideosHaveFinishedPlaying();
+
+                    if(allVideosHaveFinishedPlayback && recordedVideo.paused){
+                        listenBtn.textContent = "Listen to lead";
+                        playingLead = false;
+                        
+                        if(showingPerformance && recordedVideo.paused === true){
+                            showingPerformance = false;
+                            playbackBtn.textContent = "Replay Performance";
+                        }
+
+                    } else if(allVideosHaveFinishedPlayback){
+                        playingLead = false;
+                    }
+
+                }, false);
+
                 fetch(videoURL, {
                         method : "HEAD"
                     })
@@ -328,7 +347,7 @@
         if(listenBtn){
 
             listenBtn.addEventListener('click', function(){
-
+                debugger;
                 if(!playingLead){
                     playingLead = true;
                     recordedVideos.play();
