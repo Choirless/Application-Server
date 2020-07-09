@@ -497,6 +497,7 @@ body#record #videos .half{
   min-height: 100%;
   box-sizing: border-box;
   position: relative;
+  flex-direction: column;
 }
 
 body#record #videos .half.inverted{
@@ -504,11 +505,19 @@ body#record #videos .half.inverted{
   color: black;
 }
 
-body#record #videos .half[data-videoloaded="false"] video{
+body#record #videos #lead.half .videoContainer[data-loaded="false"] video{
   display: none;
 }
 
-body#record #videos .half[data-videoloaded="true"] .video-dialog{
+body#record #videos #lead.half .videoContainer[data-loaded="true"] .video-dialog{
+  display: none;
+}
+
+body#record #videos #performance.half[data-videoloaded="false"] video{
+  display: none;
+}
+
+body#record #videos #performance.half[data-videoloaded="true"] .video-dialog{
   display: none;
 }
 
@@ -537,6 +546,18 @@ body#record #videos[data-leadrecording="true"] div#performance {
   width: 100%;
   border-left: 0 transparent solid !important;
   border-right: 0 transparent solid !important;
+}
+
+body#record div.videoContainer{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+body#record[data-performances="2"] div.videoContainer{
+  height: 50%;
+  width: 100%;
 }
 
 body#record .video-dialog{

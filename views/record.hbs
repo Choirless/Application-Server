@@ -3,14 +3,32 @@
     {{#ifNotEquals this.partName "Lead"}}
 
     <div class="half" id="lead" data-videoloaded="false">
-        <video preload src="" ></video>
 
-        <div id="lead-loading" class="video-dialog">
-            <h2>Loading Lead Video</h2>
-            <div class="progress">
-                <span class="indicator"></span>
+        <!--<div class="videoContainer">
+
+            <video preload src="" ></video>
+
+            <div id="lead-loading" class="video-dialog">
+                <h2>Loading Video</h2>
+                <div class="progress">
+                    <span class="indicator"></span>
+                </div>
             </div>
+
         </div>
+
+        <div class="videoContainer">
+
+            <video preload src="" ></video>
+
+            <div id="lead-loading" class="video-dialog">
+                <h2>Loading Video</h2>
+                <div class="progress">
+                    <span class="indicator"></span>
+                </div>
+            </div>
+
+        </div>-->
 
         <button class="cta-button white" id="otherPerformancesTrigger">See Other Performances</button>
 
@@ -20,7 +38,7 @@
             <div class="container">
                 <div class="content">
                     <h2>See other performances</h2>
-                    
+
                     <ul id="performances-list">
                         <li class="heading">Lead</li>
                         <li><a>Sean M. Tracey</a><button class="cta-button green">Default</button></li>
@@ -157,6 +175,101 @@
 
         }
 
+        function loadVideo(videoURL){
+
+            /*<div class="videoContainer">
+
+                <video preload src="" ></video>
+
+                <div id="lead-loading" class="video-dialog">
+                    <h2>Loading Video</h2>
+                    <div class="progress">
+                        <span class="indicator"></span>
+                    </div>
+                </div>
+
+            </div>*/
+
+            var contentContainer = document.createElement('div');
+            var videoElement = document.createElement('video');
+            var loadingContainer = document.createElement('div');
+            var loadingTitle = document.createElement('h2');
+            var progressElement = document.createElement('div');
+            var indicatorElement = document.createElement('span');
+
+            loadingTitle.textContent = "Loading Video";
+
+            contentContainer.dataset.loaded = "false";
+
+            contentContainer.classList.add('videoContainer');
+            loadingContainer.classList.add('video-dialog');
+            progressElement.classList.add('progress');
+            indicatorElement.classList.add('indicator');
+
+            contentContainer.appendChild(videoElement);
+            loadingContainer.appendChild(loadingTitle);
+            progressElement.appendChild(indicatorElement);
+
+            loadingContainer.appendChild(progressElement);
+
+            contentContainer.appendChild(loadingContainer);
+
+            leadView.insertBefore(contentContainer, moreVideosTrigger);
+
+            fetch(videoURL, {
+                    method : "HEAD"
+                })
+                .then(function(res){
+                    if(res.ok){
+                        return Number(res.headers.get('Content-Length'));
+                    }
+                })
+                .then(function(sizeOfFile){
+
+                    var req = new XMLHttpRequest();
+                    req.open('GET', videoURL, true);
+                    req.withCredentials = true;
+                    req.responseType = 'blob';
+
+                    req.onload = function() {
+
+                        if (this.status === 200) {
+                            videoElement.src = window.URL.createObjectURL(this.response);
+                            contentContainer.dataset.loaded = "true";
+
+                            listenBtn.dataset.active = "true";
+
+                            if(performanceVideo.readyState === 4){
+                                recordBtn.dataset.active = "true";
+                            }
+
+                        }
+
+                    }
+
+                    req.onerror = function(err) {
+                        // Error
+                        console.log(err);
+                    }
+
+                    req.onprogress = function(e){
+                        console.log(e);
+                        indicatorElement.style.width = (e.loaded / sizeOfFile) * 100 + "%";
+                    }
+
+                    req.send();
+
+                })
+                .catch(function(err){
+
+                    console.log('fetch HEAD err:', err);
+
+                })
+
+            ;
+
+        }
+
         window.addEventListener('keyup', function(e){
             console.log(e.keyCode);
 
@@ -172,13 +285,21 @@
 
                 if(!playingLead){
                     playingLead = true;
-                    leadVideo.currentTime = 0;
-                    leadVideo.play();
+
+                    Array.from(leadView.querySelectorAll('video')).forEach(function(video){
+                        video.currentTime = 0;
+                        video.play();
+                    });
+
                     listenBtn.textContent = "Stop Lead";
                 } else {
-                    leadVideo.pause();
                     playingLead = false;
-                    leadVideo.currentTime = 0;
+
+                    Array.from(leadView.querySelectorAll('video')).forEach(function(video){
+                        video.currentTime = 0;
+                        video.pause();
+                    });
+
                     listenBtn.textContent = "Listen To Lead";
                 }
 
@@ -309,7 +430,7 @@
 
         if(!isLeadRecording){
 
-            leadVideo.addEventListener('ended', function(){
+            /*leadVideo.addEventListener('ended', function(){
                 playingLead = false;
                 leadVideo.currentTime = 0;
                 listenBtn.textContent = "Listen to lead";
@@ -319,7 +440,7 @@
                     playbackBtn.textContent = "Replay Performance";
                 }
 
-            }, false);
+            }, false);*/
 
         }
 
@@ -414,7 +535,7 @@
             offset_analyser.connect();
             offset_analyser.find(3)
                 .then(function(result){
-                    
+
                     offsetCalibrated = true;
 
                     if(result){
@@ -451,11 +572,11 @@
             var fd = new FormData();
             fd.append('video', recordedVideo, 'video.webm');
             fd.append('offset', streamOffset / 1000);
-            
+
             var req = new XMLHttpRequest();
             req.open('POST', '/performance/save/{{this.choirId}}/{{this.songId}}/{{this.partNameId}}');
             req.withCredentials = true;
-            
+
             req.onload = function() {
 
                 uploadProgressIndicator.parentNode.dataset.active = "false";
@@ -482,62 +603,15 @@
 
             var leadVideoAddr = "/performance/video/{{leadVideoIdentifier}}.webm";
             var videoSize = 0;
-            fetch(leadVideoAddr, {
-                    method : "HEAD"
-                })
-                .then(function(res){
-                    if(res.ok){
-                        return Number(res.headers.get('Content-Length'));
-                    }
-                })
-                .then(function(sizeOfFile){
 
-                    var req = new XMLHttpRequest();
-                    req.open('GET', leadVideoAddr, true);
-                    req.withCredentials = true;
-                    req.responseType = 'blob';
-
-                    req.onload = function() {
-
-                        if (this.status === 200) {
-                            leadVideo.src = window.URL.createObjectURL(this.response);
-                            leadView.dataset.videoloaded = "true";
-                            listenBtn.dataset.active = "true";
-
-                            if(performanceVideo.readyState === 4){
-                                recordBtn.dataset.active = "true";
-                            }
-
-                        }
-
-                    }
-
-                    req.onerror = function(err) {
-                        // Error
-                        console.log(err);
-                    }
-
-                    req.onprogress = function(e){
-                        console.log(e);
-                        downloadProgressIndicator.style.width = (e.loaded / sizeOfFile) * 100 + "%";
-                    }
-
-                    req.send();
-
-                })
-                .catch(function(err){
-
-                    console.log('fetch HEAD err:', err);
-
-                })
-
-            ;
+            loadVideo(leadVideoAddr);
+            loadVideo(leadVideoAddr);
 
         }
 
         moreVideosTrigger.addEventListener('click', function(e){
             console.log('click');
-            
+
             moreVideosTrigger.classList.add('loading');
             moreVideosTrigger.classList.add('dark');
             var performancesListElement = otherPerformancesModal.querySelector('ul#performances-list');
@@ -547,7 +621,7 @@
 
                     moreVideosTrigger.classList.remove('loading');
                     moreVideosTrigger.classList.remove('dark');
-                    
+
                     if(res.ok){
                         return res.json();
                     } else {
@@ -558,7 +632,7 @@
                 .then(function(recordings){
 
                     console.log(recordings);
-                    
+
                     performancesListElement.innerHTML = "";
                     var listFragment = document.createDocumentFragment();
 
@@ -573,7 +647,7 @@
                         li.dataset.selected = "false";
                         li.dataset.partid = recording.partId;
                         a.textContent = recording.userName;
-                        
+
                         btn.textContent = "Select Video";
                         btn.classList.add('cta-button');
                         btn.classList.add('blue');
@@ -620,7 +694,7 @@
                         li.appendChild(btn);
 
                         listFragment.appendChild(li);
-                    
+
                     });
 
                     performancesListElement.appendChild(listFragment);
@@ -631,7 +705,7 @@
                     closeOtherPerformancesModalButton.addEventListener('click', function(e){
                         otherPerformancesModal.dataset.active = "false";
                     }, {once : true} );
-                    
+
                     loadOtherPerformancesModalButton.addEventListener('click', function(e){
 
                         var videosToLoad = Array.from(performancesListElement.querySelectorAll('li')).filter(function(li){
