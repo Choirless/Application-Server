@@ -120,6 +120,9 @@
 
         const isLeadRecording = document.querySelector('#videos').dataset.leadrecording === "true";
 
+        var choirId = "{{choirId}}";
+        var songId = "{{songId}}";
+
         var playingLead = false;
         var recording = false;
 
@@ -175,7 +178,7 @@
 
         }
 
-        function loadVideo(videoURL){
+        function loadVideo(partId){
 
             /*<div class="videoContainer">
 
@@ -192,6 +195,8 @@
 
             document.body.dataset.performances = document.body.dataset.performances ? Number(document.body.dataset.performances) + 1 : "1";
 
+            var videoURL = `/performance/video/${choirId}+${songId}+${partId}.webm`
+
             var contentContainer = document.createElement('div');
             var videoElement = document.createElement('video');
             var loadingContainer = document.createElement('div');
@@ -202,6 +207,7 @@
             loadingTitle.textContent = "Loading Video";
 
             contentContainer.dataset.loaded = "false";
+            contentContainer.dataset.id = partId;
 
             contentContainer.classList.add('videoContainer');
             loadingContainer.classList.add('video-dialog');
@@ -603,10 +609,9 @@
 
         if(!isLeadRecording){
 
-            var leadVideoAddr = "/performance/video/{{leadVideoIdentifier}}.webm";
-            var videoSize = 0;
+            var leadVideoId = "{{leadVideoIdentifier}}";
 
-            loadVideo(leadVideoAddr);
+            loadVideo(leadVideoId);
 
         }
 
@@ -636,6 +641,9 @@
 
                     performancesListElement.innerHTML = "";
                     var listFragment = document.createDocumentFragment();
+                    var currentVideos = Array.from(leadView.querySelectorAll('.videoContainer')).map(function(video){
+                        return video.dataset.id;
+                    });
 
                     // <li><a>Sean M. Tracey</a><button class="cta-button green">Default</button></li>
                     recordings.forEach(function(recording){
@@ -645,13 +653,18 @@
                         var a = document.createElement('a');
                         var btn = document.createElement('button');
 
-                        li.dataset.selected = "false";
+                        li.dataset.selected = currentVideos.includes(recording.partId).toString();
                         li.dataset.partid = recording.partId;
                         a.textContent = recording.userName;
-
-                        btn.textContent = "Select Video";
                         btn.classList.add('cta-button');
-                        btn.classList.add('blue');
+
+                        if(li.dataset.selected === "false"){
+                            btn.textContent = "Select Video";
+                            btn.classList.add('blue');
+                        } else {
+                            btn.textContent = "Video Selected";
+                            btn.classList.add('dark-green');
+                        }
 
                         btn.addEventListener('click', function(){
 
@@ -716,9 +729,23 @@
                             return li.dataset.partid;
                         });
 
-                        console.log('videosToLoad', videosToLoad);
+                        document.body.dataset.performances = "0";
+                        
+                        Array.from(leadView.querySelectorAll('.videoContainer')).forEach(container => {
+                            container.parentNode.removeChild(container);
+                        });
+
+                        videosToLoad.forEach(function(partId){
+
+                            if(!leadView.querySelector(`.videoContainer[data-id="${partId}"]`) ){
+                                {{!-- container.parentNode.removeChild(container); --}}
+                                loadVideo(partId);
+                            }
+
+                        });
 
                         otherPerformancesModal.dataset.active = "false";
+
                     }, {once : true} );
 
                     otherPerformancesModal.dataset.active = "true";

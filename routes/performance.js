@@ -26,7 +26,7 @@ router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 				getLeadVideoIdentifier = choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID)
 					.then(recordings => {
 						const leadVideo = recordings.filter(recording => recording.partNameId === leadSection.partNameId)[0];
-						return `${leadVideo.choirId}+${leadVideo.songId}+${leadVideo.partId}`;
+						return `${leadVideo.partId}`;
 					})
 				;
 			}
@@ -73,10 +73,10 @@ router.get('/list-performances/:CHOIRID/:SONGID', (req, res, next) => {
 
 });
 
-router.head('/video/:VIDEOIDENTIFIER', (req, res, next) => {
+router.head('/video/:VIDEOIDENTIFIER', (req, res) => {
 	storage.check(req.params.VIDEOIDENTIFIER)
 		.then(data => {
-			debug(data);
+			debug('HEAD DATA:', data);
 			res.set('Content-Length', data.ContentLength)
 			res.end();
 		})

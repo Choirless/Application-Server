@@ -570,6 +570,10 @@ body#record[data-performances="3"] div.videoContainer, body#record[data-performa
   height: 50%;
 }
 
+body#record[data-performances="3"] div.videoContainer:nth-child(3){
+  width: 100%;
+}
+
 body#record .video-dialog{
   text-align: center;
   max-width: 50%;
