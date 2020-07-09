@@ -15,43 +15,20 @@
                 </div>
             </div>
 
-        </div>
-
-        <div class="videoContainer">
-
-            <video preload src="" ></video>
-
-            <div id="lead-loading" class="video-dialog">
-                <h2>Loading Video</h2>
-                <div class="progress">
-                    <span class="indicator"></span>
-                </div>
-            </div>
-
         </div>-->
 
         <button class="cta-button white" id="otherPerformancesTrigger">See Other Performances</button>
 
         <h3>Lead</h3>
 
-        <div class="modal" data-active="false" id="peformanceSelector">
+        <div class="modal" data-active="false" id="performanceSelector">
             <div class="container">
                 <div class="content">
-                    <h2>See other performances</h2>
+                    <h2>See other performances</h2> <span id="selectedCount">1/4</span>
 
                     <ul id="performances-list">
-                        <li class="heading">Lead</li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button green">Default</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button red">Remove Video</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button green">Video Selected</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
-                        <li><a>Sean M. Tracey</a><button class="cta-button blue">Select Video</button></li>
+                        <!--<li class="heading">Lead</li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button green">Default</button></li>-->
 
                     </ul>
 
@@ -133,6 +110,8 @@
         var downloadProgressIndicator = isLeadRecording ? null : leadView.querySelector('.indicator');
         var moreVideosTrigger = isLeadRecording ? null : leadView.querySelector('button#otherPerformancesTrigger');
         var otherPerformancesModal = isLeadRecording ? null : leadView.querySelector('.modal');
+        var selectedPerformancesCountDisplay = isLeadRecording ? null : leadView.querySelector('span#selectedCount');
+        var MAX_RECORDED_PERFORMANCES = 4;
 
         var performanceView = document.querySelector('.half#performance');;
         var performanceVideo = performanceView.querySelector('video');
@@ -177,106 +156,165 @@
             window.URL.revokeObjectURL(url);
 
         }
+        
+        var recordedVideos = (function(){
 
-        function loadVideo(partId){
+            function playTheRecordedVideos(){
 
-            /*<div class="videoContainer">
+                Array.from(leadView.querySelectorAll('video')).forEach(function(video){
+                    video.currentTime = 0;
+                    video.play();
+                });
 
-                <video preload src="" ></video>
+                listenBtn.textContent = "Stop Lead";
 
-                <div id="lead-loading" class="video-dialog">
-                    <h2>Loading Video</h2>
-                    <div class="progress">
-                        <span class="indicator"></span>
+            }
+
+            function pauseTheRecordedVideos(){
+
+                Array.from(leadView.querySelectorAll('video')).forEach(function(video){
+                    video.currentTime = 0;
+                    video.pause();
+                });
+
+                listenBtn.textContent = "Listen To Lead";
+
+            }
+
+            function loadARecordedVideo(partId){
+
+                /*<div class="videoContainer">
+
+                    <video preload src="" ></video>
+
+                    <div id="lead-loading" class="video-dialog">
+                        <h2>Loading Video</h2>
+                        <div class="progress">
+                            <span class="indicator"></span>
+                        </div>
                     </div>
-                </div>
 
-            </div>*/
+                </div>*/
 
-            document.body.dataset.performances = document.body.dataset.performances ? Number(document.body.dataset.performances) + 1 : "1";
+                listenBtn.dataset.active = "false";
+                document.body.dataset.performances = document.body.dataset.performances ? Number(document.body.dataset.performances) + 1 : "1";
 
-            var videoURL = `/performance/video/${choirId}+${songId}+${partId}.webm`
+                var videoURL = `/performance/video/${choirId}+${songId}+${partId}.webm`
 
-            var contentContainer = document.createElement('div');
-            var videoElement = document.createElement('video');
-            var loadingContainer = document.createElement('div');
-            var loadingTitle = document.createElement('h2');
-            var progressElement = document.createElement('div');
-            var indicatorElement = document.createElement('span');
+                var contentContainer = document.createElement('div');
+                var videoElement = document.createElement('video');
+                var loadingContainer = document.createElement('div');
+                var loadingTitle = document.createElement('h2');
+                var progressElement = document.createElement('div');
+                var indicatorElement = document.createElement('span');
 
-            loadingTitle.textContent = "Loading Video";
+                loadingTitle.textContent = "Loading Video";
 
-            contentContainer.dataset.loaded = "false";
-            contentContainer.dataset.id = partId;
+                contentContainer.dataset.loaded = "false";
+                contentContainer.dataset.id = partId;
 
-            contentContainer.classList.add('videoContainer');
-            loadingContainer.classList.add('video-dialog');
-            progressElement.classList.add('progress');
-            indicatorElement.classList.add('indicator');
+                contentContainer.classList.add('videoContainer');
+                loadingContainer.classList.add('video-dialog');
+                progressElement.classList.add('progress');
+                indicatorElement.classList.add('indicator');
 
-            contentContainer.appendChild(videoElement);
-            loadingContainer.appendChild(loadingTitle);
-            progressElement.appendChild(indicatorElement);
+                contentContainer.appendChild(videoElement);
+                loadingContainer.appendChild(loadingTitle);
+                progressElement.appendChild(indicatorElement);
 
-            loadingContainer.appendChild(progressElement);
+                loadingContainer.appendChild(progressElement);
 
-            contentContainer.appendChild(loadingContainer);
+                contentContainer.appendChild(loadingContainer);
 
-            leadView.insertBefore(contentContainer, moreVideosTrigger);
+                leadView.insertBefore(contentContainer, moreVideosTrigger);
 
-            fetch(videoURL, {
-                    method : "HEAD"
-                })
-                .then(function(res){
-                    if(res.ok){
-                        return Number(res.headers.get('Content-Length'));
-                    }
-                })
-                .then(function(sizeOfFile){
+                fetch(videoURL, {
+                        method : "HEAD"
+                    })
+                    .then(function(res){
+                        if(res.ok){
+                            return Number(res.headers.get('Content-Length'));
+                        }
+                    })
+                    .then(function(sizeOfFile){
 
-                    var req = new XMLHttpRequest();
-                    req.open('GET', videoURL, true);
-                    req.withCredentials = true;
-                    req.responseType = 'blob';
+                        var req = new XMLHttpRequest();
+                        req.open('GET', videoURL, true);
+                        req.withCredentials = true;
+                        req.responseType = 'blob';
 
-                    req.onload = function() {
+                        req.onload = function() {
 
-                        if (this.status === 200) {
-                            videoElement.src = window.URL.createObjectURL(this.response);
-                            contentContainer.dataset.loaded = "true";
+                            if (this.status === 200) {
+                                videoElement.src = window.URL.createObjectURL(this.response);
+                                contentContainer.dataset.loaded = "true";
 
-                            listenBtn.dataset.active = "true";
+                                var readyToGo = checkIfAllOfTheVideosHaveLoaded();
 
-                            if(performanceVideo.readyState === 4){
-                                recordBtn.dataset.active = "true";
+                                if(readyToGo){
+                                    listenBtn.dataset.active = "true";
+                                    if(offsetCalibrated){
+                                        recordBtn.dataset.active = "true";
+                                    }
+                                }
+
                             }
 
                         }
 
+                        req.onerror = function(err) {
+                            // Error
+                            console.log(err);
+                        }
+
+                        req.onprogress = function(e){
+                            console.log(e);
+                            indicatorElement.style.width = (e.loaded / sizeOfFile) * 100 + "%";
+                        }
+
+                        req.send();
+
+                    })
+                    .catch(function(err){
+
+                        console.log('fetch HEAD err:', err);
+
+                    })
+
+                ;
+
+            }
+
+            function checkIfAllOfTheVideosHaveLoaded(){
+
+                return leadView.querySelectorAll('.videoContainer[data-loaded="false"]').length === 0;
+
+            }
+
+            function checkIfAllOfTheVideosHaveFinishedPlaying(){
+                
+                var allFinished = true;
+                leadView.querySelectorAll('.videoContainer[data-loaded="false"]').forEach(function(video){
+                    if(!allFinished){
+                        return;
+                    } else if(!video.paused){
+                        allFinished = false;
                     }
+                });
 
-                    req.onerror = function(err) {
-                        // Error
-                        console.log(err);
-                    }
+                return allFinished;
 
-                    req.onprogress = function(e){
-                        console.log(e);
-                        indicatorElement.style.width = (e.loaded / sizeOfFile) * 100 + "%";
-                    }
+            }
 
-                    req.send();
+            return {
+                play : playTheRecordedVideos,
+                pause : pauseTheRecordedVideos,
+                load : loadARecordedVideo,
+                ready : checkIfAllOfTheVideosHaveLoaded,
+                finished : checkIfAllOfTheVideosHaveFinishedPlaying
+            };
 
-                })
-                .catch(function(err){
-
-                    console.log('fetch HEAD err:', err);
-
-                })
-
-            ;
-
-        }
+        })();
 
         window.addEventListener('keyup', function(e){
             console.log(e.keyCode);
@@ -293,22 +331,10 @@
 
                 if(!playingLead){
                     playingLead = true;
-
-                    Array.from(leadView.querySelectorAll('video')).forEach(function(video){
-                        video.currentTime = 0;
-                        video.play();
-                    });
-
-                    listenBtn.textContent = "Stop Lead";
+                    recordedVideos.play();
                 } else {
                     playingLead = false;
-
-                    Array.from(leadView.querySelectorAll('video')).forEach(function(video){
-                        video.currentTime = 0;
-                        video.pause();
-                    });
-
-                    listenBtn.textContent = "Listen To Lead";
+                    recordedVideos.pause();
                 }
 
             }, false);
@@ -342,8 +368,7 @@
                 recordedVideo.src = "";
 
                 if(!isLeadRecording){
-                    leadVideo.currentTime = 0;
-                    leadVideo.play();
+                    recordedVideos.play()
                 }
 
                 // Oh Firefox, why you gotta do me like this?
@@ -370,8 +395,7 @@
                 recordBtn.textContent = "Re-Record Performance";
 
                 if(!isLeadRecording){
-                    leadVideo.pause();
-                    leadVideo.currentTime = 0;
+                    recordedVideos.pause();
                 }
 
                 mR.stop();
@@ -414,8 +438,7 @@
                 recordedVideo.play()
 
                 if(!isLeadRecording){
-                    leadVideo.currentTime = 0;
-                    leadVideo.play();
+                    recordedVideos.play();
                 }
 
             } else {
@@ -425,12 +448,9 @@
                 playbackBtn.textContent = "Replay Performance";
 
                 recordedVideo.pause()
-                leadVideo.pause();
+                recordedVideos.pause();
 
                 recordedVideo.currentTime = 0;
-                if(!isLeadRecording){
-                    leadVideo.currentTime = 0;
-                }
 
             }
 
@@ -458,7 +478,7 @@
 
                 if(!isLeadRecording){
 
-                    if(leadVideo.paused === true){
+                    if(recordedVideos.finished()){
                         showingPerformance = false;
                         playbackBtn.textContent = "Replay Performance";
                     }
@@ -510,8 +530,8 @@
 
                                         performanceView.classList.add('inverted');
                                         calibrateInputsDialog.dataset.active = "true";
-
-                                        if(leadVideo.readyState === 4 && offsetCalibrated){
+                                        
+                                        if(recordedVideos.ready() && offsetCalibrated){
                                             recordBtn.dataset.active = "true";
                                         }
 
@@ -554,7 +574,7 @@
                     performanceView.dataset.videoloaded = "true";
 
                     if(!isLeadRecording){
-                        if(leadVideo.readyState === 4){
+                        if(recordedVideos.ready() && offsetCalibrated){
                             recordBtn.dataset.active = "true";
                         }
                     }
@@ -611,13 +631,14 @@
 
             var leadVideoId = "{{leadVideoIdentifier}}";
 
-            loadVideo(leadVideoId);
+            recordedVideos.load(leadVideoId);
 
         }
 
         moreVideosTrigger.addEventListener('click', function(e){
-            console.log('click');
-
+            
+            recordBtn.dataset.active = "false";
+            recordedVideos.pause();
             moreVideosTrigger.classList.add('loading');
             moreVideosTrigger.classList.add('dark');
             var performancesListElement = otherPerformancesModal.querySelector('ul#performances-list');
@@ -681,6 +702,22 @@
                             }
 
                             this.classList.remove('red');
+                            var numberOfSelectedPerformances = performancesListElement.querySelectorAll('li[data-selected="true"]').length;
+                            selectedPerformancesCountDisplay.textContent = `${numberOfSelectedPerformances}/${MAX_RECORDED_PERFORMANCES}`;
+
+                            if(numberOfSelectedPerformances === MAX_RECORDED_PERFORMANCES){
+                                
+                                Array.from(performancesListElement.querySelectorAll('li[data-selected="false"] button')).forEach(function(button){
+                                    button.dataset.active = "false";
+                                });
+
+                            } else {
+
+                                Array.from(performancesListElement.querySelectorAll('li[data-selected="false"] button[data-active="false"]')).forEach(function(button){
+                                    button.dataset.active = "true";
+                                });
+
+                            }
 
                         }, false);
 
@@ -718,6 +755,7 @@
 
                     closeOtherPerformancesModalButton.addEventListener('click', function(e){
                         otherPerformancesModal.dataset.active = "false";
+                        recordBtn.dataset.active = "true";
                     }, {once : true} );
 
                     loadOtherPerformancesModalButton.addEventListener('click', function(e){
@@ -738,8 +776,7 @@
                         videosToLoad.forEach(function(partId){
 
                             if(!leadView.querySelector(`.videoContainer[data-id="${partId}"]`) ){
-                                {{!-- container.parentNode.removeChild(container); --}}
-                                loadVideo(partId);
+                                recordedVideos.load(partId);
                             }
 
                         });
