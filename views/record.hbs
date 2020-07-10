@@ -3,16 +3,43 @@
     {{#ifNotEquals this.partName "Lead"}}
 
     <div class="half" id="lead" data-videoloaded="false">
-        <video preload src="" ></video>
 
-        <div id="lead-loading" class="video-dialog">
-            <h2>Loading Lead Video</h2>
-            <div class="progress">
-                <span class="indicator"></span>
+        <!--<div class="videoContainer">
+
+            <video preload src="" ></video>
+
+            <div id="lead-loading" class="video-dialog">
+                <h2>Loading Video</h2>
+                <div class="progress">
+                    <span class="indicator"></span>
+                </div>
             </div>
-        </div>
+
+        </div>-->
+
+        <button class="cta-button white" id="otherPerformancesTrigger">See Other Performances</button>
 
         <h3>Lead</h3>
+
+        <div class="modal" data-active="false" id="performanceSelector">
+            <div class="container">
+                <div class="content">
+                    <h2>See other performances</h2> <span id="selectedCount">1/4</span>
+
+                    <ul id="performances-list">
+                        <!--<li class="heading">Lead</li>
+                        <li><a>Sean M. Tracey</a><button class="cta-button green">Default</button></li>-->
+
+                    </ul>
+
+                    <div class="side-by-side">
+                        <button type="button" class="cta-button red cancel">Cancel</button>
+                        <button type="submit" class="cta-button light-blue">Load Videos</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 
     {{/ifNotEquals}}
@@ -70,6 +97,9 @@
 
         const isLeadRecording = document.querySelector('#videos').dataset.leadrecording === "true";
 
+        var choirId = "{{choirId}}";
+        var songId = "{{songId}}";
+
         var playingLead = false;
         var recording = false;
 
@@ -78,6 +108,10 @@
         var leadView = isLeadRecording ? null : document.querySelector('.half#lead');
         var leadVideo = isLeadRecording ? null : leadView.querySelector('video');
         var downloadProgressIndicator = isLeadRecording ? null : leadView.querySelector('.indicator');
+        var moreVideosTrigger = isLeadRecording ? null : leadView.querySelector('button#otherPerformancesTrigger');
+        var otherPerformancesModal = isLeadRecording ? null : leadView.querySelector('.modal');
+        var selectedPerformancesCountDisplay = isLeadRecording ? null : leadView.querySelector('span#selectedCount');
+        var MAX_RECORDED_PERFORMANCES = 4;
 
         var performanceView = document.querySelector('.half#performance');;
         var performanceVideo = performanceView.querySelector('video');
@@ -122,6 +156,190 @@
             window.URL.revokeObjectURL(url);
 
         }
+        
+        var recordedVideos = (function(){
+
+            function playTheRecordedVideos(){
+
+                Array.from(leadView.querySelectorAll('video')).forEach(function(video){
+                    video.currentTime = 0;
+                    video.play();
+                });
+
+                listenBtn.textContent = "Stop Lead";
+
+            }
+
+            function pauseTheRecordedVideos(){
+
+                Array.from(leadView.querySelectorAll('video')).forEach(function(video){
+                    video.currentTime = 0;
+                    video.pause();
+                });
+
+                listenBtn.textContent = "Listen To Lead";
+
+            }
+
+            function loadARecordedVideo(partId){
+
+                /*<div class="videoContainer">
+
+                    <video preload src="" ></video>
+
+                    <div id="lead-loading" class="video-dialog">
+                        <h2>Loading Video</h2>
+                        <div class="progress">
+                            <span class="indicator"></span>
+                        </div>
+                    </div>
+
+                </div>*/
+
+                listenBtn.dataset.active = "false";
+                document.body.dataset.performances = document.body.dataset.performances ? Number(document.body.dataset.performances) + 1 : "1";
+
+                var videoURL = `/performance/video/${choirId}+${songId}+${partId}.webm`
+
+                var contentContainer = document.createElement('div');
+                var videoElement = document.createElement('video');
+                var loadingContainer = document.createElement('div');
+                var loadingTitle = document.createElement('h2');
+                var progressElement = document.createElement('div');
+                var indicatorElement = document.createElement('span');
+
+                loadingTitle.textContent = "Loading Video";
+
+                contentContainer.dataset.loaded = "false";
+                contentContainer.dataset.id = partId;
+
+                contentContainer.classList.add('videoContainer');
+                loadingContainer.classList.add('video-dialog');
+                progressElement.classList.add('progress');
+                indicatorElement.classList.add('indicator');
+
+                contentContainer.appendChild(videoElement);
+                loadingContainer.appendChild(loadingTitle);
+                progressElement.appendChild(indicatorElement);
+
+                loadingContainer.appendChild(progressElement);
+
+                contentContainer.appendChild(loadingContainer);
+
+                leadView.insertBefore(contentContainer, moreVideosTrigger);
+
+                Array.from(leadView.querySelectorAll('video')).forEach(function(video){
+
+                    video.volume = 1 / Number(document.body.dataset.performances);
+
+                });
+
+                videoElement.addEventListener('ended', function(){
+                    
+                    var allVideosHaveFinishedPlayback = checkIfAllOfTheVideosHaveFinishedPlaying();
+
+                    if(allVideosHaveFinishedPlayback && recordedVideo.paused){
+                        listenBtn.textContent = "Listen to lead";
+                        playingLead = false;
+                        
+                        if(showingPerformance && recordedVideo.paused === true){
+                            showingPerformance = false;
+                            playbackBtn.textContent = "Replay Performance";
+                        }
+
+                    } else if(allVideosHaveFinishedPlayback){
+                        playingLead = false;
+                    }
+
+                }, false);
+
+                fetch(videoURL, {
+                        method : "HEAD"
+                    })
+                    .then(function(res){
+                        if(res.ok){
+                            return Number(res.headers.get('Content-Length'));
+                        }
+                    })
+                    .then(function(sizeOfFile){
+
+                        var req = new XMLHttpRequest();
+                        req.open('GET', videoURL, true);
+                        req.withCredentials = true;
+                        req.responseType = 'blob';
+
+                        req.onload = function() {
+
+                            if (this.status === 200) {
+                                videoElement.src = window.URL.createObjectURL(this.response);
+                                contentContainer.dataset.loaded = "true";
+
+                                var readyToGo = checkIfAllOfTheVideosHaveLoaded();
+
+                                if(readyToGo){
+                                    listenBtn.dataset.active = "true";
+                                    if(offsetCalibrated){
+                                        recordBtn.dataset.active = "true";
+                                    }
+                                }
+
+                            }
+
+                        }
+
+                        req.onerror = function(err) {
+                            // Error
+                            console.log(err);
+                        }
+
+                        req.onprogress = function(e){
+                            console.log(e);
+                            indicatorElement.style.width = (e.loaded / sizeOfFile) * 100 + "%";
+                        }
+
+                        req.send();
+
+                    })
+                    .catch(function(err){
+
+                        console.log('fetch HEAD err:', err);
+
+                    })
+
+                ;
+
+            }
+
+            function checkIfAllOfTheVideosHaveLoaded(){
+
+                return leadView.querySelectorAll('.videoContainer[data-loaded="false"]').length === 0;
+
+            }
+
+            function checkIfAllOfTheVideosHaveFinishedPlaying(){
+                
+                var allFinished = true;
+                leadView.querySelectorAll('.videoContainer[data-loaded="false"]').forEach(function(video){
+                    if(!allFinished){
+                        return;
+                    } else if(!video.paused){
+                        allFinished = false;
+                    }
+                });
+
+                return allFinished;
+
+            }
+
+            return {
+                play : playTheRecordedVideos,
+                pause : pauseTheRecordedVideos,
+                load : loadARecordedVideo,
+                ready : checkIfAllOfTheVideosHaveLoaded,
+                finished : checkIfAllOfTheVideosHaveFinishedPlaying
+            };
+
+        })();
 
         window.addEventListener('keyup', function(e){
             console.log(e.keyCode);
@@ -138,14 +356,10 @@
 
                 if(!playingLead){
                     playingLead = true;
-                    leadVideo.currentTime = 0;
-                    leadVideo.play();
-                    listenBtn.textContent = "Stop Lead";
+                    recordedVideos.play();
                 } else {
-                    leadVideo.pause();
                     playingLead = false;
-                    leadVideo.currentTime = 0;
-                    listenBtn.textContent = "Listen To Lead";
+                    recordedVideos.pause();
                 }
 
             }, false);
@@ -179,8 +393,7 @@
                 recordedVideo.src = "";
 
                 if(!isLeadRecording){
-                    leadVideo.currentTime = 0;
-                    leadVideo.play();
+                    recordedVideos.play()
                 }
 
                 // Oh Firefox, why you gotta do me like this?
@@ -207,8 +420,7 @@
                 recordBtn.textContent = "Re-Record Performance";
 
                 if(!isLeadRecording){
-                    leadVideo.pause();
-                    leadVideo.currentTime = 0;
+                    recordedVideos.pause();
                 }
 
                 mR.stop();
@@ -251,8 +463,7 @@
                 recordedVideo.play()
 
                 if(!isLeadRecording){
-                    leadVideo.currentTime = 0;
-                    leadVideo.play();
+                    recordedVideos.play();
                 }
 
             } else {
@@ -262,12 +473,9 @@
                 playbackBtn.textContent = "Replay Performance";
 
                 recordedVideo.pause()
-                leadVideo.pause();
+                recordedVideos.pause();
 
                 recordedVideo.currentTime = 0;
-                if(!isLeadRecording){
-                    leadVideo.currentTime = 0;
-                }
 
             }
 
@@ -275,7 +483,7 @@
 
         if(!isLeadRecording){
 
-            leadVideo.addEventListener('ended', function(){
+            /*leadVideo.addEventListener('ended', function(){
                 playingLead = false;
                 leadVideo.currentTime = 0;
                 listenBtn.textContent = "Listen to lead";
@@ -285,7 +493,7 @@
                     playbackBtn.textContent = "Replay Performance";
                 }
 
-            }, false);
+            }, false);*/
 
         }
 
@@ -295,7 +503,7 @@
 
                 if(!isLeadRecording){
 
-                    if(leadVideo.paused === true){
+                    if(recordedVideos.finished()){
                         showingPerformance = false;
                         playbackBtn.textContent = "Replay Performance";
                     }
@@ -347,8 +555,8 @@
 
                                         performanceView.classList.add('inverted');
                                         calibrateInputsDialog.dataset.active = "true";
-
-                                        if(leadVideo.readyState === 4 && offsetCalibrated){
+                                        
+                                        if(recordedVideos.ready() && offsetCalibrated){
                                             recordBtn.dataset.active = "true";
                                         }
 
@@ -380,7 +588,7 @@
             offset_analyser.connect();
             offset_analyser.find(3)
                 .then(function(result){
-                    
+
                     offsetCalibrated = true;
 
                     if(result){
@@ -391,7 +599,7 @@
                     performanceView.dataset.videoloaded = "true";
 
                     if(!isLeadRecording){
-                        if(leadVideo.readyState === 4){
+                        if(recordedVideos.ready() && offsetCalibrated){
                             recordBtn.dataset.active = "true";
                         }
                     }
@@ -417,11 +625,11 @@
             var fd = new FormData();
             fd.append('video', recordedVideo, 'video.webm');
             fd.append('offset', streamOffset / 1000);
-            
+
             var req = new XMLHttpRequest();
             req.open('POST', '/performance/save/{{this.choirId}}/{{this.songId}}/{{this.partNameId}}');
             req.withCredentials = true;
-            
+
             req.onload = function() {
 
                 uploadProgressIndicator.parentNode.dataset.active = "false";
@@ -446,60 +654,206 @@
 
         if(!isLeadRecording){
 
-            var leadVideoAddr = "/performance/video/{{leadVideoIdentifier}}.webm";
-            var videoSize = 0;
-            fetch(leadVideoAddr, {
-                    method : "HEAD"
-                })
+            var leadVideoId = "{{leadVideoIdentifier}}";
+
+            recordedVideos.load(leadVideoId);
+
+        }
+
+        moreVideosTrigger.addEventListener('click', function(e){
+            
+            recordBtn.dataset.active = "false";
+            recordedVideos.pause();
+            moreVideosTrigger.classList.add('loading');
+            moreVideosTrigger.classList.add('dark');
+            var performancesListElement = otherPerformancesModal.querySelector('ul#performances-list');
+
+            fetch(`/performance/list-performances/${choirId}/${songId}`)
                 .then(function(res){
+
+                    moreVideosTrigger.classList.remove('loading');
+                    moreVideosTrigger.classList.remove('dark');
+
                     if(res.ok){
-                        return Number(res.headers.get('Content-Length'));
+                        return res.json();
+                    } else {
+                        throw res;
                     }
+
                 })
-                .then(function(sizeOfFile){
+                .then(function(data){
 
-                    var req = new XMLHttpRequest();
-                    req.open('GET', leadVideoAddr, true);
-                    req.withCredentials = true;
-                    req.responseType = 'blob';
+                    var sections = data.sections;
 
-                    req.onload = function() {
+                    performancesListElement.innerHTML = "";
+                    var listFragment = document.createDocumentFragment();
+                    var currentVideos = Array.from(leadView.querySelectorAll('.videoContainer')).map(function(video){
+                        return video.dataset.id;
+                    });
 
-                        if (this.status === 200) {
-                            leadVideo.src = window.URL.createObjectURL(this.response);
-                            leadView.dataset.videoloaded = "true";
-                            listenBtn.dataset.active = "true";
+                    sections.forEach(function(section){
 
-                            if(performanceVideo.readyState === 4){
-                                recordBtn.dataset.active = "true";
+                        // <li class="heading">Lead</li>
+
+                        var headerLi = document.createElement('li');
+                        headerLi.classList.add('heading');
+                        headerLi.textContent = section.name;
+
+                        listFragment.appendChild(headerLi);
+
+                        section.recordings.forEach(function(recording){
+
+                            // <li><a>Sean M. Tracey</a><button class="cta-button green">Default</button></li>
+
+                            console.log(recording);
+                            var li = document.createElement('li');
+                            var a = document.createElement('a');
+                            var btn = document.createElement('button');
+
+                            li.dataset.selected = currentVideos.includes(recording.partId).toString();
+                            li.dataset.partid = recording.partId;
+                            a.textContent = recording.userName;
+                            btn.classList.add('cta-button');
+
+                            if(li.dataset.selected === "false"){
+                                btn.textContent = "Select Video";
+                                btn.classList.add('blue');
+                            } else {
+                                btn.textContent = "Video Selected";
+                                btn.classList.add('dark-green');
                             }
 
+                            if(recording.partType !== "backing"){
+
+                                btn.addEventListener('click', function(){
+
+                                    this.parentNode.dataset.selected = this.parentNode.dataset.selected === "true" ? "false"  : "true";
+
+                                    if(this.parentNode.dataset.selected === "true"){
+                                        this.textContent = "Video Selected";
+                                        this.classList.add('dark-green');
+                                        this.classList.remove('blue');
+                                    } else {
+                                        this.textContent = "Select Video";
+                                        this.classList.add('blue');
+                                        this.classList.remove('dark-green');
+                                    }
+
+                                    this.classList.remove('red');
+                                    var numberOfSelectedPerformances = performancesListElement.querySelectorAll('li[data-selected="true"]').length;
+                                    selectedPerformancesCountDisplay.textContent = `${numberOfSelectedPerformances}/${MAX_RECORDED_PERFORMANCES}`;
+
+                                    if(numberOfSelectedPerformances === MAX_RECORDED_PERFORMANCES){
+                                        
+                                        Array.from(performancesListElement.querySelectorAll('li[data-selected="false"] button')).forEach(function(button){
+                                            button.dataset.active = "false";
+                                        });
+
+                                    } else {
+
+                                        Array.from(performancesListElement.querySelectorAll('li[data-selected="false"] button[data-active="false"]')).forEach(function(button){
+                                            button.dataset.active = "true";
+                                        });
+
+                                    }
+
+                                }, false);
+
+                                btn.addEventListener('mouseenter', function(){
+
+                                    if(this.parentNode.dataset.selected === "true"){
+                                        this.textContent = "Remove Video";
+                                        this.classList.add('red');
+                                        this.classList.remove('dark-green');
+                                    }
+
+                                }, false);
+
+                                btn.addEventListener('mouseleave', function(){
+
+                                    if(this.parentNode.dataset.selected === "true"){
+                                        this.textContent = "Video Selected";
+                                        this.classList.add('dark-green');
+                                        this.classList.remove('red');
+                                    }
+
+                                }, false);
+
+                            }
+
+                            li.appendChild(a);
+                            li.appendChild(btn);
+
+                            listFragment.appendChild(li);
+                        
+                        });
+
+                    });
+
+                    var numberOfSelectedPerformances = listFragment.querySelectorAll('li[data-selected="true"]').length;
+                    if(numberOfSelectedPerformances >= MAX_RECORDED_PERFORMANCES){
+                                
+                        Array.from(listFragment.querySelectorAll('li[data-selected="false"] button')).forEach(function(button){
+                            button.dataset.active = "false";
+                        });
+
+                    } else {
+
+                        Array.from(listFragment.querySelectorAll('li[data-selected="false"] button[data-active="false"]')).forEach(function(button){
+                            button.dataset.active = "true";
+                        });
+
+                    }
+
+                    performancesListElement.appendChild(listFragment);
+
+                    var closeOtherPerformancesModalButton = otherPerformancesModal.querySelector('button.cancel');
+                    var loadOtherPerformancesModalButton = otherPerformancesModal.querySelector('button[type="submit"]');
+
+                    closeOtherPerformancesModalButton.addEventListener('click', function(e){
+                        otherPerformancesModal.dataset.active = "false";
+                        if(recordedVideos.ready() && offsetCalibrated){
+                            recordBtn.dataset.active = "true";
                         }
+                    }, {once : true} );
 
-                    }
+                    loadOtherPerformancesModalButton.addEventListener('click', function(e){
 
-                    req.onerror = function(err) {
-                        // Error
-                        console.log(err);
-                    }
+                        var videosToLoad = Array.from(performancesListElement.querySelectorAll('li')).filter(function(li){
+                            console.log(li);
+                            return li.dataset.selected === "true"
+                        }).map(function(li){
+                            return li.dataset.partid;
+                        });
 
-                    req.onprogress = function(e){
-                        console.log(e);
-                        downloadProgressIndicator.style.width = (e.loaded / sizeOfFile) * 100 + "%";
-                    }
+                        document.body.dataset.performances = "0";
+                        
+                        Array.from(leadView.querySelectorAll('.videoContainer')).forEach(container => {
+                            container.parentNode.removeChild(container);
+                        });
 
-                    req.send();
+                        videosToLoad.forEach(function(partId){
+
+                            if(!leadView.querySelector(`.videoContainer[data-id="${partId}"]`) ){
+                                recordedVideos.load(partId);
+                            }
+
+                        });
+
+                        otherPerformancesModal.dataset.active = "false";
+
+                    }, {once : true} );
+
+                    otherPerformancesModal.dataset.active = "true";
 
                 })
                 .catch(function(err){
-
-                    console.log('fetch HEAD err:', err);
-
+                    console.log('list performances err:', err);
                 })
-
             ;
 
-        }
+
+        }, false);
 
     }());
 

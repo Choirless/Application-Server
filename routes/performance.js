@@ -26,7 +26,7 @@ router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 				getLeadVideoIdentifier = choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID)
 					.then(recordings => {
 						const leadVideo = recordings.filter(recording => recording.partNameId === leadSection.partNameId)[0];
-						return `${leadVideo.choirId}+${leadVideo.songId}+${leadVideo.partId}`;
+						return `${leadVideo.partId}`;
 					})
 				;
 			}
@@ -58,10 +58,50 @@ router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 
 });
 
-router.head('/video/:VIDEOIDENTIFIER', (req, res, next) => {
+router.get('/list-performances/:CHOIRID/:SONGID', (req, res, next) => {
+
+	const apiRequests = [];
+
+	apiRequests.push(choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID));
+	apiRequests.push(choir.songs.get(req.params.CHOIRID, req.params.SONGID));
+
+	Promise.all(apiRequests)
+		.then(results => {
+
+			const recordings = results[0];
+			const songSections = results[1].partNames.map(section => {
+				
+				section.recordings = recordings.filter(recording => {
+					return recording.partNameId === section.partNameId;
+				});
+				
+				if(section.recordings.length === 0){
+					section.recordings = undefined;
+				}
+				
+				return section;
+			});
+			
+			debug('Recordings:', recordings);
+			debug('Sections:', songSections);
+			
+			res.json({
+				sections : songSections
+			});
+
+		})
+		.catch(err => {
+			debug('/list-performances/:CHOIRID/:SONGID err:', err);
+			res.end();
+		})
+	;
+
+});
+
+router.head('/video/:VIDEOIDENTIFIER', (req, res) => {
 	storage.check(req.params.VIDEOIDENTIFIER)
 		.then(data => {
-			debug(data);
+			debug('HEAD DATA:', data);
 			res.set('Content-Length', data.ContentLength)
 			res.end();
 		})
@@ -155,8 +195,6 @@ router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), functio
 			res.end();
 		})
 	;
-
-
 
 });
 
