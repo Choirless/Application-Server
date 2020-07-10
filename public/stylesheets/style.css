@@ -126,6 +126,7 @@ nav .cta-button{
   box-shadow: 0 0 15px black;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
   width: 25%;
+  z-index: 10000;
 }
 
 #notice.success{
