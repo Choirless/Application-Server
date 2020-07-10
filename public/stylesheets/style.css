@@ -85,6 +85,7 @@ nav {
   align-items: center;
   display: flex;
   justify-content: space-between;
+  z-index: 1000;
 }
 
 nav a {
@@ -343,6 +344,30 @@ button{
   background-image: url("/assets/images/loader_dark.gif");
 }
 
+button.sub-menu{
+  display: none;
+  position: absolute;
+  width: 3em;
+  height: 100%;
+  background: white;
+  right: 0;
+  top: 0;
+  border: 0;
+  background-image: url('/assets/images/menu-icon-dark.png');
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: 50%;
+}
+
+button.sub-menu.dark{
+  background-color: black;
+  background-image: url('/assets/images/menu-icon-light.png');
+}
+
+nav[data-expanded="true"] button.sub-menu, #choirMenu[data-expanded="true"] button.sub-menu{
+  height: 3em;
+}
+
 footer{
   width: 100%;
   display: flex;
@@ -424,6 +449,7 @@ footer div p:last-of-type{
   align-items: center;
   color: black;
   font-size: 0.8em;
+  z-index: 50;
 }
 
 .modal .container{
@@ -1182,4 +1208,192 @@ body#admin main section form{
   0% { opacity: 1; }
   50% { opacity: 0.5; }
   100% { opacity: 1; }
+}
+
+@media all and (max-width: 768px){
+
+  body{
+    background-size: auto 50%;
+    background-position: 50% 0;
+  }
+
+  nav[data-expanded="false"] section{
+    display: none;
+  }
+
+  nav[data-expanded="true"]{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    z-index: 1000;
+    padding: 1em;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  nav[data-expanded="true"] a{
+    align-self: flex-start;
+  }
+
+  nav[data-expanded="true"] section{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2em;
+  }
+
+  nav[data-expanded="true"] section a{
+    margin-left: inherit;
+    font-size: 1em;
+    margin-bottom: 1.5em;
+    padding-bottom: 1.5em;
+    border-bottom: 1px solid #828282;
+    width: 100%;
+  }
+
+  button.sub-menu{
+    display: block !important;
+  }
+
+  #notice{
+    width: 100%;
+    z-index: 1000;
+  }
+
+  .modal{
+    position: fixed;
+  }
+
+  .modal .container {
+    max-width: 90%;
+  }
+
+  body#home header {
+    height: auto;
+  }
+  
+  body#home header h1{
+    font-size: 3em;
+  }
+
+  footer div {
+    max-width: 100%;
+  }
+
+  body#dashboard main{
+    flex-direction: column;
+  }
+
+  body#dashboard main section{
+    width: 100%;
+  }
+
+  body#dashboard main section#choirMenu {
+    width: 100%;
+    position: absolute;
+    z-index: 5;
+    height: auto;
+    max-height: 2.5em;
+    padding-top: 0;
+    overflow: hidden;
+  }
+
+  body#dashboard main section#choirMenu[data-expanded="true"]{
+    height: 100%;
+    overflow-y: scroll;
+    max-height: 80%;
+    box-sizing: border-box;
+  }
+
+  body#dashboard main section#choirMenu h2{
+    font-size: 1em;
+    margin-top: 0.5em;
+  }
+
+  body#dashboard main section#choirMenu ul li a{
+    font-size: 0.9em;
+    border-bottom: 1px solid #d4d4d4;
+  }
+
+  body#dashboard main section#choirMenu ul li a.selected{
+    background: transparent;
+    color: inherit;
+  }
+
+  body#dashboard main section#choirMenu ul li a.selected::after {
+    width: 0;
+    height: 0;
+  }
+  
+  body#dashboard main section#choirInfo {
+    padding-top: 4em;
+    font-size: 0.9em;
+  }
+
+  body#dashboard main section#choirInfo header p {
+    max-width: 100%;
+  }
+
+  body#record{
+    font-size: 0.8em;
+  }
+
+  body#record #videos {
+    flex-direction: column;
+  }
+
+  body#record #videos .half {
+    width: 100%;
+    height: 60%;
+    min-height: inherit;
+  }
+
+  body#record #videos .half:first-of-type {
+    border-right: 0;
+    border-bottom: 1px solid white;
+  }
+
+  body#record #videos .half:last-of-type {
+    border-left: 0;
+  }
+
+  body#record #videos .half h3 {
+    top: 1vh;
+  }
+
+  body#record #videos .half#lead{
+    height: 40%;
+  }
+
+  body#record #videos .half#lead button#otherPerformancesTrigger {
+    bottom: 0.5em;
+  }
+
+  body#record .half#lead .video-dialog h2{
+    font-size: 1em;
+  }
+
+  body#record #videos .half#performance{
+    justify-content: flex-start;
+  }
+
+  body#record #videos .half#performance p{
+    margin: 0.75em 0;
+  }
+
+  body#record .half#performance .video-dialog {
+    max-width: 80%;
+    font-size: 0.9em;
+    padding-top: 4em;
+  }
+
+
+  body#record .progress{
+    width: 100%;
+  }
+
+  body#record #controls{
+    bottom: 0;
+  }
+
 }
