@@ -60,10 +60,35 @@ router.get('/record/:CHOIRID/:SONGID/:SECTIONID', function(req, res, next) {
 
 router.get('/list-performances/:CHOIRID/:SONGID', (req, res, next) => {
 
-	choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID)
-		.then(recordings => {
+	const apiRequests = [];
+
+	apiRequests.push(choir.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID));
+	apiRequests.push(choir.songs.get(req.params.CHOIRID, req.params.SONGID));
+
+	Promise.all(apiRequests)
+		.then(results => {
+
+			const recordings = results[0];
+			const songSections = results[1].partNames.map(section => {
+				
+				section.recordings = recordings.filter(recording => {
+					return recording.partNameId === section.partNameId;
+				});
+				
+				if(section.recordings.length === 0){
+					section.recordings = undefined;
+				}
+				
+				return section;
+			});
+			
 			debug('Recordings:', recordings);
-			res.json(recordings);
+			debug('Sections:', songSections);
+			
+			res.json({
+				sections : songSections
+			});
+
 		})
 		.catch(err => {
 			debug('/list-performances/:CHOIRID/:SONGID err:', err);
