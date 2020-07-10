@@ -20,6 +20,8 @@
             {{/if}}
         </ul>
 
+        <button class="sub-menu dark" id="choirMenuToggle" type="button"></button>
+
         {{#ifEquals userType "admin"}}
         <div class="center-text">
             <button class="cta-button black" id="choirCreationCTA">Create a Choir</button>
@@ -99,16 +101,25 @@
         'use strict';
 
         var createChoirModal = document.querySelector('#createChoir.modal');
+        var choirMenu = document.querySelector('#choirMenu');
+        var choirMenuToggle = choirMenu.querySelector('button#choirMenuToggle');
 
         if(createChoirModal){
             
             document.querySelector('#choirCreationCTA').addEventListener('click', function(){
 
                 createChoirModal.dataset.active = "true";
+                choirMenu.dataset.expanded = "false";
 
             }, false);
 
         }
+
+        choirMenuToggle.addEventListener('click', function(){
+
+            choirMenu.dataset.expanded = choirMenu.dataset.expanded === "true" ? "false" : "true";
+
+        }, false);
 
     }());
 

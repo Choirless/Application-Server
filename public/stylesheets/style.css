@@ -906,6 +906,21 @@ body#dashboard main section#choirMenu button.cta-button{
   width: 100%;
 }
 
+body#dashboard main section#choirMenu button.sub-menu{
+  display: none;
+  position: absolute;
+  width: 3em;
+  height: 3em;
+  background: white;
+  right: 0;
+  top: 0;
+  border: 0;
+  background-image: url('/assets/images/menu-icon-dark.png');
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: 50%;
+}
+
 body#dashboard main section#choirInfo{
   position: relative;
   flex-grow: 1;
@@ -1182,4 +1197,80 @@ body#admin main section form{
   0% { opacity: 1; }
   50% { opacity: 0.5; }
   100% { opacity: 1; }
+}
+
+@media all and (max-width: 768px){
+
+  #notice{
+    width: 100%;
+    z-index: 1000;
+  }
+
+  .modal .container {
+    max-width: 90%;
+  }
+
+  body#dashboard main{
+    flex-direction: column;
+  }
+
+  body#dashboard main section{
+    width: 100%;
+  }
+
+  body#dashboard main section#choirMenu {
+    width: 100%;
+    position: absolute;
+    z-index: 5;
+    height: auto;
+    max-height: 2.5em;
+    padding-top: 0;
+    overflow: hidden;
+  }
+
+  body#dashboard main section#choirMenu[data-expanded="true"]{
+    height: 100%;
+    overflow-y: scroll;
+    max-height: 80%;
+    box-sizing: border-box;
+  }
+
+  body#dashboard main section#choirMenu h2{
+    font-size: 1em;
+    margin-top: 0.5em;
+  }
+
+  body#dashboard main section#choirMenu ul li a{
+    font-size: 0.9em;
+    border-bottom: 1px solid #d4d4d4;
+  }
+
+  body#dashboard main section#choirMenu ul li a.selected{
+    background: transparent;
+    color: inherit;
+  }
+
+  body#dashboard main section#choirMenu ul li a.selected::after {
+    width: 0;
+    height: 0;
+  }
+
+  body#dashboard main section#choirMenu button.sub-menu{
+
+  }
+
+  body#dashboard main section#choirMenu button.sub-menu{
+    display: block;
+  }
+
+  
+  body#dashboard main section#choirInfo {
+    padding-top: 4em;
+    font-size: 0.9em;
+  }
+
+  body#dashboard main section#choirInfo header p {
+    max-width: 100%;
+  }
+
 }
