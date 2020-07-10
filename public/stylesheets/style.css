@@ -343,6 +343,36 @@ button{
   background-image: url("/assets/images/loader_dark.gif");
 }
 
+button.sub-menu{
+  display: none;
+  position: absolute;
+  width: 3em;
+  height: 3em;
+  background: white;
+  right: 0;
+  top: 0;
+  border: 0;
+  background-image: url('/assets/images/menu-icon-dark.png');
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: 50%;
+}
+
+button.sub-menu.dark{
+  display: none;
+  position: absolute;
+  width: 3em;
+  height: 3em;
+  background: black;
+  right: 0;
+  top: 0;
+  border: 0;
+  background-image: url('/assets/images/menu-icon-light.png');
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: 50%;
+}
+
 footer{
   width: 100%;
   display: flex;
@@ -906,21 +936,6 @@ body#dashboard main section#choirMenu button.cta-button{
   width: 100%;
 }
 
-body#dashboard main section#choirMenu button.sub-menu{
-  display: none;
-  position: absolute;
-  width: 3em;
-  height: 3em;
-  background: white;
-  right: 0;
-  top: 0;
-  border: 0;
-  background-image: url('/assets/images/menu-icon-dark.png');
-  background-position: 50%;
-  background-repeat: no-repeat;
-  background-size: 50%;
-}
-
 body#dashboard main section#choirInfo{
   position: relative;
   flex-grow: 1;
@@ -1201,6 +1216,44 @@ body#admin main section form{
 
 @media all and (max-width: 768px){
 
+  nav[data-expanded="false"] section{
+    display: none;
+  }
+
+  nav[data-expanded="true"]{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    z-index: 1000;
+    padding: 1em;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  nav[data-expanded="true"] a{
+    align-self: flex-start;
+  }
+
+  nav[data-expanded="true"] section{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2em;
+  }
+
+  nav[data-expanded="true"] section a{
+    margin-left: inherit;
+    font-size: 1em;
+    margin-bottom: 1.5em;
+    padding-bottom: 1.5em;
+    border-bottom: 1px solid #828282;
+    width: 100%;
+  }
+
+  button.sub-menu{
+    display: block !important;
+  }
+
   #notice{
     width: 100%;
     z-index: 1000;
@@ -1254,15 +1307,6 @@ body#admin main section form{
     width: 0;
     height: 0;
   }
-
-  body#dashboard main section#choirMenu button.sub-menu{
-
-  }
-
-  body#dashboard main section#choirMenu button.sub-menu{
-    display: block;
-  }
-
   
   body#dashboard main section#choirInfo {
     padding-top: 4em;

@@ -1,4 +1,4 @@
-<nav>
+<nav data-expanded="false">
     <a href="/" id="logo">Choirless</a>
     <section>
         <a href="/">Home</a>
@@ -8,4 +8,23 @@
         <a href="/admin" class="cta-button yellow">Admin</a>
         {{/ifEquals}}
     </section>
+    <button class="sub-menu dark" id="navMenuToggle" type="button"></button>
 </nav>
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        var navToggle = document.querySelector('nav button#navMenuToggle');
+
+        navToggle.addEventListener('click', function(){
+
+            this.parentNode.dataset.expanded = this.parentNode.dataset.expanded === "true" ? "false" : "true";
+
+        }, false);
+
+    }());
+
+</script>
