@@ -1212,6 +1212,11 @@ body#admin main section form{
 
 @media all and (max-width: 768px){
 
+  body{
+    background-size: auto 50%;
+    background-position: 50% 0;
+  }
+
   nav[data-expanded="false"] section{
     display: none;
   }
@@ -1261,6 +1266,18 @@ body#admin main section form{
 
   .modal .container {
     max-width: 90%;
+  }
+
+  body#home header {
+    height: auto;
+  }
+  
+  body#home header h1{
+    font-size: 3em;
+  }
+
+  footer div {
+    max-width: 100%;
   }
 
   body#dashboard main{
