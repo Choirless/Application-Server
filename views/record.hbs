@@ -660,201 +660,204 @@
 
         }
 
-        moreVideosTrigger.addEventListener('click', function(e){
-            
-            recordBtn.dataset.active = "false";
-            recordedVideos.pause();
-            moreVideosTrigger.classList.add('loading');
-            moreVideosTrigger.classList.add('dark');
-            var performancesListElement = otherPerformancesModal.querySelector('ul#performances-list');
+        if(moreVideosTrigger){
 
-            fetch(`/performance/list-performances/${choirId}/${songId}`)
-                .then(function(res){
+            moreVideosTrigger.addEventListener('click', function(e){
+                
+                recordBtn.dataset.active = "false";
+                recordedVideos.pause();
+                moreVideosTrigger.classList.add('loading');
+                moreVideosTrigger.classList.add('dark');
+                var performancesListElement = otherPerformancesModal.querySelector('ul#performances-list');
 
-                    moreVideosTrigger.classList.remove('loading');
-                    moreVideosTrigger.classList.remove('dark');
+                fetch(`/performance/list-performances/${choirId}/${songId}`)
+                    .then(function(res){
 
-                    if(res.ok){
-                        return res.json();
-                    } else {
-                        throw res;
-                    }
+                        moreVideosTrigger.classList.remove('loading');
+                        moreVideosTrigger.classList.remove('dark');
 
-                })
-                .then(function(data){
-
-                    var sections = data.sections;
-
-                    performancesListElement.innerHTML = "";
-                    var listFragment = document.createDocumentFragment();
-                    var currentVideos = Array.from(leadView.querySelectorAll('.videoContainer')).map(function(video){
-                        return video.dataset.id;
-                    });
-
-                    sections.forEach(function(section){
-
-                        // <li class="heading">Lead</li>
-
-                        var headerLi = document.createElement('li');
-                        headerLi.classList.add('heading');
-                        headerLi.textContent = section.name;
-
-                        listFragment.appendChild(headerLi);
-
-                        section.recordings.forEach(function(recording){
-
-                            // <li><a>Sean M. Tracey</a><button class="cta-button green">Default</button></li>
-
-                            console.log(recording);
-                            var li = document.createElement('li');
-                            var a = document.createElement('a');
-                            var btn = document.createElement('button');
-
-                            li.dataset.selected = currentVideos.includes(recording.partId).toString();
-                            li.dataset.partid = recording.partId;
-                            a.textContent = recording.userName;
-                            btn.classList.add('cta-button');
-
-                            if(li.dataset.selected === "false"){
-                                btn.textContent = "Select Video";
-                                btn.classList.add('blue');
-                            } else {
-                                btn.textContent = "Video Selected";
-                                btn.classList.add('dark-green');
-                            }
-
-                            if(recording.partType !== "backing"){
-
-                                btn.addEventListener('click', function(){
-
-                                    this.parentNode.dataset.selected = this.parentNode.dataset.selected === "true" ? "false"  : "true";
-
-                                    if(this.parentNode.dataset.selected === "true"){
-                                        this.textContent = "Video Selected";
-                                        this.classList.add('dark-green');
-                                        this.classList.remove('blue');
-                                    } else {
-                                        this.textContent = "Select Video";
-                                        this.classList.add('blue');
-                                        this.classList.remove('dark-green');
-                                    }
-
-                                    this.classList.remove('red');
-                                    var numberOfSelectedPerformances = performancesListElement.querySelectorAll('li[data-selected="true"]').length;
-                                    selectedPerformancesCountDisplay.textContent = `${numberOfSelectedPerformances}/${MAX_RECORDED_PERFORMANCES}`;
-
-                                    if(numberOfSelectedPerformances === MAX_RECORDED_PERFORMANCES){
-                                        
-                                        Array.from(performancesListElement.querySelectorAll('li[data-selected="false"] button')).forEach(function(button){
-                                            button.dataset.active = "false";
-                                        });
-
-                                    } else {
-
-                                        Array.from(performancesListElement.querySelectorAll('li[data-selected="false"] button[data-active="false"]')).forEach(function(button){
-                                            button.dataset.active = "true";
-                                        });
-
-                                    }
-
-                                }, false);
-
-                                btn.addEventListener('mouseenter', function(){
-
-                                    if(this.parentNode.dataset.selected === "true"){
-                                        this.textContent = "Remove Video";
-                                        this.classList.add('red');
-                                        this.classList.remove('dark-green');
-                                    }
-
-                                }, false);
-
-                                btn.addEventListener('mouseleave', function(){
-
-                                    if(this.parentNode.dataset.selected === "true"){
-                                        this.textContent = "Video Selected";
-                                        this.classList.add('dark-green');
-                                        this.classList.remove('red');
-                                    }
-
-                                }, false);
-
-                            }
-
-                            li.appendChild(a);
-                            li.appendChild(btn);
-
-                            listFragment.appendChild(li);
-                        
-                        });
-
-                    });
-
-                    var numberOfSelectedPerformances = listFragment.querySelectorAll('li[data-selected="true"]').length;
-                    if(numberOfSelectedPerformances >= MAX_RECORDED_PERFORMANCES){
-                                
-                        Array.from(listFragment.querySelectorAll('li[data-selected="false"] button')).forEach(function(button){
-                            button.dataset.active = "false";
-                        });
-
-                    } else {
-
-                        Array.from(listFragment.querySelectorAll('li[data-selected="false"] button[data-active="false"]')).forEach(function(button){
-                            button.dataset.active = "true";
-                        });
-
-                    }
-
-                    performancesListElement.appendChild(listFragment);
-
-                    var closeOtherPerformancesModalButton = otherPerformancesModal.querySelector('button.cancel');
-                    var loadOtherPerformancesModalButton = otherPerformancesModal.querySelector('button[type="submit"]');
-
-                    closeOtherPerformancesModalButton.addEventListener('click', function(e){
-                        otherPerformancesModal.dataset.active = "false";
-                        if(recordedVideos.ready() && offsetCalibrated){
-                            recordBtn.dataset.active = "true";
+                        if(res.ok){
+                            return res.json();
+                        } else {
+                            throw res;
                         }
-                    }, {once : true} );
 
-                    loadOtherPerformancesModalButton.addEventListener('click', function(e){
+                    })
+                    .then(function(data){
 
-                        var videosToLoad = Array.from(performancesListElement.querySelectorAll('li')).filter(function(li){
-                            console.log(li);
-                            return li.dataset.selected === "true"
-                        }).map(function(li){
-                            return li.dataset.partid;
+                        var sections = data.sections;
+
+                        performancesListElement.innerHTML = "";
+                        var listFragment = document.createDocumentFragment();
+                        var currentVideos = Array.from(leadView.querySelectorAll('.videoContainer')).map(function(video){
+                            return video.dataset.id;
                         });
 
-                        document.body.dataset.performances = "0";
-                        
-                        Array.from(leadView.querySelectorAll('.videoContainer')).forEach(container => {
-                            container.parentNode.removeChild(container);
+                        sections.forEach(function(section){
+
+                            // <li class="heading">Lead</li>
+
+                            var headerLi = document.createElement('li');
+                            headerLi.classList.add('heading');
+                            headerLi.textContent = section.name;
+
+                            listFragment.appendChild(headerLi);
+
+                            section.recordings.forEach(function(recording){
+
+                                // <li><a>Sean M. Tracey</a><button class="cta-button green">Default</button></li>
+
+                                console.log(recording);
+                                var li = document.createElement('li');
+                                var a = document.createElement('a');
+                                var btn = document.createElement('button');
+
+                                li.dataset.selected = currentVideos.includes(recording.partId).toString();
+                                li.dataset.partid = recording.partId;
+                                a.textContent = recording.userName;
+                                btn.classList.add('cta-button');
+
+                                if(li.dataset.selected === "false"){
+                                    btn.textContent = "Select Video";
+                                    btn.classList.add('blue');
+                                } else {
+                                    btn.textContent = "Video Selected";
+                                    btn.classList.add('dark-green');
+                                }
+
+                                if(recording.partType !== "backing"){
+
+                                    btn.addEventListener('click', function(){
+
+                                        this.parentNode.dataset.selected = this.parentNode.dataset.selected === "true" ? "false"  : "true";
+
+                                        if(this.parentNode.dataset.selected === "true"){
+                                            this.textContent = "Video Selected";
+                                            this.classList.add('dark-green');
+                                            this.classList.remove('blue');
+                                        } else {
+                                            this.textContent = "Select Video";
+                                            this.classList.add('blue');
+                                            this.classList.remove('dark-green');
+                                        }
+
+                                        this.classList.remove('red');
+                                        var numberOfSelectedPerformances = performancesListElement.querySelectorAll('li[data-selected="true"]').length;
+                                        selectedPerformancesCountDisplay.textContent = `${numberOfSelectedPerformances}/${MAX_RECORDED_PERFORMANCES}`;
+
+                                        if(numberOfSelectedPerformances === MAX_RECORDED_PERFORMANCES){
+                                            
+                                            Array.from(performancesListElement.querySelectorAll('li[data-selected="false"] button')).forEach(function(button){
+                                                button.dataset.active = "false";
+                                            });
+
+                                        } else {
+
+                                            Array.from(performancesListElement.querySelectorAll('li[data-selected="false"] button[data-active="false"]')).forEach(function(button){
+                                                button.dataset.active = "true";
+                                            });
+
+                                        }
+
+                                    }, false);
+
+                                    btn.addEventListener('mouseenter', function(){
+
+                                        if(this.parentNode.dataset.selected === "true"){
+                                            this.textContent = "Remove Video";
+                                            this.classList.add('red');
+                                            this.classList.remove('dark-green');
+                                        }
+
+                                    }, false);
+
+                                    btn.addEventListener('mouseleave', function(){
+
+                                        if(this.parentNode.dataset.selected === "true"){
+                                            this.textContent = "Video Selected";
+                                            this.classList.add('dark-green');
+                                            this.classList.remove('red');
+                                        }
+
+                                    }, false);
+
+                                }
+
+                                li.appendChild(a);
+                                li.appendChild(btn);
+
+                                listFragment.appendChild(li);
+                            
+                            });
+
                         });
 
-                        videosToLoad.forEach(function(partId){
+                        var numberOfSelectedPerformances = listFragment.querySelectorAll('li[data-selected="true"]').length;
+                        if(numberOfSelectedPerformances >= MAX_RECORDED_PERFORMANCES){
+                                    
+                            Array.from(listFragment.querySelectorAll('li[data-selected="false"] button')).forEach(function(button){
+                                button.dataset.active = "false";
+                            });
 
-                            if(!leadView.querySelector(`.videoContainer[data-id="${partId}"]`) ){
-                                recordedVideos.load(partId);
+                        } else {
+
+                            Array.from(listFragment.querySelectorAll('li[data-selected="false"] button[data-active="false"]')).forEach(function(button){
+                                button.dataset.active = "true";
+                            });
+
+                        }
+
+                        performancesListElement.appendChild(listFragment);
+
+                        var closeOtherPerformancesModalButton = otherPerformancesModal.querySelector('button.cancel');
+                        var loadOtherPerformancesModalButton = otherPerformancesModal.querySelector('button[type="submit"]');
+
+                        closeOtherPerformancesModalButton.addEventListener('click', function(e){
+                            otherPerformancesModal.dataset.active = "false";
+                            if(recordedVideos.ready() && offsetCalibrated){
+                                recordBtn.dataset.active = "true";
                             }
+                        }, {once : true} );
 
-                        });
+                        loadOtherPerformancesModalButton.addEventListener('click', function(e){
 
-                        otherPerformancesModal.dataset.active = "false";
+                            var videosToLoad = Array.from(performancesListElement.querySelectorAll('li')).filter(function(li){
+                                console.log(li);
+                                return li.dataset.selected === "true"
+                            }).map(function(li){
+                                return li.dataset.partid;
+                            });
 
-                    }, {once : true} );
+                            document.body.dataset.performances = "0";
+                            
+                            Array.from(leadView.querySelectorAll('.videoContainer')).forEach(container => {
+                                container.parentNode.removeChild(container);
+                            });
 
-                    otherPerformancesModal.dataset.active = "true";
+                            videosToLoad.forEach(function(partId){
 
-                })
-                .catch(function(err){
-                    console.log('list performances err:', err);
-                })
-            ;
+                                if(!leadView.querySelector(`.videoContainer[data-id="${partId}"]`) ){
+                                    recordedVideos.load(partId);
+                                }
+
+                            });
+
+                            otherPerformancesModal.dataset.active = "false";
+
+                        }, {once : true} );
+
+                        otherPerformancesModal.dataset.active = "true";
+
+                    })
+                    .catch(function(err){
+                        console.log('list performances err:', err);
+                    })
+                ;
 
 
-        }, false);
+            }, false);
 
+        }
     }());
 
 
