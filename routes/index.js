@@ -7,7 +7,7 @@ const users = require(`../bin/modules/users`);
 router.get('/', function(req, res, next) {
 	
 	res.render('index', { 
-		title: "Choirless | All the world's a stage", 
+		title: "Choirless | Bringing people together, even when they're not together.", 
 		bodyid: "home",
 	});
 
