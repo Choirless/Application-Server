@@ -43,7 +43,7 @@
                     console.log('Invalid message type passed. Defaulting to general');
                     messageType = "general";
                 }
-
+                debugger;
                 notificationBox.classList.add(messageType);
                 title.textContent = types[messageType].titleText;
                 contentElement.textContent = information.content;
@@ -81,7 +81,7 @@
 
     __global_message.display({
         content : decodeURIComponent("{{msg}}"),
-        type : "{{msgType}}",
+        type : "{{msgtype}}",
         resetParameters : true
     });
 
