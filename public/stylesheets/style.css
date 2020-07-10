@@ -85,6 +85,7 @@ nav {
   align-items: center;
   display: flex;
   justify-content: space-between;
+  z-index: 1000;
 }
 
 nav a {
@@ -347,7 +348,7 @@ button.sub-menu{
   display: none;
   position: absolute;
   width: 3em;
-  height: 3em;
+  height: 100%;
   background: white;
   right: 0;
   top: 0;
@@ -359,18 +360,12 @@ button.sub-menu{
 }
 
 button.sub-menu.dark{
-  display: none;
-  position: absolute;
-  width: 3em;
-  height: 3em;
-  background: black;
-  right: 0;
-  top: 0;
-  border: 0;
+  background-color: black;
   background-image: url('/assets/images/menu-icon-light.png');
-  background-position: 50%;
-  background-repeat: no-repeat;
-  background-size: 50%;
+}
+
+nav[data-expanded="true"] button.sub-menu, #choirMenu[data-expanded="true"] button.sub-menu{
+  height: 3em;
 }
 
 footer{
@@ -454,6 +449,7 @@ footer div p:last-of-type{
   align-items: center;
   color: black;
   font-size: 0.8em;
+  z-index: 50;
 }
 
 .modal .container{
@@ -1259,6 +1255,10 @@ body#admin main section form{
     z-index: 1000;
   }
 
+  .modal{
+    position: fixed;
+  }
+
   .modal .container {
     max-width: 90%;
   }
@@ -1315,6 +1315,68 @@ body#admin main section form{
 
   body#dashboard main section#choirInfo header p {
     max-width: 100%;
+  }
+
+  body#record{
+    font-size: 0.8em;
+  }
+
+  body#record #videos {
+    flex-direction: column;
+  }
+
+  body#record #videos .half {
+    width: 100%;
+    height: 60%;
+    min-height: inherit;
+  }
+
+  body#record #videos .half:first-of-type {
+    border-right: 0;
+    border-bottom: 1px solid white;
+  }
+
+  body#record #videos .half:last-of-type {
+    border-left: 0;
+  }
+
+  body#record #videos .half h3 {
+    top: 1vh;
+  }
+
+  body#record #videos .half#lead{
+    height: 40%;
+  }
+
+  body#record #videos .half#lead button#otherPerformancesTrigger {
+    bottom: 0.5em;
+  }
+
+  body#record .half#lead .video-dialog h2{
+    font-size: 1em;
+  }
+
+  body#record #videos .half#performance{
+    justify-content: flex-start;
+  }
+
+  body#record #videos .half#performance p{
+    margin: 0.75em 0;
+  }
+
+  body#record .half#performance .video-dialog {
+    max-width: 80%;
+    font-size: 0.9em;
+    padding-top: 4em;
+  }
+
+
+  body#record .progress{
+    width: 100%;
+  }
+
+  body#record #controls{
+    bottom: 0;
   }
 
 }
