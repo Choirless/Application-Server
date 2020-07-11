@@ -21,6 +21,10 @@
 
         <p class="center-text">Don't have an account? No worries! you can <a href="/account/create?inviteId={{inviteId}}{{#if redirect}}&redirect={{#encodeURL}}{{this.redirect}}{{/encodeURL}}{{/if}}">create one here</a>.</p>
         
+        {{else}}
+
+        <p class="center-text">Don't have an account? No worries! you can <a href="/account/beta-interest">register you interest for our closed beta</a> and we'll get back to you soon!</p>
+
         {{/if}}
 
     </section>
