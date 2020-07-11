@@ -6,6 +6,8 @@ const users = require(`${__dirname}/../bin/modules/users`);
 const mail = require(`${__dirname}/../bin/modules/emails`);
 const invitations = require(`${__dirname}/../bin/modules/invitations`);
 
+const betaInterestReceivees = process.env.BETA_INTEREST_RECEIVEES ? process.env.BETA_INTEREST_RECEIVEES.split(',') : [];
+
 router.get('/login', function(req, res, next) {
 
 	if(!req.session.user){
@@ -230,6 +232,51 @@ router.post('/create', (req, res, next) => {
 	} else {
 		res.status(422);
 		next();
+	}
+
+});
+
+router.get('/beta-interest', (req, res, next) => {
+
+	res.render('account/beta_interest', { 
+		title: "Choirless | Bringing people together, even when they're not together.", 
+		bodyid: "accountLogin",
+		redirect: req.query.redirect,
+		inviteId : req.query.inviteId
+	});
+
+})
+
+router.post('/beta-interest', (req, res, next) => {
+
+	if(!req.body.email){
+		res.redirect('/beta-interest?msg=Sorry, you need to include an email address to register your interest.&msgtype=error');
+	} else if(!req.body.info){
+		res.redirect('/beta-interest?msg=Sorry, you need to tell us a bit about yourself to register your interest.&msgtype=error');
+	} else {
+		
+		betaInterestReceivees.forEach(person => {
+
+			const msgInfo = {
+				"to" : person,
+				"subject" : "Choirless Beta Interest",
+				"text" : `${req.body.email} has registered their interest for the Choirless beta.\nHere's the info they sent about their choir:\n\n ${req.body.info}`
+			};
+	
+			mail.send(msgInfo)
+				.then(function(){
+					debug('Registered interest successfully forwarded on.');
+					res.redirect("/?msg=Thank you for registering your interest in Choirless! We will get back to you as soon as possible.&msgtype=success");
+				})
+				.catch(err => {
+					debug('/account/beta-interest err:', err);
+					res.redirect("/?msg=Sorry, and error occurred in our systems. Please try again later.&msgtype=error");
+				})
+			;
+
+		});
+
+
 	}
 
 });

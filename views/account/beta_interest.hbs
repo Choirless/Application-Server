@@ -1,0 +1,27 @@
+<main>
+    <header>
+        <h1>Register your interest</h1>
+        <h4>We're looking for beta testers! Enter your details below and we'll get back to you soon</h4>
+
+    </header>
+
+    <section>
+
+        <form id="registerInterestForm" method="POST" action="/account/beta-interest">
+            
+            <h2>Login to Choirless</h2>
+            <label for="email">Email Address</label>
+            <input id="email" type="email" placeholder="alex@choirless.com" name="email" required/>
+            
+            <label for="info">Tell us about your choir/performance group</label>
+            <textarea id="info" name="info"></textarea>
+            
+            <button type="submit" class="cta-button" id="loginBtn" data-active="true">Submit</button>
+
+        </form>
+
+        <p class="center-text">Already have an account? Great! You can <a href="/account/login">log in here</a>.</p>
+
+    </section>
+
+</main>

@@ -855,6 +855,16 @@ body#accountLogin main section form button, #createAccountBtn{
   align-self: center;
 }
 
+body#accountLogin main section form textarea{
+  padding: 1em;
+  font-size: 1em;
+  font-family: 'Montserrat';
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 8em;
+  margin-bottom: 1em;
+}
+
 /* Dashboard styles */
 
 body#dashboard{
