@@ -75,10 +75,6 @@ router.get('/list-performances/:CHOIRID/:SONGID', (req, res, next) => {
 					return recording.partNameId === section.partNameId;
 				});
 				
-				if(section.recordings.length === 0){
-					section.recordings = undefined;
-				}
-				
 				return section;
 			});
 			
