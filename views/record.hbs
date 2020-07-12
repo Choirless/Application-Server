@@ -706,6 +706,10 @@
 
                             // <li class="heading">Lead</li>
 
+                            if(section.recordings.length === 0){
+                                return;
+                            }
+
                             var headerLi = document.createElement('li');
                             headerLi.classList.add('heading');
                             headerLi.textContent = section.name;
