@@ -35,6 +35,9 @@
                 
                 audioContext = new (window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext)();
                 
+                {{!-- console.log('base latency:', audioContext.baseLatency); --}}
+                {{!-- console.log('output latency:', audioContext.outputLatency); --}}
+                
                 testChimesSource = new Audio();
                 testChimesSource.src = audioSource || "test_chimes.wav";
                 testChimesSource.addEventListener('ended', function(){
@@ -79,7 +82,7 @@
 
                 nodes.filter = audioContext.createBiquadFilter();
                 nodes.filter.type = "lowpass";
-                nodes.filter.frequency.value = options.lowPassFilterValue || 5000;
+                nodes.filter.frequency.value = options.lowPassFilterValue || 1000;
 
             }
 
@@ -127,26 +130,16 @@
                         firstDetection = performance.now();
                         detectedFrequenciesSequence.push(highestIndex);
 
-                        setTimeout(analyseStream, 275);
-                        setTimeout(analyseStream, 525);
-                        setTimeout(analyseStream, 775);
-
-                    } else if(highestIndex === lastItemInArray || highestIndex === lastItemInArray + 1) {
+                    } else if(highestIndex === lastItemInArray + 1) {
 
                         detectedFrequenciesSequence.push(highestIndex);
 
-                    } else if(detectedFrequenciesSequence.length === 0){
-
-                        requestAnimationFrame( analyseStream );
-                    
                     }
 
-                } else {
-                    if(detectedFrequenciesSequence.length === 0){
-                        requestAnimationFrame( analyseStream );
-                    }
-                
                 }
+
+                requestAnimationFrame(analyseStream);
+
 
             }
 
