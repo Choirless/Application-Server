@@ -525,12 +525,18 @@
             navigator.mediaDevices.enumerateDevices()
                 .then( function(listOfDevices){
 
-                    var constraints = { video: true,  audio: true };
+                    var constraints = { video: true,  audio: {latency : 0.05 } } ;
 
                     navigator.mediaDevices.getUserMedia(constraints)
                         .then(function(stream) {
-
+                            
+                            console.log(stream);
                             performanceStream = stream;
+
+                            var a = stream.getAudioTracks()[0];
+                            console.log(a);
+
+                            console.log(JSON.stringify(a.getSettings(), null, 2));
 
                             try{
                                 const vidURL = window.URL.createObjectURL(stream);
