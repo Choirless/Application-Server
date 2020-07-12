@@ -124,6 +124,7 @@
         var calibrateInputsBtn = calibrateInputsDialog.querySelector('#beginCalibration');
         var offsetCalibrated = false;
         var streamOffset = 0;
+        var reportedOffset = 0;
 
         var listenBtn = isLeadRecording ? null : document.querySelector('#controls button.listen');
         var recordBtn = document.querySelector('#controls button.record');
@@ -534,10 +535,10 @@
                             performanceStream = stream;
 
                             var a = stream.getAudioTracks()[0];
-                            console.log(a);
+                            reportedOffset = a.getSettings().latency;
 
-                            console.log(JSON.stringify(a.getSettings(), null, 2));
-
+                            console.log('Reported offset (seconds):', reportedOffset);
+                            
                             try{
                                 const vidURL = window.URL.createObjectURL(stream);
                                 performanceVideo.src = vidURL;
@@ -588,16 +589,17 @@
 
             this.classList.add('loading');
 
-            offset_analyser.enable("/assets/audio/test_chimes.wav");
-            offset_analyser.create( { fftSize : 2048 } );
+            offset_analyser.enable("/assets/audio/test_chimes_square.wav");
+            offset_analyser.create( { fftSize : 512 } );
             offset_analyser.src(performanceStream);
             offset_analyser.connect();
             offset_analyser.find(3)
                 .then(function(result){
 
                     offsetCalibrated = true;
-
-                    if(result){
+                    if(reportedOffset){
+                        streamOffset = reportedOffset * 1000;
+                    } else if(result){
                         streamOffset = result;
                     }
 
