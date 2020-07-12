@@ -124,6 +124,7 @@
         var calibrateInputsBtn = calibrateInputsDialog.querySelector('#beginCalibration');
         var offsetCalibrated = false;
         var streamOffset = 0;
+        var reportedOffset = 0;
 
         var listenBtn = isLeadRecording ? null : document.querySelector('#controls button.listen');
         var recordBtn = document.querySelector('#controls button.record');
@@ -525,13 +526,19 @@
             navigator.mediaDevices.enumerateDevices()
                 .then( function(listOfDevices){
 
-                    var constraints = { video: true,  audio: true };
+                    var constraints = { video: true,  audio: {latency : 0.05, echoCancellation : false } } ;
 
                     navigator.mediaDevices.getUserMedia(constraints)
                         .then(function(stream) {
-
+                            
+                            console.log(stream);
                             performanceStream = stream;
 
+                            var a = stream.getAudioTracks()[0];
+                            reportedOffset = a.getSettings().latency;
+
+                            console.log('Reported offset (seconds):', reportedOffset);
+                            
                             try{
                                 const vidURL = window.URL.createObjectURL(stream);
                                 performanceVideo.src = vidURL;
@@ -582,7 +589,7 @@
 
             this.classList.add('loading');
 
-            offset_analyser.enable("/assets/audio/test_chimes.wav");
+            offset_analyser.enable("/assets/audio/test_chimes_square.wav");
             offset_analyser.create( { fftSize : 2048 } );
             offset_analyser.src(performanceStream);
             offset_analyser.connect();
@@ -590,12 +597,14 @@
                 .then(function(result){
 
                     offsetCalibrated = true;
-
-                    if(result){
+                    if(reportedOffset){
+                        streamOffset = reportedOffset * 1000;
+                    } else if(result){
                         streamOffset = result;
                     }
 
-                    console.log(result);
+                    console.log('Detected offset:', result);
+                    console.log('Chosen offset:', streamOffset);
                     performanceView.dataset.videoloaded = "true";
 
                     if(!isLeadRecording){
