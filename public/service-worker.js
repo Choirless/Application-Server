@@ -2,7 +2,7 @@ var CACHE_NAME = 'CHOIRLESS';
 
 self.addEventListener('fetch', function(event) {
 
-    if(event.request.method === 'GET' && event.request.url.indexOf('.webm') > -1){
+    if( (event.request.method === 'GET' && event.request.url.indexOf('.webm') > -1) || /fonts.(googleapis|gstatic).com/.test(event.request.url) ){
         
         event.respondWith(
             caches.open(CACHE_NAME).then(function(cache) {
