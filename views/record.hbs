@@ -526,7 +526,7 @@
             navigator.mediaDevices.enumerateDevices()
                 .then( function(listOfDevices){
 
-                    var constraints = { video: true,  audio: {latency : 0.05 } } ;
+                    var constraints = { video: true,  audio: {latency : 0.05, echoCancellation : false } } ;
 
                     navigator.mediaDevices.getUserMedia(constraints)
                         .then(function(stream) {
@@ -590,7 +590,7 @@
             this.classList.add('loading');
 
             offset_analyser.enable("/assets/audio/test_chimes_square.wav");
-            offset_analyser.create( { fftSize : 512 } );
+            offset_analyser.create( { fftSize : 2048 } );
             offset_analyser.src(performanceStream);
             offset_analyser.connect();
             offset_analyser.find(3)
@@ -603,7 +603,8 @@
                         streamOffset = result;
                     }
 
-                    console.log(result);
+                    console.log('Detected offset:', result);
+                    console.log('Chosen offset:', streamOffset);
                     performanceView.dataset.videoloaded = "true";
 
                     if(!isLeadRecording){
