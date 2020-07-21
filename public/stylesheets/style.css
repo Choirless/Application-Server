@@ -1114,6 +1114,8 @@ body#dashboard main section#choirInfo table tbody tr.subhead.collapsable[data-ex
 
 body#dashboard main section#choirInfo table tbody tr.subhead.collapsable td:first-of-type{
   padding-left: 2em;
+  padding-top: 1.3em;
+  padding-bottom: 1.3em;
 }
 
 body#dashboard main section#choirInfo table tbody tr.subhead td{
