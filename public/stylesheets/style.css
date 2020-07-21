@@ -454,8 +454,9 @@ footer div p:last-of-type{
 }
 
 .modal .container{
-  width: 100%;
-  max-width: 50%;
+  width: auto;
+  min-width: 50%;
+  max-width: 60%;
   background: white;
   border-radius: 3px;
   height: auto;
@@ -1099,6 +1100,10 @@ body#dashboard main section#choirInfo table tbody tr td{
   border-right: 1px solid rgba(0,0,0,0.2);
 }
 
+body#dashboard main section#choirInfo table#song tbody tr td{
+  border-right: 0 solid transparent;
+}
+
 body#dashboard main section#choirInfo table tbody tr.subhead.collapsable{
   cursor: pointer;
   background: #d8d8d8;
@@ -1114,6 +1119,8 @@ body#dashboard main section#choirInfo table tbody tr.subhead.collapsable[data-ex
 
 body#dashboard main section#choirInfo table tbody tr.subhead.collapsable td:first-of-type{
   padding-left: 2em;
+  padding-top: 1.3em;
+  padding-bottom: 1.3em;
 }
 
 body#dashboard main section#choirInfo table tbody tr.subhead td{
@@ -1146,6 +1153,10 @@ body#dashboard main section#choirInfo table tbody tr td:last-of-type{
 body#dashboard main section#choirInfo table tbody tr td:last-of-type a{
   color: black;
   font-weight: 600;
+}
+
+body#dashboard main section#choirInfo table#song tbody tr td button.view-video{
+  float: right;
 }
 
 body#dashboard main section#choirInfo div#settings{
@@ -1345,7 +1356,7 @@ body#admin main section form{
     max-width: 100%;
   }
 
-  body#record{
+  body#record #videos, body#record #controls, body#record #uploadDialog{
     font-size: 0.8em;
   }
 
@@ -1382,6 +1393,10 @@ body#admin main section form{
 
   body#record .half#lead .video-dialog h2{
     font-size: 1em;
+  }
+
+  body#record #videos[data-leadrecording="true"] div#performance {
+    height: 100%;
   }
 
   body#record #videos .half#performance{
