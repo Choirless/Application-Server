@@ -1347,7 +1347,7 @@ body#admin main section form{
     max-width: 100%;
   }
 
-  body#record{
+  body#record #videos, body#record #controls, body#record #uploadDialog{
     font-size: 0.8em;
   }
 
