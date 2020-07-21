@@ -3,7 +3,7 @@
     <h3>{{songInformation.name}}</h3>
     
     {{#if render}}
-    <button id="previewRenderBtn" class="cta-button dark-green" >See latest render</button>
+    <button class="view-video cta-button dark-green" data-videosrc="{{render}}">See latest render</button>
     {{/if}}
 
     {{#ifEquals memberType "leader"}}
@@ -11,7 +11,7 @@
     {{/ifEquals}}
 </div>
 
-<table id="songs" data-active="true">
+<table id="song" data-active="true">
     
     <thead>
         <tr>
@@ -63,7 +63,8 @@
 
                 {{#each this.recordings}}
                 <tr data-collapsed="true" data-collapseid="{{this.partNameId}}">
-                    <td colspan="2"><a>{{this.userName}}</a></td>
+                    <td colspan="1"><a>{{this.userName}}</a></td>
+                    <td><button class="cta-button dark-green view-video" data-videosrc="/performance/video/{{../../choirInfo.choirId}}+{{../../songInformation.songId}}+{{this.partId}}.webm">View performance</button></td>
                 </tr>
                 {{/each}}
 
@@ -76,16 +77,14 @@
 
 </table>
 
-{{#if render}}
-    {{> dashboard/render_playback}}
-{{/if}}
+{{> dashboard/render_playback}}
 
 <script>
 
     (function(){
 
         'use strict';
-        var table = document.querySelector('table#songs');
+        var table = document.querySelector('table#song');
         var collapsableHeaders = Array.from(table.querySelectorAll('tr[data-collapsetarget]'));
 
         collapsableHeaders.forEach(function(header){
@@ -114,6 +113,11 @@
 
         var tableActions = document.querySelector('.tableActions#songActions');
 
+        function viewPerformance(url){
+            document.querySelector('#renderPlayback video').src = url;
+            document.querySelector('#renderPlayback').dataset.active = "true";
+        }
+
         if(tableActions){
 
             var addNewSongPart = tableActions.querySelector('button#addANewPart');
@@ -136,8 +140,23 @@
                     document.querySelector('#renderPlayback').dataset.active = "true";
                 }, false);
 
-
             }
+
+            var viewVideoBtns = document.querySelectorAll('button.view-video');
+
+            console.log(viewVideoBtns);
+
+            Array.from(viewVideoBtns).forEach(function(button){
+
+                button.addEventListener('click', function(){
+
+                    console.log(this.dataset.videosrc);
+
+                    viewPerformance(this.dataset.videosrc);
+
+                }, false);
+
+            });
 
         }
 

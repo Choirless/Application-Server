@@ -454,8 +454,9 @@ footer div p:last-of-type{
 }
 
 .modal .container{
-  width: 100%;
-  max-width: 50%;
+  width: auto;
+  min-width: 50%;
+  max-width: 60%;
   background: white;
   border-radius: 3px;
   height: auto;
@@ -1099,6 +1100,10 @@ body#dashboard main section#choirInfo table tbody tr td{
   border-right: 1px solid rgba(0,0,0,0.2);
 }
 
+body#dashboard main section#choirInfo table#song tbody tr td{
+  border-right: 0 solid transparent;
+}
+
 body#dashboard main section#choirInfo table tbody tr.subhead.collapsable{
   cursor: pointer;
   background: #d8d8d8;
@@ -1148,6 +1153,10 @@ body#dashboard main section#choirInfo table tbody tr td:last-of-type{
 body#dashboard main section#choirInfo table tbody tr td:last-of-type a{
   color: black;
   font-weight: 600;
+}
+
+body#dashboard main section#choirInfo table#song tbody tr td button.view-video{
+  float: right;
 }
 
 body#dashboard main section#choirInfo div#settings{
