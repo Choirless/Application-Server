@@ -369,7 +369,11 @@ button.sub-menu.dark{
   background-image: url('/assets/images/menu-icon-light.png');
 }
 
-nav[data-expanded="true"] button.sub-menu, #choirMenu[data-expanded="true"] button.sub-menu{
+nav[data-expanded="true"] button.sub-menu{
+  height: 3.7em;
+}
+
+#choirMenu[data-expanded="true"] button.sub-menu{
   height: 3em;
 }
 
@@ -1253,7 +1257,7 @@ body#admin main section form{
     height: 100%;
     box-sizing: border-box;
     z-index: 1000;
-    padding: 1em;
+    padding: 0.78em 1em;
     flex-direction: column;
     justify-content: flex-start;
   }
@@ -1293,6 +1297,7 @@ body#admin main section form{
 
   .modal .container {
     max-width: 90%;
+    width: 100%;
   }
 
   body#home header {
@@ -1332,9 +1337,26 @@ body#admin main section form{
     box-sizing: border-box;
   }
 
+  body#dashboard main section#choirMenu[data-expanded="false"] .center-text{
+    display: none;
+  }
+
   body#dashboard main section#choirMenu h2{
     font-size: 1em;
     margin-top: 0.5em;
+  }
+
+  body#dashboard main section#choirMenu .center-text{    
+    position: absolute;
+    bottom: 1em;
+    left: 0;
+    width: 100%;
+  }
+
+  body#dashboard main section#choirMenu ul{
+    margin-bottom: 3em;
+    max-height: 100%;
+    overflow-y: scroll;
   }
 
   body#dashboard main section#choirMenu ul li a{
