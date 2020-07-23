@@ -160,6 +160,10 @@ main form input[type="text"], main form input[type="email"], main form input[typ
   color: black;
 }
 
+.modal .container .content{
+  width: 100%;
+}
+
 .modal .container .content div.side-by-side{
   justify-content: flex-end;
   margin-top: 1em;
@@ -1182,6 +1186,7 @@ body#dashboard .modal#renderPlayback .container .content{
 
 body#dashboard .modal#renderPlayback .container .content video{
   width: 100%;
+  min-width: 100%;
   outline: 0px solid transparent;
 }
 
