@@ -23,7 +23,15 @@ function getAnInvitationById(inviteId){
             debug('getAnInvitationById err:', err);
 
             if(err.status === 498){
-                return { expired : true };
+                return { 
+                    expired : true,
+                    reason : "expired"
+                };
+            } else if(err.status === 404){
+                return {
+                    ok : false,
+                    reason : "notfound"
+                };
             } else {
                 throw err;
             }

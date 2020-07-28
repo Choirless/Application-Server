@@ -127,8 +127,8 @@
                     console.log(response);
                     var shareableLink = form.querySelector('.shareable-link');
                     var pre = shareableLink.querySelector('pre');
-                    
-                    pre.textContent = response.link;
+
+                    pre.textContent = response.link + "?inviteId=" + response.invitationId;
                     shareableLink.dataset.active = "true";
                     
                     submitBtn.classList.remove('loading');

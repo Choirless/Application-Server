@@ -11,12 +11,42 @@ const betaInterestReceivees = process.env.BETA_INTEREST_RECEIVEES ? process.env.
 router.get('/login', function(req, res, next) {
 
 	if(!req.session.user){
-		res.render('account/login', { 
-			title: "Choirless | Bringing people together, even when they're not together.", 
-			bodyid: "accountLogin",
-			redirect: req.query.redirect,
-			inviteId : req.query.inviteId
-		});
+
+		let invitationCheck;
+
+		if(!req.query.inviteId){
+			invitationCheck = Promise.resolve(true);
+		} else {
+			invitationCheck = invitations.get(req.query.inviteId)
+				.then(invitation => {
+					debug('invitation:', invitation);
+					if(invitation.expired || invitation.ok === false){
+						return false;
+					} else {
+						return true;
+					}
+				})
+			;
+		}
+
+		invitationCheck.then((validInvitation) => {
+				debug('Valid Invite:' , validInvitation);
+				res.render('account/login', { 
+					title: "Choirless | Bringing people together, even when they're not together.", 
+					bodyid: "accountLogin",
+					redirect: req.query.redirect,
+					inviteId : validInvitation ? req.query.inviteId : undefined
+				});
+				
+			})
+			.catch(err => {
+				debug('/login err:', err);
+				res.status(500);
+				res.redirect('/?msg=Sorry, an error occurred trying to process that request.&msgtype=error');
+			})
+		;
+
+
 	} else {
 		res.redirect('/');
 	}
