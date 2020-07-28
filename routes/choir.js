@@ -115,6 +115,22 @@ router.post('/create-song', (req, res, next) => {
 
 });
 
+router.post('/delete-song/:CHOIRID/:SONGID', (req, res, next) => {
+
+    res.json({
+        status : "ok"
+    });
+
+});
+
+router.post('/delete-recording/:CHOIRID/:SONGID/:PARTID', (req, res, next) => {
+
+    res.json({
+        status : "ok"
+    });
+
+});
+
 router.post('/add-song-part', (req, res, next) => {
 
     let errMsg;

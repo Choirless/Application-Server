@@ -64,7 +64,20 @@
                 {{#each this.recordings}}
                 <tr data-collapsed="true" data-collapseid="{{this.partNameId}}">
                     <td colspan="1"><a>{{this.userName}}</a></td>
-                    <td><button class="cta-button dark-green view-video" data-videosrc="/performance/video/{{../../choirInfo.choirId}}+{{../../songInformation.songId}}+{{this.partId}}.webm">View performance</button></td>
+                    <td>
+                        <button class="cta-button dark-green view-video" data-videosrc="/performance/video/{{../../choirInfo.choirId}}+{{../../songInformation.songId}}+{{this.partId}}.webm">View</button>
+                        {{#ifEquals ../../memberType "leader"}}
+                            
+                            <button class="cta-button red delete-video" data-choirid="{{../../choirInfo.choirId}}" data-songid="{{../../songInformation.songId}}" data-partid="{{this.partId}}" >Delete</button>
+
+                            {{else}}
+
+                                {{#ifEquals this.userId ../../user}}
+                                    <button class="cta-button red delete-video" data-choirid="{{../../choirInfo.choirId}}" data-songid="{{../../songInformation.songId}}" data-partid="{{this.partId}}" >Delete</button>
+                                {{/ifEquals}}
+
+                        {{/ifEquals}}
+                    </td>
                 </tr>
                 {{/each}}
 
@@ -78,6 +91,7 @@
 </table>
 
 {{> dashboard/render_playback}}
+{{> dashboard/delete_recording}}
 
 <script>
 
@@ -118,6 +132,18 @@
             document.querySelector('#renderPlayback').dataset.active = "true";
         }
 
+        function confirmVideoDeletion(choirId, songId, partId){
+            console.log(choirId, songId, partId);
+
+            var deleteConfirmationModal = document.querySelector('.modal#deleteRecording');
+
+            deleteConfirmationModal.querySelector('video').src = `/performance/video/${choirId}+${songId}+${partId}.webm`;
+            deleteConfirmationModal.querySelector('form').action = `/choir/delete-recording/${choirId}/${songId}/${partId}`;
+
+            deleteConfirmationModal.dataset.active = "true";
+
+        }
+
         if(tableActions){
 
             var addNewSongPart = tableActions.querySelector('button#addANewPart');
@@ -156,6 +182,18 @@
 
                 }, false);
 
+            });
+
+            var deleteVideoBtns = document.querySelectorAll('table#song button.delete-video');
+
+            console.log(deleteVideoBtns);
+
+            Array.from(deleteVideoBtns).forEach(function(button){
+                button.addEventListener('click', function(){
+
+                    confirmVideoDeletion(this.dataset.choirid, this.dataset.songid, this.dataset.partid);
+
+                }, false);
             });
 
         }

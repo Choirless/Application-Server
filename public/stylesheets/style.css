@@ -161,7 +161,7 @@ nav .cta-button.feedback.small-screen-only{
   padding: 0.8em;
 }
 
-form input[type="text"], form input[type="email"], form input[type="password"]{
+form input[type="text"], form input[type="email"], form input[type="password"], form input[type="number"]{
   background: #e2e2e2;
   color: black;
 }
@@ -506,6 +506,10 @@ footer div p:last-of-type{
   color: black;
   font-size: 0.8em;
   z-index: 50;
+}
+
+.modal.dangerous{
+  background: rgba(140,0,0,0.8);
 }
 
 .modal .container{
@@ -1048,7 +1052,7 @@ body#dashboard main section#choirInfo #management{
   padding: 0;
 }
 
-body#dashboard main section#choirInfo #management div, body#dashboard main section#choirInfo #management div *{
+body#dashboard main section#choirInfo #management div#subnav, body#dashboard main section#choirInfo #management div#subnav * {
   display: flex;
 }
 
@@ -1222,8 +1226,9 @@ body#dashboard main section#choirInfo table tbody tr td:last-of-type a{
   font-weight: 600;
 }
 
-body#dashboard main section#choirInfo table#song tbody tr td button.view-video{
+body#dashboard main section#choirInfo table#song tbody tr td button{
   float: right;
+  margin-left: 1em;
 }
 
 body#dashboard main section#choirInfo div#settings{
@@ -1241,6 +1246,27 @@ body#dashboard main section#choirInfo div#settings button{
   width: auto;
   justify-self: center;
   align-self: center;
+}
+
+body#dashboard main section#choirInfo .modal#deleteRecording .container .content h3{
+  background: #e84343;
+  padding: 1em;
+  color: white;
+  text-shadow: 0 1px 1px black;
+  text-align: center;
+}
+
+body#dashboard main section#choirInfo .modal#deleteRecording .container .content video{
+  width: 50%;
+  display: block;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1em;
+}
+
+body#dashboard main section#choirInfo .modal#deleteRecording .container .content p{
+  text-align: center;
 }
 
 body#dashboard .modal#renderPlayback .container .content{
@@ -1453,6 +1479,10 @@ body#admin main section form{
 
   body#dashboard main section#choirInfo header p {
     max-width: 100%;
+  }
+
+  body#dashboard main section#choirInfo .modal#deleteRecording .container .content video{
+    width: 100%;
   }
 
   body#record #videos, body#record #controls, body#record #uploadDialog{
