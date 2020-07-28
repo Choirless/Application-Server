@@ -15,13 +15,17 @@
             <input type="Email" placeholder="Email Address" name="email" required/>
             <input type="password" placeholder="Password" name="password" required/>
             <input type="password" placeholder="Repeat password" name="repeat_password" required/>
-
+            
             <button type="submit" class="cta-button" id="createAccountBtn" data-active="true">Create Account</button>
 
         </form>
 
         <p class="center-text">Already have an account? Great! You can <a href="/account/login">log in here</a>.</p>
+
+        <p class="center-text">By creating this account, you are agreeing to our <a class="open-terms">terms &amp; conditions</a>.</p>
         
     </section>
 
 </main>
+
+{{> terms}}
