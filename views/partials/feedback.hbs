@@ -1,0 +1,91 @@
+<div id="feedback" class="modal" data-active="false">
+    <div class="container">
+
+        <div class="content">
+            <h2>Send Feedback</h2>
+            <p>We love to hear from people!</p>
+            <p>If you have any thoughts, ideas, or suggestions on how we can make Choirless even better, just fill in this form and hit send.</p>
+
+            <form action="/feedback/send" method="POST">
+                <label for="feedback-title">Feedback Title</label>
+                <input type="text" id="feedback-title" name="title" placeholder="Title for feedback" required />
+                
+                <label for="feedback-content">Feedback Title</label>
+                <textarea id="feedback-content" name="content"required></textarea>
+
+                <div class="side-by-side">
+                    <button type="button" class="cta-button red cancel">Cancel</button>
+                    <button type="submit" class="cta-button light-blue">Send Feedback</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+
+    (function(){
+
+        'use strict';
+
+        var feedbackButtons = document.querySelectorAll('.feedback');
+        var modal = document.querySelector('.modal#feedback'); 
+        var form = modal.querySelector('.modal#feedback form');
+        var cancel = form.querySelector('button.cancel');
+
+        form.addEventListener('submit', function(e){
+
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var data = {
+                title : form[0].value,
+                content : form[1].value,
+                page : window.location.href
+            };
+
+            fetch(form.action, {
+                    method : form.method,
+                    headers : {
+                        'Content-Type' : 'application/json'
+                    },
+                    body : JSON.stringify(data)
+                })
+                .then(function(res){
+                    if(res.ok){
+                        return res.json();
+                    } else {
+                        throw res;
+                    }
+                })
+                .then(function(){
+                    modal.dataset.active = "false";
+                    form.reset();
+                    __global_message.display({
+                        content : "Feedback sent. Thanks!",
+                        type : "success",
+                        resetParameters : true
+                    });
+                })
+                .catch(function(err){
+                    console.log('Send feedback err:', err);
+                })
+
+        }, false);
+
+        Array.from(feedbackButtons).forEach(function(button){
+            
+            button.addEventListener('click', function(){
+                modal.dataset.active = "true";
+            }, false);
+
+        });
+
+        cancel.addEventListener('click', function(){
+            modal.dataset.active = "false";
+        }, false);
+
+    }());
+
+</script>
