@@ -114,7 +114,6 @@ nav .cta-button{
   padding: 0.5em 1em !important;
 }
 
-
 #notice{
   position: fixed;
   top: 0;
@@ -227,6 +226,37 @@ main form input[type="text"], main form input[type="email"], main form input[typ
 .modal .container .content ul li a{
   font-weight: 600;
   color: black;
+}
+
+.modal#terms .container{
+  min-width: inherit;
+  max-width: 400px;
+}
+
+.modal#terms .container .content h3{
+  margin-top: 2em;
+}
+
+.modal#terms .container .content ul{
+  max-height: initial;
+}
+
+.modal#terms .container .content ul li{
+  margin-left: 2em;
+  margin-bottom: 1em;
+  padding: 0;
+  list-style-type: disc;
+  border-bottom: 0 solid transparent;
+  display: list-item;
+}
+
+.modal#terms .container .content button#close-terms{
+  float: right;
+  margin-top: 1em;
+}
+
+.open-terms{
+  cursor: pointer;
 }
 
 body#home header{
@@ -381,19 +411,19 @@ footer{
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   font-size: 0.8em;
   padding: 0 2em;
   box-sizing: border-box;
-  position: absolute;
   bottom: 0;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+border-top: 1px solid rgba(255,255,255,0.5);
 }
 
 footer div{
-  max-width: 80%;
-  width: 100%;
   padding: 1em 0;
-  border-top: 1px solid rgba(255,255,255,0.5);
 }
 
 footer div p{
