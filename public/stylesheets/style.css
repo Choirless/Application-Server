@@ -1338,6 +1338,11 @@ body#admin main section form{
     font-size: 3em;
   }
 
+  footer{
+    padding: 0 1em;
+    font-size: 0.65em;
+  }
+
   footer div {
     max-width: 100%;
   }
