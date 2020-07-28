@@ -114,6 +114,13 @@ nav .cta-button{
   padding: 0.5em 1em !important;
 }
 
+nav .cta-button.feedback.small-screen-only{
+  display: none;
+  position: absolute;
+  right: 3.5em;
+  top: 0.65em;
+}
+
 #notice{
   position: fixed;
   top: 0;
@@ -1332,6 +1339,14 @@ body#admin main section form{
     padding-bottom: 1.5em;
     border-bottom: 1px solid #828282;
     width: 100%;
+  }
+
+  nav .cta-button.feedback.small-screen-only{
+    display: inherit;
+  }
+
+  nav section .cta-button.feedback{
+    display: none;
   }
 
   button.sub-menu{
