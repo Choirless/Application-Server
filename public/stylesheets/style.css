@@ -114,6 +114,13 @@ nav .cta-button{
   padding: 0.5em 1em !important;
 }
 
+nav .cta-button.feedback.small-screen-only{
+  display: none;
+  position: absolute;
+  right: 3.5em;
+  top: 0.65em;
+}
+
 #notice{
   position: fixed;
   top: 0;
@@ -154,7 +161,7 @@ nav .cta-button{
   padding: 0.8em;
 }
 
-main form input[type="text"], main form input[type="email"], main form input[type="password"]{
+form input[type="text"], form input[type="email"], form input[type="password"]{
   background: #e2e2e2;
   color: black;
 }
@@ -314,6 +321,7 @@ button{
 .cta-button.blue{
   background-color: #46649f !important;
   color: white !important;
+  text-shadow: 0 1px rgb(0, 0, 0, 0.40);
 }
 
 .cta-button.blue:hover{
@@ -322,6 +330,7 @@ button{
 
 .cta-button.light-blue{
   background-color:#2a93e4 !important;
+  text-shadow: 0 1px rgb(0, 0, 0, 0.40);
   color: white !important;
 }
 
@@ -331,6 +340,7 @@ button{
 
 .cta-button.red{
   background-color: #c34343 !important;
+  text-shadow: 0 1px rgb(0, 0, 0, 0.40);
   color: white !important;
 }
 
@@ -340,14 +350,20 @@ button{
 
 .cta-button.green{
   background-color: #7dce33 !important;
+  text-shadow: 0 1px rgb(0, 0, 0, 0.40);
   color: white !important;
 }
 
 .cta-button.dark-green{
   background-color: #6db12f !important;
+  text-shadow: 0 1px rgb(0, 0, 0, 0.40);
   color: white !important;
 }
 
+.cta-button.dark-green:hover{
+  background-color: #7dce33 !important;
+  color: white !important;
+}
 
 .cta-button.green:hover{
   background-color: #98ea4c !important;
@@ -361,6 +377,7 @@ button{
 .cta-button.yellow{
   background: #ffe563;
   color: black;
+  text-shadow: initial;
 }
 
 .cta-button.yellow:hover{
@@ -808,12 +825,13 @@ body main section form h2, body#accountLogin main section form h2{
   margin-top: 1em;
 }
 
-body main section form label{
+body form label{
+  display: block;
   margin-bottom: 0.5em;
   font-weight: 600;
 }
 
-body main section form input{
+body form input{
   background: black;
   border: 1px solid #969696;
   font-size: 1em;
@@ -824,6 +842,17 @@ body main section form input{
   box-sizing: border-box;
   font-family: 'Montserrat';
   margin-bottom: 1em;
+}
+
+body form textarea{
+  background: #e2e2e2;
+  color: black;
+  width: 100%;
+  min-height: 7em;
+  box-sizing: border-box;
+  resize: none;
+  font-family: 'Montserrat';
+  padding: 0.75em;
 }
 
 body#accountLogin main section form input, body#accountCreate main section form input {
@@ -1310,6 +1339,14 @@ body#admin main section form{
     padding-bottom: 1.5em;
     border-bottom: 1px solid #828282;
     width: 100%;
+  }
+
+  nav .cta-button.feedback.small-screen-only{
+    display: inherit;
+  }
+
+  nav section .cta-button.feedback{
+    display: none;
   }
 
   button.sub-menu{

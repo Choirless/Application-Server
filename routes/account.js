@@ -6,7 +6,7 @@ const users = require(`${__dirname}/../bin/modules/users`);
 const mail = require(`${__dirname}/../bin/modules/emails`);
 const invitations = require(`${__dirname}/../bin/modules/invitations`);
 
-const betaInterestReceivees = process.env.BETA_INTEREST_RECEIVEES ? process.env.BETA_INTEREST_RECEIVEES.split(',') : [];
+const adminEmailAddresses = process.env.ADMIN_EMAIL_ADDRESSES ? process.env.ADMIN_EMAIL_ADDRESSES.split(',') : [];
 
 router.get('/login', function(req, res, next) {
 
@@ -285,7 +285,7 @@ router.post('/beta-interest', (req, res, next) => {
 		res.redirect('/beta-interest?msg=Sorry, you need to tell us a bit about yourself to register your interest.&msgtype=error');
 	} else {
 		
-		betaInterestReceivees.forEach(person => {
+		adminEmailAddresses.forEach(person => {
 
 			const msgInfo = {
 				"to" : person,

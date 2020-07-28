@@ -4,10 +4,12 @@
         <a href="/">Home</a>
         {{#if user}}<a href="/dashboard">Dashboard</a>{{/if}}
         {{#if user}}<a href="/account/logout">Log Out</a>{{else}}<a href="/account/login">Log In</a>{{/if}}
+        {{#if user}}<a class="cta-button dark-green feedback">Feedback</a>{{/if}}
         {{#ifEquals userType "admin"}}
         <a href="/admin" class="cta-button yellow">Admin</a>
         {{/ifEquals}}
     </section>
+    {{#if user}}<a class="cta-button dark-green feedback small-screen-only">Feedback</a>{{/if}}
     <button class="sub-menu dark" id="navMenuToggle" type="button"></button>
 </nav>
 
