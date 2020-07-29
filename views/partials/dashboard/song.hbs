@@ -68,12 +68,16 @@
                         <button class="cta-button dark-green view-video" data-videosrc="/performance/video/{{../../choirInfo.choirId}}+{{../../songInformation.songId}}+{{this.partId}}.webm">View</button>
                         {{#ifEquals ../../memberType "leader"}}
                             
-                            <button class="cta-button red delete-video" data-choirid="{{../../choirInfo.choirId}}" data-songid="{{../../songInformation.songId}}" data-partid="{{this.partId}}" >Delete</button>
+                            {{#ifNotEquals ../this.name "Lead"}}
+                                <button class="cta-button red delete-video" data-choirid="{{../../choirInfo.choirId}}" data-songid="{{../../songInformation.songId}}" data-partid="{{this.partId}}" >Delete</button>
+                            {{/ifNotEquals}}
 
                             {{else}}
 
                                 {{#ifEquals this.userId ../../user}}
-                                    <button class="cta-button red delete-video" data-choirid="{{../../choirInfo.choirId}}" data-songid="{{../../songInformation.songId}}" data-partid="{{this.partId}}" >Delete</button>
+                                    {{#ifNotEquals ../this.name "Lead"}}
+                                        <button class="cta-button red delete-video" data-choirid="{{../../choirInfo.choirId}}" data-songid="{{../../songInformation.songId}}" data-partid="{{this.partId}}" >Delete</button>
+                                    {{/ifNotEquals}}
                                 {{/ifEquals}}
 
                         {{/ifEquals}}

@@ -6,6 +6,7 @@ const choirInterface = require(`${__dirname}/../bin/modules/choir`);
 const usersInterface = require(`${__dirname}/../bin/modules/users`);
 const mailInterface = require(`${__dirname}/../bin/modules/emails`);
 const invitationsInterface = require(`${__dirname}/../bin/modules/invitations`);
+const storage = require(`${__dirname}/../bin/lib/storage`);
 
 router.post('/create', (req, res, next) => {
 
@@ -124,10 +125,66 @@ router.post('/delete-song/:CHOIRID/:SONGID', (req, res, next) => {
 });
 
 router.post('/delete-recording/:CHOIRID/:SONGID/:PARTID', (req, res, next) => {
+    
+    const apiRequests = [];
 
-    res.json({
-        status : "ok"
-    });
+    apiRequests.push(choirInterface.members.check(req.params.CHOIRID, res.locals.user));
+    apiRequests.push(choirInterface.songs.recordings.get(req.params.CHOIRID, req.params.SONGID, req.params.PARTID));
+
+    Promise.all(apiRequests)
+        .then(results => {
+
+            const choirMemberInfo = results[0];
+            const recordingInfo = results[1];
+
+            debug(results);
+
+            if(choirMemberInfo){
+
+                if(choirMemberInfo.memberType === "leader" || choirMemberInfo.userId === recordingInfo.userId){
+
+                    const deletionProcesses = [];
+                    const fileKey = `${req.params.CHOIRID}+${req.params.SONGID}+${req.params.PARTID}.webm`;
+
+                    deletionProcesses.push(storage.delete(fileKey))
+                    deletionProcesses.push(choirInterface.songs.recordings.delete(req.params.CHOIRID, req.params.SONGID, req.params.PARTID))
+
+                    return Promise.all(deletionProcesses);
+
+                } else {
+                    res.status(401);
+                    res.json({
+                        status : "err",
+                        msg : "Sorry, you don't have the authority to delete this recording."
+                    });
+                }
+
+            } else {
+                res.status(401);
+                res.json({
+                    status : "err",
+                    msg : "Sorry, you're not a member of this choir."
+                });
+            }
+
+        })
+        .then(function(){
+            res.json({
+                status : "ok",
+                msg : "Data successfully deleted"
+            });
+        })
+        .catch(err => {
+            debug('/delete-recording err:', err);
+            res.status(500);
+            res.json({
+                status : "err",
+                msg : "Sorry, something went wrong deleting that recording"
+            });
+        })
+    ;
+
+
 
 });
 

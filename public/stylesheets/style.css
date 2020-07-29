@@ -390,6 +390,7 @@ button{
   background-position: 50% 45%;
   background-repeat: no-repeat;
   color: transparent !important;
+  text-shadow: none;
 }
 
 .cta-button.loading.dark{
@@ -1254,6 +1255,7 @@ body#dashboard main section#choirInfo .modal#deleteRecording .container .content
   color: white;
   text-shadow: 0 1px 1px black;
   text-align: center;
+  text-transform: uppercase;
 }
 
 body#dashboard main section#choirInfo .modal#deleteRecording .container .content video{
@@ -1271,6 +1273,7 @@ body#dashboard main section#choirInfo .modal#deleteRecording .container .content
 
 body#dashboard .modal#renderPlayback .container .content{
   flex-direction: column;
+  display: flex;
 }
 
 body#dashboard .modal#renderPlayback .container .content video{

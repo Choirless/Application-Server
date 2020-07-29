@@ -382,6 +382,39 @@ function addARecordingToASongInAChoir(data){
 
 }
 
+function getASpecificRecordingInASongInAChoir(choirId, songId, partId){
+
+    if(!choirId){
+        return Promise.reject('No choirId passed to function');
+    }
+
+    if(!songId){
+        return Promise.reject('No songId passed to function');
+    }
+
+    if(!partId){
+        return Promise.reject('No partId passed to function');
+    }
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}&choirId=${choirId}&songId=${songId}&partId=${partId}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.part;
+        })
+        .catch(err => {
+            debug('API getASpecificRecordingInASongInAChoir err:', err);
+            throw err;
+        })
+    ;
+
+}
+
 function getAllRecordingsForASongInAChoir(choirId, songId){
 
     if(!choirId){
@@ -405,6 +438,47 @@ function getAllRecordingsForASongInAChoir(choirId, songId){
         })
         .catch(err => {
             debug('getAllRecordingsForASongInAChoir:', err);
+        })
+    ;
+
+}
+
+function deleteARecordingForASongInAChoir(choirId, songId, partId){
+
+    if(!choirId){
+        return Promise.reject('No choirId passed to function');
+    }
+
+    if(!songId){
+        return Promise.reject('No songId passed to function');
+    }
+
+    if(!partId){
+        return Promise.reject('No partId passed to function');
+    }
+
+    const data = {
+        choirId : choirId,
+        songId : songId,
+        partId : partId
+    };
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/songpart?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+            method : "DELETE",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(data)
+        })
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .catch(err => {
+            debug('deleteARecordingForASongInAChoir err:', err);
         })
     ;
 
@@ -534,7 +608,9 @@ module.exports = {
         },
         recordings : {
             add : addARecordingToASongInAChoir,
-            getAll : getAllRecordingsForASongInAChoir
+            get : getASpecificRecordingInASongInAChoir,
+            getAll : getAllRecordingsForASongInAChoir,
+            delete : deleteARecordingForASongInAChoir
         }
     },
     members : {
