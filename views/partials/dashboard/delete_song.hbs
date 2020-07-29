@@ -1,23 +1,21 @@
-<div id="deleteRecording" class="modal dangerous" data-active="false">
+<div id="deleteSong" class="modal dangerous" data-active="false">
     <div class="container">
 
         <div class="content">
-            <h2>Delete a recording</h2>
+            <h2>Delete a song</h2>
 
             <h3 class="warning">WARNING: This is an irreversible action</h3>
 
-            <p>If you delete this recording, <strong>it will be immediately removed from the Choirless system and will not be retrievable.</strong></p>
-            <p><strong>This is the recording you're about to delete:</strong></p>
-            <video controls src="https://choirless-videos-preview.s3.eu-gb.cloud-object-storage.appdomain.cloud/001jr0nG1EKeJr2W13rs3ZIZi42mi3fO+001jrCTr1SeUDX0KQwiK3YZVwo4Owvbv+final.mp4?ts=1595968600860"></video>
+            <p>If you delete this song, <strong>it will be immediately removed from the Choirless system <em>along with all recordings that have been made to date</em> and <em>will not be retrievable.</em></strong></p>
             
-            <p>If you're sure you want to delete this recording, please enter the answer to the sum below and then click 'Delete recording'</p>
+            <p>If you're sure you want to delete this song and all it's recorded pieces, please enter the answer to the sum below and then click 'Delete song'</p>
             <form method="POST">
                 <label for="answer">What is 2 + 2?</label>
                 <input id="answer" type="number" required/>
 
                 <div class="side-by-side">
                     <button type="button" class="cta-button black cancel">Cancel</button>
-                    <button type="submit" class="cta-button red">Delete recording</button>
+                    <button type="submit" class="cta-button red">Delete song</button>
                 </div>
 
             </form>
@@ -32,7 +30,7 @@
 
         'use strict';
 
-        var modal = document.body.querySelector('.modal#deleteRecording');
+        var modal = document.body.querySelector('.modal#deleteSong');
         var form = modal.querySelector('form');
         var challenge = form.querySelector('label[for="answer"]');
         var cancel = modal.querySelector('button.cancel');
@@ -45,7 +43,6 @@
         var answer = firstInt + secondInt;
 
         function closeModal(){
-            modal.querySelector('video').src = "";
             modal.dataset.active = "false";
             firstInt = Math.random() * 10 | 0;
             secondInt = Math.random() * 10 | 0;
@@ -67,12 +64,12 @@
             if(challengeAnswer !== answer){
                 form.reset();
                 __global_message.display({
-                    content : "That's not the right answer to the challenge. Preventing deletion of recording.",
+                    content : "That's not the right answer to the challenge. Preventing deletion of song.",
                     type : "error",
                     resetParameters : true
                 });
             } else {
-                console.log('Confirmed. Delete recording');
+                console.log('Confirmed. Delete song.');
 
                 this.querySelector('button[type="submit"]').classList.add('loading');
 
@@ -87,13 +84,13 @@
                         }
                     })
                     .then(function(){
-                        console.log('Recording deleted.');
+                        console.log('Song deleted.');
 
-                        window.location.href = `${window.location.origin}${window.location.pathname}?msg=Recording successfully deleted.&msgtype=success`;
+                        window.location.href = `${window.location.origin}${window.location.pathname}?msg=Song successfully deleted.&msgtype=success`;
 
                     })
                     .catch(function(err){
-                        console.log('Delete recording err:', err);
+                        console.log('Delete song err:', err);
                     })
                 ;
 

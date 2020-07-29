@@ -170,6 +170,17 @@ form input[type="text"], form input[type="email"], form input[type="password"], 
   width: 100%;
 }
 
+.modal .content .warning{
+
+  background: #e84343;
+  padding: 1em;
+  color: white;
+  text-shadow: 0 1px 1px black;
+  text-align: center;
+  text-transform: uppercase;
+
+}
+
 .modal .container .content div.side-by-side{
   justify-content: flex-end;
   margin-top: 1em;
@@ -395,6 +406,11 @@ button{
 
 .cta-button.loading.dark{
   background-image: url("/assets/images/loader_dark.gif");
+}
+
+.cta-button.inactive{
+  opacity: 0.5 !important;
+  filter: grayscale(1) !important;
 }
 
 button.sub-menu{
@@ -1176,6 +1192,13 @@ body#dashboard main section#choirInfo table#song tbody tr td{
   border-right: 0 solid transparent;
 }
 
+body#dashboard main section#choirInfo table#songs button.delete-song{
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
 body#dashboard main section#choirInfo table tbody tr.subhead.collapsable{
   cursor: pointer;
   background: #d8d8d8;
@@ -1247,15 +1270,6 @@ body#dashboard main section#choirInfo div#settings button{
   width: auto;
   justify-self: center;
   align-self: center;
-}
-
-body#dashboard main section#choirInfo .modal#deleteRecording .container .content h3{
-  background: #e84343;
-  padding: 1em;
-  color: white;
-  text-shadow: 0 1px 1px black;
-  text-align: center;
-  text-transform: uppercase;
 }
 
 body#dashboard main section#choirInfo .modal#deleteRecording .container .content video{
