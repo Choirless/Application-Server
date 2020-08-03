@@ -19,7 +19,7 @@
                 <td>Title</td>
                 <td>Number of Sections</td>
                 <td>Performances Recorded</td>
-                <td>Created (DD/MM/YYYY)</td>
+                <td>Delete?</td>
             </tr>
         </thead>
 
@@ -37,7 +37,11 @@
                 <td><a href="/dashboard/choir/{{this.choirId}}/song/{{this.songId}}">{{this.name}}</a></td>
                 <td><strong>{{{this.numberOfSections}}}</strong> sections</td>
                 <td><strong>{{{this.numberOfRecordings}}}</strong> recordings</td>
-                <td>{{#humantime}}{{this.createdOn}}{{/humantime}}</td>
+                {{#ifEquals ../memberType "leader"}}
+                    <td><button class="cta-button red delete-song" data-choirid="{{this.choirId}}" data-songid="{{this.songId}}" >Delete</button></td>
+                {{else}}
+                    <td><button class="cta-button red delete-song inactive" >Delete</button></td>
+                {{/ifEquals}}
             </tr>
             {{/each}}
 
@@ -47,12 +51,23 @@
 
 {{/unless}}
 
+{{> dashboard/delete_song}}
+
 <script>
     (function(){
 
         'use strict';
 
         var tableActions = document.querySelector('.tableActions#songsActions');
+
+        function confirmSongDeletion(choirId, songId){
+            var modal = document.querySelector('.modal#deleteSong');
+            var form = modal.querySelector('form');
+            
+            form.action = `/choir/delete-song/${choirId}/${songId}`;
+            
+            modal.dataset.active = "true";
+        }
 
         if(tableActions){
 
@@ -68,7 +83,36 @@
 
             }
 
+
         }
+        
+        var deleteSongBtns = document.querySelectorAll('table#songs button.delete-song');
+
+        console.log(deleteSongBtns);
+
+        Array.from(deleteSongBtns).forEach(function(deleteButton){
+
+            if(Array.from(deleteButton.classList).includes('inactive')){
+
+                deleteButton.addEventListener('click', function(){
+
+                    __global_message.display({
+                        content : "You don't have the ability to delete this song.",
+                        type : "notice",
+                        resetParameters : true
+                    });
+
+                }, false);
+
+            } else {
+
+                deleteButton.addEventListener('click', function(){
+                    confirmSongDeletion(this.dataset.choirid, this.dataset.songid);
+                }, false);
+
+            }
+            
+        });
 
     }());
 
