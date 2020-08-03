@@ -1184,7 +1184,7 @@ body#dashboard main section#choirInfo table tr td{
 }
 
 body#dashboard main section#choirInfo table tbody tr td{
-  padding: 1.5em 0.5em;
+  padding: 1em 0.5em;
   border-right: 1px solid rgba(0,0,0,0.2);
 }
 

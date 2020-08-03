@@ -479,9 +479,46 @@ function deleteARecordingForASongInAChoir(choirId, songId, partId){
         })
         .catch(err => {
             debug('deleteARecordingForASongInAChoir err:', err);
+            throw err;
         })
     ;
 
+}
+
+function deleteASongFromAChoir(choirId, songId){
+   
+    if(!choirId){
+        return Promise.reject('No choirId passed to function');
+    }
+
+    if(!songId){
+        return Promise.reject('No songId passed to function');
+    }
+
+    const data = {
+        choirId : choirId,
+        songId : songId,
+    };
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/choir/song?apikey=${process.env.CHOIRLESS_API_KEY}`, {
+            method : "DELETE",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(data)
+        })
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .catch(err => {
+            debug('deleteASongInAChoir err:', err);
+            throw err;
+        })
+    ;
 }
 
 function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
@@ -611,7 +648,8 @@ module.exports = {
             get : getASpecificRecordingInASongInAChoir,
             getAll : getAllRecordingsForASongInAChoir,
             delete : deleteARecordingForASongInAChoir
-        }
+        },
+        delete : deleteASongFromAChoir
     },
     members : {
         get : getAllOfTheMembersOfAChoir,

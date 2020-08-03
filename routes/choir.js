@@ -118,9 +118,37 @@ router.post('/create-song', (req, res, next) => {
 
 router.post('/delete-song/:CHOIRID/:SONGID', (req, res, next) => {
 
-    res.json({
-        status : "ok"
-    });
+    const apiRequests = [];
+
+    apiRequests.push(choirInterface.members.check(req.params.CHOIRID, res.locals.user));
+    apiRequests.push(choirInterface.songs.get(req.params.CHOIRID, req.params.SONGID));
+
+    Promise.all(apiRequests)
+        .then(results => {
+
+            const choirMemberInfo = results[0];
+            const songInfo = results[1];
+
+            debug(choirMemberInfo, songInfo);
+
+            if(choirMemberInfo && songInfo){
+
+                if(choirMemberInfo.memberType === "leader"){
+                    return choirInterface.songs.delete(req.params.CHOIRID, req.params.SONGID);
+                } else {
+                    res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?msg=Sorry, you have to be a choir leader to delete this song.&msgtype=notice`);
+                }
+
+            }
+
+        })
+        .then(function(){
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}?msg=Song successfully deleted.&msgtype=success`);
+        })
+        .catch(err => {
+            debug(`/choir/delete-song/${req.params.CHOIRID}/${req.params.SONGID} err:`, err)
+        })
+    ;
 
 });
 
@@ -153,34 +181,22 @@ router.post('/delete-recording/:CHOIRID/:SONGID/:PARTID', (req, res, next) => {
 
                 } else {
                     res.status(401);
-                    res.json({
-                        status : "err",
-                        msg : "Sorry, you don't have the authority to delete this recording."
-                    });
+                    res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?msg=Sorry, you don't have the authority to delete this recording.&msgtype=notice`);
                 }
 
             } else {
                 res.status(401);
-                res.json({
-                    status : "err",
-                    msg : "Sorry, you're not a member of this choir."
-                });
+                res.redirect(`/dashboard/?msg=Sorry, you're not a member of this choir.&msgtype=error`);
             }
 
         })
         .then(function(){
-            res.json({
-                status : "ok",
-                msg : "Data successfully deleted"
-            });
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?msg=Recording successfully deleted.&msgtype=success`);
         })
         .catch(err => {
             debug('/delete-recording err:', err);
             res.status(500);
-            res.json({
-                status : "err",
-                msg : "Sorry, something went wrong deleting that recording"
-            });
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?msg=Sorry, something went wrong deleting that recording.&msgtype=error`);
         })
     ;
 

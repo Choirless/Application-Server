@@ -76,7 +76,7 @@
 
                 this.querySelector('button[type="submit"]').classList.add('loading');
 
-                fetch(this.action, {
+                /*fetch(this.action, {
                         method : this.method
                     })
                     .then(function(res){
@@ -95,7 +95,10 @@
                     .catch(function(err){
                         console.log('Delete recording err:', err);
                     })
-                ;
+                ;*/
+
+                this.submit();
+
 
             }
 
