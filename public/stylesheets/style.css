@@ -1494,6 +1494,10 @@ body#admin main section form{
     font-size: 0.9em;
   }
 
+  body#dashboard main section#choirInfo header h1{
+    font-size: 2em;
+  }
+
   body#dashboard main section#choirInfo header p {
     max-width: 100%;
   }
