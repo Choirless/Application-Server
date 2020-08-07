@@ -29,6 +29,7 @@ body{
   background-repeat: no-repeat;
   padding-top: 50px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 a {
