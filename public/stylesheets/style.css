@@ -32,6 +32,18 @@ body{
   overflow: hidden;
 }
 
+body.impersonating{
+  margin-top: 50px;
+}
+
+body.impersonating nav{
+  top: 50px;
+}
+
+body.impersonating .impersonating-toolbar .cta-button{
+  margin-left: 1em;
+}
+
 a {
   color: #00B7FF;
 }
@@ -71,6 +83,22 @@ label.required::after{
   top: -0.3em;
   color: #969696;
 }
+
+.impersonating-toolbar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #ffe563;
+  z-index: 100000;
+  width: 100%;
+  height: 50px;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
 
 nav {
   background-color: black;
@@ -646,6 +674,10 @@ body#record #videos .half#lead button#otherPerformancesTrigger{
   position: absolute;
   bottom: 2em;
   box-shadow: 0 1px 2px black;
+}
+
+body#record.impersonating #videos .half#lead button#otherPerformancesTrigger{
+  bottom: 4em;
 }
 
 body#record #videos[data-leadrecording="true"] div#performance {

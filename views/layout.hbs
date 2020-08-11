@@ -30,7 +30,12 @@
 		<meta property="twitter:image" content="https://www.choirless.com/assets/images/choirless-social.png">
 
 	</head>
-	<body id="{{{bodyid}}}"></body>
+	<body id="{{{bodyid}}}" {{#if impersonating}}class="impersonating"{{/if}}></body>
+
+		{{#if impersonating}}
+			<div class="impersonating-toolbar">You're currently impersonating '{{user}}'<form action="/admin/impersonate/stop" method="POST"><button class="cta-button black">Stop</button></form></div>
+		{{/if}}
+
 		{{> nav}}
 		{{> display_message}}
 
