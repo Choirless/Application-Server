@@ -71,6 +71,23 @@ router.post('/invite-beta-user', (req, res, next) => {
 
     }
     
+});
+
+router.post('/impersonate', (req, res) => {
+
+    req.session.impersonating = true;
+    req.session.impersonatedId = req.body.impersonatedId;
+
+    res.redirect('/dashboard');
+
+});
+
+router.post('/impersonate/stop', (req, res) => {
+
+    req.session.impersonating = undefined;
+    req.session.impersonatedId = undefined;
+
+    res.redirect('/admin');
 
 });
 
