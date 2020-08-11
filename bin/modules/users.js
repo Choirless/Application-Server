@@ -3,6 +3,10 @@ const fetch = require('node-fetch');
 
 function getSpecificUserByID(userId){
 
+    if(!userId){
+        return Promise.reject('No userId was passed to function');
+    }
+
     return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/user?apikey=${process.env.CHOIRLESS_API_KEY}&userId=${userId}`)
         .then(res => {
             if(res.ok){
@@ -22,7 +26,35 @@ function getSpecificUserByID(userId){
 
 }
 
+function getSpecificUserByEmailAddress(emailAddress){
+
+    if(!emailAddress){
+        return Promise.reject('No email address was passed to function');
+    }
+
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/user/byemail?apikey=${process.env.CHOIRLESS_API_KEY}&email=${emailAddress}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.user;
+        })
+        .catch(err => {
+            debug('Get user error:', err);
+            throw err;
+        })
+    ;
+}
+
 function addUserToDatabase(userData){
+
+    if(!userData){
+        return Promise.reject(`No 'userData' object was passed to function`);
+    }
 
     return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/user?apikey=${process.env.CHOIRLESS_API_KEY}`, {
             method : "POST",
@@ -113,6 +145,7 @@ function getChoirsForUserID(userId){
 module.exports = {
     get : {
         byID : getSpecificUserByID,
+        byEmail : getSpecificUserByEmailAddress,
         choirs : getChoirsForUserID
     },
     add : addUserToDatabase,
