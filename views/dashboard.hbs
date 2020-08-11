@@ -22,11 +22,11 @@
 
         <button class="sub-menu light" id="choirMenuToggle" type="button"></button>
 
-        {{#ifEquals userType "admin"}}
+        {{#ifNotEquals userType "regular"}}
         <div class="center-text">
             <button class="cta-button black" id="choirCreationCTA">Create a Choir</button>
         </div>
-        {{/ifEquals}}
+        {{/ifNotEquals}}
 
     </section>
 
