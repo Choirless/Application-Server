@@ -57,6 +57,10 @@ a.sub-link{
   text-align: center;
 }
 
+.smaller-text{
+  font-size: 0.8em;
+}
+
 input[type="text"]{
   font-family: 'Montserrat';
 }
@@ -830,7 +834,7 @@ body header, body#accountLogin header{
   padding-top: 2em;
 }
 
-body#accountLogin main section{
+body#accountLogin main section, body#resetPassword main section{ 
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -940,7 +944,7 @@ body#accountLogin main section form{
   display: flex;
 }
 
-body#accountLogin main section form button, #createAccountBtn{
+body#accountLogin main section form button, #createAccountBtn, #resetPasswordBtn{
   width: 185px;
   align-self: center;
 }

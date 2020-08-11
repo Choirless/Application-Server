@@ -17,6 +17,8 @@
 
         </form>
 
+                <p class="center-text">Forgot your password? That's ok! you can <a href="/account/reset-password">reset it here</a>.</p>
+
         {{#if inviteId}}
 
         <p class="center-text">Don't have an account? No worries! you can <a href="/account/create?inviteId={{inviteId}}{{#if redirect}}&redirect={{#encodeURL}}{{this.redirect}}{{/encodeURL}}{{/if}}">create one here</a>.</p>
@@ -27,7 +29,7 @@
 
         {{/if}}
 
-        <p class="center-text">By using Choirless, you are agreeing to our <a class="open-terms">terms &amp; conditions</a>.</p>
+        <p class="center-text smaller-text">By using Choirless, you are agreeing to our <a class="open-terms">terms &amp; conditions</a>.</p>
 
     </section>
 

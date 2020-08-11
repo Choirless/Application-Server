@@ -267,6 +267,25 @@ router.post('/create', (req, res, next) => {
 
 });
 
+router.get('/reset-password', (req, res) => {
+	
+	res.render('account/reset_password', { 
+		title: "Choirless | Bringing people together, even when they're not together.", 
+		bodyid: "resetPassword",
+		redirect: req.query.redirect,
+		inviteId : req.query.inviteId
+	});
+
+});
+
+router.post('/trigger-reset-password', (req, res) => {
+	
+	users.get
+
+	res.redirect(`/?msg=A link to reset your password has been sent to ${req.body.email}&msgtype=notice`);
+
+});
+
 router.get('/beta-interest', (req, res, next) => {
 
 	res.render('account/beta_interest', { 
