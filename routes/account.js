@@ -279,8 +279,6 @@ router.get('/reset-password', (req, res) => {
 });
 
 router.post('/trigger-reset-password', (req, res) => {
-	
-	users.get
 
 	res.redirect(`/?msg=A link to reset your password has been sent to ${req.body.email}&msgtype=notice`);
 
