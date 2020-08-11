@@ -55,14 +55,6 @@ app.use(cookieSession({
 app.use('*', serverStarted);
 app.use('*', checkSession);
 
-app.get('/choir/join/choirless-alpha', (req, res, next) => {
-
-	req.query.inviteId = process.env.CHOIRLESS_ALPHA_ID;
-	debug(req.query);
-	next();
-
-});
-
 app.use('/', require(`${__dirname}/routes/index`));
 app.use('/account', require(`${__dirname}/routes/account`));
 app.use('/dashboard', [protectRoute], require(`${__dirname}/routes/dashboard`));
