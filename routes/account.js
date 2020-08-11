@@ -7,6 +7,7 @@ const mail = require(`${__dirname}/../bin/modules/emails`);
 const invitations = require(`${__dirname}/../bin/modules/invitations`);
 
 const adminEmailAddresses = process.env.ADMIN_EMAIL_ADDRESSES ? process.env.ADMIN_EMAIL_ADDRESSES.split(',') : [];
+const SUPER_USERS = process.env.CHOIRLESS_ADMINS ? process.env.CHOIRLESS_ADMINS.split(',') : [];
 
 router.get('/login', function(req, res, next) {
 
@@ -72,7 +73,7 @@ router.post('/login', (req, res, next) => {
 						debug(data);
 						req.session.user = data.user.userId;
 						req.session.name = data.user.name;
-						req.session.userType = data.user.userType;
+						req.session.userType = SUPER_USERS.includes(data.user.userId) ? 'super' : data.user.userType;
 
 						if(req.query.redirect){
 							res.redirect(decodeURIComponent(req.query.redirect));

@@ -2,15 +2,12 @@ const debug = require('debug')('routes:admin');
 const express = require('express');
 const router = express.Router();
 
-const users = require(`${__dirname}/../bin/modules/users`);
 const invitations = require(`${__dirname}/../bin/modules/invitations`);
 const mail = require(`${__dirname}/../bin/modules/emails`);
 
-const ADMIN_USERS = process.env.CHOIRLESS_ADMINS ? process.env.CHOIRLESS_ADMINS.split(',') : [];
-
 router.use('*', (req, res, next) => {
 
-    if(ADMIN_USERS.includes(res.locals.user)){
+    if(res.locals.userType === 'super'){
         next();
     } else {
         res.status(401);
