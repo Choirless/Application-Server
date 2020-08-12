@@ -1,16 +1,34 @@
 <nav data-expanded="false">
-    <a href="/" id="logo">Choirless</a>
-    <section>
-        <a href="/">Home</a>
-        {{#if user}}<a href="/dashboard">My Choirs</a>{{/if}}
-        {{#if user}}<a href="/account/logout">Log Out</a>{{else}}<a href="/account/login">Log In</a>{{/if}}
-        {{#if user}}<a class="cta-button dark-green feedback">Feedback</a>{{/if}}
-        {{#ifEquals userType "super"}}
-        <a href="/admin" class="cta-button yellow">Admin</a>
-        {{/ifEquals}}
-    </section>
-    {{#if user}}<a class="cta-button dark-green feedback small-screen-only">Feedback</a>{{/if}}
-    <button class="sub-menu dark" id="navMenuToggle" type="button"></button>
+    
+    <div>
+
+        <a href="/" id="logo">Choirless</a>
+
+        <div id="accountInfo">
+            {{#if name}}
+            <span>{{name}}'s account</span>
+            {{/if}}
+            {{#if email}}
+            <span>({{email}})</span>
+            {{/if}}
+        </div>
+
+    </div>
+    
+
+        <section>
+            <a href="/">Home</a>
+            {{#if user}}<a href="/dashboard">My Choirs</a>{{/if}}
+            {{#if user}}<a href="/account/logout">Log Out</a>{{else}}<a href="/account/login">Log In</a>{{/if}}
+            {{#if user}}<a class="cta-button dark-green feedback">Feedback</a>{{/if}}
+            {{#ifEquals userType "super"}}
+            <a href="/admin" class="cta-button yellow">Admin</a>
+            {{/ifEquals}}
+        </section>
+        {{#if user}}<a class="cta-button dark-green feedback small-screen-only">Feedback</a>{{/if}}
+        <button class="sub-menu dark" id="navMenuToggle" type="button"></button>
+
+
 </nav>
 
 <script>
