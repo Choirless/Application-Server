@@ -73,6 +73,7 @@ router.post('/login', (req, res, next) => {
 						debug(data);
 						req.session.user = data.user.userId;
 						req.session.name = data.user.name;
+						req.session.email = data.user.email;
 						req.session.userType = SUPER_USERS.includes(data.user.userId) ? 'super' : data.user.userType;
 
 						if(req.query.redirect){
