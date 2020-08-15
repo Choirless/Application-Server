@@ -152,6 +152,7 @@ nav section a{
   margin-left: 1em;
   font-size: 0.8em;
   font-weight: 500;
+  margin-right: 0;
 }
 
 nav .cta-button{
