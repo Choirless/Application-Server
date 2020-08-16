@@ -8,17 +8,25 @@ const mail = require(`${__dirname}/../bin/modules/emails`);
 
 router.post('/send', (req, res) => {
 
-    debug("Feedback form body:", req.body);
+    // debug("Feedback form body:", req.body);
 
     adminEmailAddresses.forEach(address => {
 
-        const msgInfo = {
-            "to" : address,
-            "subject" : "Choirless Beta Feedback",
-            "text" : `${res.locals.user} has sent some feedback for the Choirless beta.\nHere's what they said:\n\nTitle: ${req.body.title}\n\nPage: ${req.body.page}\n\nFeedback:\n${req.body.content}`
+        // const msgBody = `${res.locals.user} has sent some feedback for the Choirless beta.\nHere's what they said:\n\nTitle: ${req.body.title}\n\nPage: ${req.body.page}\n\nFeedback:\n${req.body.content}`;
+
+        const msg = {
+            to : address,
+            subject : "Choirless Beta Feedback",
+            info : {
+                user : res.locals.user,
+                title : req.body.title,
+                page : req.body.page,
+                content : req.body.content,
+                screenshot : req.body.screenshot
+            }
         };
 
-        mail.send(msgInfo)
+        mail.send(msg, 'feedback')
             .then(function(){
                 debug('Feedback successfully sent.');
                 res.json({

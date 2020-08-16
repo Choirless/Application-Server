@@ -13,6 +13,11 @@
                 <label for="feedback-content">Feedback Content</label>
                 <textarea id="feedback-content" name="content"required></textarea>
 
+                <p>If you're writing to report an issue you're having, you can also include a screenshot of the current page.</p>
+
+                <label for="include-screenshot">Include screenshot?</label>
+                <input type="checkbox" id="include-screenshot"/>
+
                 <div class="side-by-side">
                     <button type="button" class="cta-button red cancel">Cancel</button>
                     <button type="submit" class="cta-button light-blue">Send Feedback</button>
@@ -23,11 +28,16 @@
         </div>
     </div>
 </div>
+
+<script src="/javascripts/html2canvas.min.js"></script>
+
 <script>
 
     (function(){
 
         'use strict';
+
+        var screenshot = undefined;
 
         var feedbackButtons = document.querySelectorAll('.feedback');
         var modal = document.querySelector('.modal#feedback'); 
@@ -44,6 +54,10 @@
                 content : form[1].value,
                 page : window.location.href
             };
+
+            if(form[2].checked === true){
+                data.screenshot = screenshot;
+            }
 
             fetch(form.action, {
                     method : form.method,
@@ -75,9 +89,19 @@
         }, false);
 
         Array.from(feedbackButtons).forEach(function(button){
-            
+
             button.addEventListener('click', function(){
-                modal.dataset.active = "true";
+                
+                html2canvas(document.body).then(canvas => {
+                    
+                    modal.dataset.active = "true";
+                    document.body.appendChild(canvas);
+
+                    screenshot = canvas.toDataURL('image/jpeg');
+                    canvas.parentNode.removeChild(canvas);
+
+                });
+
             }, false);
 
         });
