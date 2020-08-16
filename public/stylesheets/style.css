@@ -23,7 +23,7 @@ h1, h2, h3, h4, h5, h6{
 
 body{ 
   overflow: scroll;
-  background-image: url('/assets/images/background.png');
+  background-image: url('/assets/images/background.jpg');
   background-size: 100% auto;
   background-position: 50% -20vh;
   background-repeat: no-repeat;
