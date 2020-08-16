@@ -97,7 +97,16 @@ function getAKnownChoir(choirId){
         })
         .catch(err => {
             debug('getAKnownChoir Err:', err);
-            throw err;
+
+            if(err.status === 404){
+                debug(`Choir "${choirId}" is unknown.`);
+                return {
+                    unknown : true
+                };
+            } else {
+                throw err;
+            }
+
         })
     ;
 

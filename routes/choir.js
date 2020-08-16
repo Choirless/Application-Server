@@ -257,39 +257,49 @@ router.post('/add-song-part', (req, res, next) => {
 
 router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
 
-    const informationRequests = [];
+    choirInterface.get(req.params.CHOIRID)
+        .then(choirInformation => {
 
-    informationRequests.push( usersInterface.get.byID( res.locals.user ) );
-    informationRequests.push( choirInterface.members.invitations.get( req.params.INVITEID ) );
+            if(choirInformation.unknown === true){
+                res.redirect(`/dashboard?${generateNotification('Sorry, that choir does not exist.', "error")}`);
+            } else {
+                const informationRequests = [];
 
-    Promise.all(informationRequests)
-        .then(results => {
+                informationRequests.push( usersInterface.get.byID( res.locals.user ) );
+                informationRequests.push( choirInterface.members.invitations.get( req.params.INVITEID ) );
 
-            const userInfo = results[0];
-            const invitationInfo = results[1];
+                Promise.all(informationRequests)
+                    .then(results => {
 
-            debug(userInfo);
-            debug(invitationInfo);
+                        const userInfo = results[0];
+                        const invitationInfo = results[1];
 
-            if(invitationInfo.expired){ // Invite is now invalud
-                const expiredMsg = "Sorry, that invitation has expired. Please ask the choir leader to send another";
-                res.redirect(`/dashboard?${generateNotification(`${expiredMsg}`, "error")}`);
-            } else if(!invitationInfo.invitee || userInfo.email === invitationInfo.invitee){ 
-               return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member");
-            } else { // If this person is the wrong person, throw them out.
-                res.redirect(`/dashboard?${generateNotification(`Sorry, the invitation you used is not valid for this account. Please check the email account you're using for your Choirless account matches to email address you received the invitation for.`, "notice")}`);
+                        debug(userInfo);
+                        debug(invitationInfo);
+
+                        if(invitationInfo.expired){ // Invite is now invalid
+                            const expiredMsg = "Sorry, that invitation has expired. Please ask the choir leader to send another.";
+                            res.redirect(`/dashboard?${generateNotification(`${expiredMsg}`, "error")}`);
+                        } else if(!invitationInfo.invitee || userInfo.email === invitationInfo.invitee){ 
+                        // return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member");
+                        } else { // If this person is the wrong person, throw them out.
+                            res.redirect(`/dashboard?${generateNotification(`Sorry, the invitation you used is not valid for this account. Please check the email account you're using for your Choirless account matches to email address you received the invitation for.`, "notice")}`);
+                        }
+
+                    })
+                    .then(function(){
+                        res.redirect(`/dashboard/choir/${req.params.CHOIRID}?${generateNotification(`You've joined the choir!`, "success")}`);
+                    })
+                ;
             }
 
-        })
-        .then(function(){
-            res.redirect(`/dashboard/choir/${req.params.CHOIRID}?${generateNotification(`You've joined the choir!`, "success")}`);
         })
         .catch(err => {
             debug('/join/:CHOIRID/:INVITEID err:', err);
             res.status(500);
             res.redirect(`/dashboard?${generateNotification("Sorry, we couldn't add you to that choir", "error")}`)
         })
-    ;
+    ;        
 
 });
 
