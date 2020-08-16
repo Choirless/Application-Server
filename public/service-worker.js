@@ -2,7 +2,7 @@ var CACHE_NAME = 'CHOIRLESS';
 
 self.addEventListener('fetch', function(event) {
 
-    if( (event.request.method === 'GET' && event.request.url.indexOf('.webm') > -1) || /fonts.(googleapis|gstatic).com/.test(event.request.url) ){
+    if( (event.request.method === 'GET' && (event.request.url.indexOf('.webm') > -1) || /fonts.(googleapis|gstatic).com/.test(event.request.url)) ){
         
         event.respondWith(
             caches.open(CACHE_NAME).then(function(cache) {
@@ -18,8 +18,13 @@ self.addEventListener('fetch', function(event) {
                             result = fetchPromise = fetch(event.request)
                                 .then(function(networkResponse) {        
 
-                                    console.log('Caching request:', event.request.url);
-                                    cache.put(event.request, networkResponse.clone());
+                                    console.log(networkResponse);
+                                    
+                                    if(networkResponse.status === 200){
+                                        console.log('Caching request:', event.request.url);
+                                        cache.put(event.request, networkResponse.clone());
+                                    }
+
         
                                     return networkResponse;
                                 
