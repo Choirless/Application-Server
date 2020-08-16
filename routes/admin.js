@@ -53,7 +53,7 @@ router.post('/invite-beta-user', (req, res, next) => {
 
                 mail.send(mailInformation, 'beta')
                     .then(function(){
-                        res.redirect(`/admin?${generateNotification(`Invitation created with ID "${inviteId}" and an invitation email has been sent to ${req.body.emai}.`, "success")}`);
+                        res.redirect(`/admin?${generateNotification(`Invitation created with ID "${inviteId}" and an invitation email has been sent to ${req.body.email}.`, "success")}`);
                     })
                     .catch(err => {
                         debug('/invite-beta-user err:', err);
