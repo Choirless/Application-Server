@@ -5,6 +5,7 @@ const router = express.Router();
 const users = require(`${__dirname}/../bin/modules/users`);
 const mail = require(`${__dirname}/../bin/modules/emails`);
 const invitations = require(`${__dirname}/../bin/modules/invitations`);
+const generateNotification = require(`${__dirname}/../bin/modules/generate_notification`);
 
 const adminEmailAddresses = process.env.ADMIN_EMAIL_ADDRESSES ? process.env.ADMIN_EMAIL_ADDRESSES.split(',') : [];
 const SUPER_USERS = process.env.CHOIRLESS_ADMINS ? process.env.CHOIRLESS_ADMINS.split(',') : [];
@@ -43,7 +44,7 @@ router.get('/login', function(req, res, next) {
 			.catch(err => {
 				debug('/login err:', err);
 				res.status(500);
-				res.redirect('/?msg=Sorry, an error occurred trying to process that request.&msgtype=error');
+				res.redirect(`/?${generateNotification("Sorry, an error occurred trying to process that request.", "error")}`);
 			})
 		;
 
@@ -64,10 +65,10 @@ router.post('/login', (req, res, next) => {
 			.then(data => {
 
 				if(data){
-				
+					
 					if(data.ok !== true){
 						res.status(401);
-						res.redirect(`/account/login?msg=Sorry, those credentials are incorrect.&msgtype=error`);
+						res.redirect(`/account/login?${generateNotification("Sorry, those credentials are incorrect.", "error")}`);
 					} else {
 
 						debug(data);
@@ -90,7 +91,7 @@ router.post('/login', (req, res, next) => {
 			.catch(err => {
 				debug('Login err:', err);
 				res.status(err.status || 422);
-				res.redirect('/account/login?msg=Sorry, an error occurred during login.&msgtype=error');
+				res.redirect(`/account/login?${generateNotification("Sorry, an error occurred during login.", "error")}`);
 			})
 		;
 
@@ -109,7 +110,7 @@ router.get('/create/:INVITEID?', function(req, res, next) {
 	if(!req.session.user){
 
 		if(!inviteId){
-			res.redirect('/?msg=Sorry, Choirless account creations are by invitation only at this time&msgtype=general');
+			res.redirect(`/?${generateNotification("Sorry, Choirless account creations are by invitation only at this time.", "general")}`);
 		} else {
 
 			let invitationData;
@@ -124,9 +125,9 @@ router.get('/create/:INVITEID?', function(req, res, next) {
 				.then(invitation => {
 					
 					if(!invitation){
-						res.redirect(`/?msg=Sorry, we couldn't find that invitation.&msgtype=error`);
+						res.redirect(`/?${generateNotification("Sorry, we couldn't find that invitation.", "error")}`);
 					} else if(invitation.expired){
-						res.redirect(`/?msg=Sorry, that invitation has expired. Please ask the sender for another.&msgtype=error`);
+						res.redirect(`/?${generateNotification("Sorry, that invitation has expired. Please ask the sender for another.", "error")}`);
 					} else {
 						
 						res.render('account/create', { 
@@ -162,7 +163,7 @@ router.post('/create', (req, res, next) => {
 
 		if(req.body.password !== req.body.repeat_password){
 			res.status(422);
-			res.redirect('/account/create?msg=Password and repeated password did not match.&msgtype=error');
+			res.redirect(`/account/create?${generateNotification("Password and repeated password did not match.", "error")}`);
 		}
 
 		debug(req.query.redirect);
@@ -182,14 +183,14 @@ router.post('/create', (req, res, next) => {
 			.then(invitation => {
 
 				if(!invitation){
-					res.redirect(`/?msg=Sorry, we couldn't find that invitation.&msgtype=error`);
+					res.redirect(`/?${generateNotification("Sorry, we couldn't find that invitation.", "error")}`);
 				} else if(invitation.expired){
-					res.redirect(`/?msg=Sorry, that invitation has expired. Please ask the sender for another.&msgtype=error`);
+					res.redirect(`/?${generateNotification("Sorry, that invitation has expired. Please ask the sender for another.", "error")}`);
 				} else {
 
 					if(invitation.invitee !== req.body.email){
 						res.status(401);
-						res.redirect(`/?msg=Sorry, the email you tried to create the account with doesn't match the address the invitation was sent to&msgtype=error`);
+						res.redirect(`/?${generateNotification("Sorry, the email you tried to create the account with doesn't match the address the invitation was sent to.", "error")}`);
 					} else {
 
 						const userType = invitation.choirId ? "regular" : "admin";
@@ -224,7 +225,7 @@ router.post('/create', (req, res, next) => {
 								if(req.query.redirect){
 									res.redirect(decodeURIComponent(req.query.redirect));
 								} else {
-									res.redirect('/dashboard?msg=Account created! Welcome to Choirless :)&msgtype=success');
+									res.redirect(`/dashboard?${generateNotification("Account created! Welcome to Choirless :)", "success")}`);
 								}
 			
 							} else {
@@ -245,15 +246,12 @@ router.post('/create', (req, res, next) => {
 				
 				if(err.status === 409){
 					// Account exists with this email address;
-					const errMsg = `Sorry, we couldn't create that account.`;
 					res.status(422);
-					res.redirect(`/account/create?msg=${errMsg}&msgtype=error&redirect=${req.query.redirect}`);
+					res.redirect(`/account/create?${generateNotification(`Sorry, we couldn't create that account.`, "error")}&redirect=${req.query.redirect}`);
 				} else {
-					
-					const errMsg = `Sorry, an error ocurred during the creation of this account.`;
-					
+
 					res.status(err.status);
-					res.redirect(`/account/create?msg=${errMsg}&msgtype=error&redirect=${req.query.redirect}`);
+					res.redirect(`/account/create?${generateNotification(`Sorry, an error ocurred during the creation of this account.`)}&redirect=${req.query.redirect}`);
 
 				}
 
@@ -282,9 +280,9 @@ router.get('/beta-interest', (req, res, next) => {
 router.post('/beta-interest', (req, res, next) => {
 
 	if(!req.body.email){
-		res.redirect('/beta-interest?msg=Sorry, you need to include an email address to register your interest.&msgtype=error');
+		res.redirect(`/beta-interest?${generateNotification("Sorry, you need to include an email address to register your interest.", "error")}`);
 	} else if(!req.body.info){
-		res.redirect('/beta-interest?msg=Sorry, you need to tell us a bit about yourself to register your interest.&msgtype=error');
+		res.redirect(`/beta-interest?${generateNotification("Sorry, you need to tell us a bit about yourself to register your interest.", "error")}`);
 	} else {
 		
 		adminEmailAddresses.forEach(person => {
@@ -298,11 +296,11 @@ router.post('/beta-interest', (req, res, next) => {
 			mail.send(msgInfo)
 				.then(function(){
 					debug('Registered interest successfully forwarded on.');
-					res.redirect("/?msg=Thank you for registering your interest in Choirless! We will get back to you as soon as possible.&msgtype=success");
+					res.redirect(`/?${generateNotification("Thank you for registering your interest in Choirless! We will get back to you as soon as possible.", "success")}`);
 				})
 				.catch(err => {
 					debug('/account/beta-interest err:', err);
-					res.redirect("/?msg=Sorry, and error occurred in our systems. Please try again later.&msgtype=error");
+					res.redirect(`/?${generateNotification("Sorry, and error occurred in our systems. Please try again later.", "error")}`);
 				})
 			;
 
@@ -313,7 +311,7 @@ router.post('/beta-interest', (req, res, next) => {
 
 });
 
-router.get('/logout', (req, res, next) => {
+router.get('/logout', (req, res) => {
 	req.session = null;
 	res.redirect('/');
 });

@@ -7,6 +7,7 @@ const usersInterface = require(`${__dirname}/../bin/modules/users`);
 const mailInterface = require(`${__dirname}/../bin/modules/emails`);
 const invitationsInterface = require(`${__dirname}/../bin/modules/invitations`);
 const storage = require(`${__dirname}/../bin/lib/storage`);
+const generateNotification = require(`${__dirname}/../bin/modules/generate_notification`);
 
 router.post('/create', (req, res, next) => {
 
@@ -34,7 +35,7 @@ router.post('/create', (req, res, next) => {
                         .then((response) => {
 
                             debug(response);
-                            res.redirect(`/dashboard/choir/${response.choirId}?msg=Choir "${req.body.name}" has been created.&msgtype=success`);
+                            res.redirect(`/dashboard/choir/${response.choirId}?${generateNotification(`Choir "${req.body.name}" has been created.`, "success")}`);
 
                         })
                     ;
@@ -57,7 +58,7 @@ router.post('/update/:CHOIRID', (req, res, next) => {
     choirInterface.update(res.locals.user, req.params.CHOIRID, req.body)
         .then(result => {
             debug('result');
-            res.redirect(`/dashboard/choir/${req.params.CHOIRID}?msg=Choir details have been successfully updated&msgtype=success`);
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}?${generateNotification(`Choir details have been successfully updated`, "success")}`);
         })
         .catch(err => {
             debug(`/choir/update/:CHOIRID err`, err);
@@ -103,7 +104,7 @@ router.post('/create-song', (req, res, next) => {
         choirInterface.songs.add(songData)
             .then(songId => {
                 debug('Song successfully created:', songId);
-                res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}?msg=New song "${songData.name}" added to choir&msgtype=success`);
+                res.redirect(`/dashboard/choir/${req.body.choirId}/song/${songId}?${generateNotification(`New song "${songData.name}" added to choir`, "success")}`);
             })
             .catch(err => {
                 debug('/create-song err:', err);
@@ -136,14 +137,14 @@ router.post('/delete-song/:CHOIRID/:SONGID', (req, res, next) => {
                 if(choirMemberInfo.memberType === "leader"){
                     return choirInterface.songs.delete(req.params.CHOIRID, req.params.SONGID);
                 } else {
-                    res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?msg=Sorry, you have to be a choir leader to delete this song.&msgtype=notice`);
+                    res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?${generateNotification(`Sorry, you have to be a choir leader to delete this song.`, "notice")}`);
                 }
 
             }
 
         })
         .then(function(){
-            res.redirect(`/dashboard/choir/${req.params.CHOIRID}?msg=Song successfully deleted.&msgtype=success`);
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}?${generateNotification(`Song successfully deleted.`, "success")}`);
         })
         .catch(err => {
             debug(`/choir/delete-song/${req.params.CHOIRID}/${req.params.SONGID} err:`, err)
@@ -181,22 +182,22 @@ router.post('/delete-recording/:CHOIRID/:SONGID/:PARTID', (req, res, next) => {
 
                 } else {
                     res.status(401);
-                    res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?msg=Sorry, you don't have the authority to delete this recording.&msgtype=notice`);
+                    res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?${generateNotification(`Sorry, you don't have the authority to delete this recording.`, "notice")}`);
                 }
 
             } else {
                 res.status(401);
-                res.redirect(`/dashboard/?msg=Sorry, you're not a member of this choir.&msgtype=error`);
+                res.redirect(`/dashboard/?${generateNotification(`Sorry, you're not a member of this choir.`, "error")}`);
             }
 
         })
         .then(function(){
-            res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?msg=Recording successfully deleted.&msgtype=success`);
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?${generateNotification(`Recording successfully deleted.`, "success")}`);
         })
         .catch(err => {
             debug('/delete-recording err:', err);
             res.status(500);
-            res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?msg=Sorry, something went wrong deleting that recording.&msgtype=error`);
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?${generateNotification(`Sorry, something went wrong deleting that recording.`, "error")}`);
         })
     ;
 
@@ -218,7 +219,7 @@ router.post('/add-song-part', (req, res, next) => {
 
     if(errMsg){
         res.status(422);
-        res.redirect(`/dashboard?msg=${errMsg}&msgtype=error`);
+        res.redirect(`/dashboard?${generateNotification(`${errMsg}`, "error")}`);
     } else {
 
         choirInterface.members.check(req.body.choirId, res.locals.user)
@@ -230,12 +231,12 @@ router.post('/add-song-part', (req, res, next) => {
                         return choirInterface.songs.sections.add(req.body.choirId, req.body.songId, req.body.name);
                     } else {
                         const errMsg = `Sorry, only leaders of choirs can add new parts to a song.`;
-                        res.redirect(`/dashboard/choir/${req.body.choirId}?msg=${errMsg}&msgtype=error`);
+                        res.redirect(`/dashboard/choir/${req.body.choirId}?${generateNotification(`${errMsg}`, "error")}`);
                     }
 
                 } else {
                     const errMsg = `Sorry, you have to be a member of this choir to make changes.`;
-                    res.redirect(`/dashboard/choir/${req.body.choirId}?msg=${errMsg}&msgtype=error`);
+                    res.redirect(`/dashboard/choir/${req.body.choirId}?${generateNotification(`${errMsg}`, "error")}`);
                 }
 
             })
@@ -272,23 +273,21 @@ router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
 
             if(invitationInfo.expired){ // Invite is now invalud
                 const expiredMsg = "Sorry, that invitation has expired. Please ask the choir leader to send another";
-                res.redirect(`/dashboard?msg=${expiredMsg}&msgtype=error`);
+                res.redirect(`/dashboard?${generateNotification(`${expiredMsg}`, "error")}`);
             } else if(!invitationInfo.invitee || userInfo.email === invitationInfo.invitee){ 
                return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member");
             } else { // If this person is the wrong person, throw them out.
-                throw Error('User is not the user invited');
+                res.redirect(`/dashboard?${generateNotification(`Sorry, the invitation you used is not valid for this account. Please check the email account you're using for your Choirless account matches to email address you received the invitation for.`, "notice")}`);
             }
 
         })
         .then(function(){
-
-            res.redirect(`/dashboard/choir/${req.params.CHOIRID}?msg=You've joined the choir!&msgtype=success`);
-
+            res.redirect(`/dashboard/choir/${req.params.CHOIRID}?${generateNotification(`You've joined the choir!`, "success")}`);
         })
         .catch(err => {
             debug('/join/:CHOIRID/:INVITEID err:', err);
             res.status(500);
-            next();
+            res.redirect(`/dashboard?${generateNotification("Sorry, we couldn't add you to that choir", "error")}`)
         })
     ;
 
@@ -298,10 +297,10 @@ router.post('/add-member', (req, res, next) => {
 
     if(!req.body.email){
         res.status(422);
-        res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=No email was passed to invite a new member&msgtype=error`);
+        res.redirect(`/dashboard/choir/${req.body.choirId}/members?${generateNotification(`No email was passed to invite a new member`, "error")}`);
     } else if(!req.body.choirId){
         res.status(422);
-        res.redirect('/dashboard?msg=No choir ID was passed to invite a user to&msgtype=error');
+        res.redirect(`/dashboard?${generateNotification(`No choir ID was passed to invite a user to`, "error")}`);
     } else {
 
         choirInterface.members.get(req.body.choirId)
@@ -311,7 +310,7 @@ router.post('/add-member', (req, res, next) => {
 
                 if(!thisMembersDetails){
 
-                    res.redirect(`/dashboard?msg=Sorry, you are not a member of this choir.&msgtype=error`);
+                    res.redirect(`/dashboard?${generateNotification(`Sorry, you are not a member of this choir.`, "error")}`);
 
                 } else if(thisMembersDetails.memberType === "leader"){
 
@@ -346,7 +345,7 @@ router.post('/add-member', (req, res, next) => {
                         .then(() => {
 
                             const successMessage = `Invitation to "${req.body.email}" has been sent. If they accept, they will have access to your choir and appear here.`;
-                            res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${encodeURIComponent(successMessage)}&msgtype=success`);
+                            res.redirect(`/dashboard/choir/${req.body.choirId}/members?${generateNotification(successMessage, "success")}`);
 
                         })
                         .catch(err => {
@@ -360,7 +359,7 @@ router.post('/add-member', (req, res, next) => {
                 } else {
 
                     const errMsg = `Sorry, we could not create that invitation. You must be a leader of this choir to send invitations`;
-                    res.redirect(`/dashboard/choir/${req.body.choirId}/members?msg=${errMsg}&msgtype=error`);
+                    res.redirect(`/dashboard/choir/${req.body.choirId}/members?${generateNotification(errMsg, "error")}`);
 
                 }
 

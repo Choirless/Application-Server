@@ -5,6 +5,7 @@ const router = express.Router();
 const users = require(`../bin/modules/users`);
 const choir = require(`../bin/modules/choir`);
 const storage = require('../bin/lib/storage');
+const generateNotification = require(`${__dirname}/../bin/modules/generate_notification`);
 
 router.get('/', (req, res, next) => {
 
@@ -58,7 +59,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                     requiredData.userInfo = userInformationForChoir;
 
                     if(req.params.VIEW === "members" && userInformationForChoir.memberType !== "leader"){
-                        res.redirect(`/dashboard/choir/${req.params.CHOIRID}?msg=Sorry, only choir leaders can see member information.&msgtype=error`);
+                        res.redirect(`/dashboard/choir/${req.params.CHOIRID}?${generateNotification("Sorry, only choir leaders can see member information.", "error")}`);
                     } else {
 
                         apiRequests.push(users.get.choirs(res.locals.user).then(data => { requiredData.userChoirInfo = data }) );
@@ -127,13 +128,12 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                     }
 
                 } else {
-                    res.redirect(`/dashboard?msg=Sorry, you're not a member of that choir&msgtype=error`);
+                    res.redirect(`/dashboard?${generateNotification("Sorry, you're not a member of that choir.", "error")}`);
                 }
 
             })
             .catch(err => {
                 debug('/choir/:CHOIRID err:', err);
-                process.exit();
                 res.status(500);
                 next();
             })

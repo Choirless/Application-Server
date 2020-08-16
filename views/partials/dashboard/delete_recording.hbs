@@ -75,30 +75,7 @@
                 console.log('Confirmed. Delete recording');
 
                 this.querySelector('button[type="submit"]').classList.add('loading');
-
-                /*fetch(this.action, {
-                        method : this.method
-                    })
-                    .then(function(res){
-                        if(res.ok){
-                            return res.json();
-                        } else {
-                            throw res;
-                        }
-                    })
-                    .then(function(){
-                        console.log('Recording deleted.');
-
-                        window.location.href = `${window.location.origin}${window.location.pathname}?msg=Recording successfully deleted.&msgtype=success`;
-
-                    })
-                    .catch(function(err){
-                        console.log('Delete recording err:', err);
-                    })
-                ;*/
-
                 this.submit();
-
 
             }
 
