@@ -123,19 +123,29 @@ router.post('/delete-song/:CHOIRID/:SONGID', (req, res, next) => {
 
     apiRequests.push(choirInterface.members.check(req.params.CHOIRID, res.locals.user));
     apiRequests.push(choirInterface.songs.get(req.params.CHOIRID, req.params.SONGID));
+    apiRequests.push(choirInterface.songs.recordings.getAll(req.params.CHOIRID, req.params.SONGID));
 
     Promise.all(apiRequests)
         .then(results => {
 
             const choirMemberInfo = results[0];
             const songInfo = results[1];
+            const recordingsInfo = results[2];
 
-            debug(choirMemberInfo, songInfo);
+            debug(choirMemberInfo, songInfo, recordingsInfo);
 
             if(choirMemberInfo && songInfo){
 
                 if(choirMemberInfo.memberType === "leader"){
-                    return choirInterface.songs.delete(req.params.CHOIRID, req.params.SONGID);
+
+                    const deletionActions = recordingsInfo.map(recording => {
+                        return choirInterface.songs.recordings.delete(req.params.CHOIRID, req.params.SONGID, recording.partId);
+                    });
+
+                    deletionActions.push(choirInterface.songs.delete(req.params.CHOIRID, req.params.SONGID));
+
+                    return Promise.all(deletionActions);
+
                 } else {
                     res.redirect(`/dashboard/choir/${req.params.CHOIRID}/song/${req.params.SONGID}?${generateNotification(`Sorry, you have to be a choir leader to delete this song.`, "notice")}`);
                 }
@@ -154,7 +164,7 @@ router.post('/delete-song/:CHOIRID/:SONGID', (req, res, next) => {
 });
 
 router.post('/delete-recording/:CHOIRID/:SONGID/:PARTID', (req, res, next) => {
-    
+
     const apiRequests = [];
 
     apiRequests.push(choirInterface.members.check(req.params.CHOIRID, res.locals.user));
@@ -280,7 +290,7 @@ router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
                         if(invitationInfo.expired){ // Invite is now invalid
                             const expiredMsg = "Sorry, that invitation has expired. Please ask the choir leader to send another.";
                             res.redirect(`/dashboard?${generateNotification(`${expiredMsg}`, "error")}`);
-                        } else if(!invitationInfo.invitee || userInfo.email === invitationInfo.invitee){ 
+                        } else if(!invitationInfo.invitee || userInfo.email === invitationInfo.invitee){
                         // return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member");
                         } else { // If this person is the wrong person, throw them out.
                             res.redirect(`/dashboard?${generateNotification(`Sorry, the invitation you used is not valid for this account. Please check the email account you're using for your Choirless account matches to email address you received the invitation for.`, "notice")}`);
@@ -299,7 +309,7 @@ router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
             res.status(500);
             res.redirect(`/dashboard?${generateNotification("Sorry, we couldn't add you to that choir", "error")}`)
         })
-    ;        
+    ;
 
 });
 
@@ -409,7 +419,7 @@ router.post('/create-open-invitation/:CHOIRID',  (req, res, next) => {
 
         })
         .then(invitationId => {
-            
+
             res.json({
                 status : "ok",
                 invitationId : invitationId,
