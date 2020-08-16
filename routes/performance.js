@@ -147,42 +147,52 @@ router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), functio
 			// If the person uploading is a leader it's: 'reference'
 			// Otherwise, it's: 'rendition'
 
-			if(recordingInformation.length === 0){
-				recordingType = 'backing';
-			} else if(userInformation.memberType === 'leader'){
-				recordingType = 'reference';
-			} else{
-				recordingType = 'rendition';
-			}
+			if(!userInformation){
+				res.status(401);
+				res.json({
+					status : "err",
+					msg : "Sorry, you're not a member of this choir."
+				});
+			} else {
 
-			const recordingData = {
-				choirId : req.params.CHOIRID,
-				songId : req.params.SONGID,
-				partNameId : req.params.SECTIONID,
-				userId : res.locals.user,
-				offset : req.body.offset,
-				partType : recordingType
-			};
-		
-			choir.songs.recordings.add(recordingData)
-				.then(partId => {
-		
-					const filename = `${req.params.CHOIRID}+${req.params.SONGID}+${partId}.webm`
-				
-					storage.put(filename, req.file.buffer)
-						.then(() => {
-							debug(`Video ${filename} stored :D`);
-							res.end();
-						})
-						.catch(err => {
-							debug("Storage err:", err);
-							res.status(500);
-							res.end();
-						})
-					;
-		
-				})
-			;
+				if(recordingInformation.length === 0){
+					recordingType = 'backing';
+				} else if(userInformation.memberType === 'leader'){
+					recordingType = 'reference';
+				} else{
+					recordingType = 'rendition';
+				}
+	
+				const recordingData = {
+					choirId : req.params.CHOIRID,
+					songId : req.params.SONGID,
+					partNameId : req.params.SECTIONID,
+					userId : res.locals.user,
+					offset : req.body.offset,
+					partType : recordingType
+				};
+			
+				choir.songs.recordings.add(recordingData)
+					.then(partId => {
+			
+						const filename = `${req.params.CHOIRID}+${req.params.SONGID}+${partId}.webm`
+					
+						storage.put(filename, req.file.buffer)
+							.then(() => {
+								debug(`Video ${filename} stored :D`);
+								res.end();
+							})
+							.catch(err => {
+								debug("Storage err:", err);
+								res.status(500);
+								res.end();
+							})
+						;
+			
+					})
+				;
+
+			}
 
 		})
 		.catch(err => {
