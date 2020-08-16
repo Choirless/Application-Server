@@ -294,7 +294,6 @@
                         }
 
                         req.onprogress = function(e){
-                            console.log(e);
                             indicatorElement.style.width = (e.loaded / sizeOfFile) * 100 + "%";
                         }
 
@@ -304,6 +303,14 @@
                     .catch(function(err){
 
                         console.log('fetch HEAD err:', err);
+
+                        __global_message.display({
+                            content : "Could not retrieve the video. Please check network connection and try again.",
+                            type : "error",
+                            resetParameters : true
+                        });
+
+                        contentContainer.parentNode.removeChild(contentContainer);
 
                     })
 
@@ -651,6 +658,16 @@
             req.onerror = function(err) {
                 // Error
                 console.log(err);
+
+                uploadDialog.dataset.active = "false";
+
+                __global_message.display({
+                    content : "Could not complete upload to the Choirless service. Please check network connection and try again.",
+                    type : "error",
+                    resetParameters : true
+                });
+
+
             }
 
             req.upload.onprogress = function(e){
@@ -864,6 +881,13 @@
                     })
                     .catch(function(err){
                         console.log('list performances err:', err);
+
+                        __global_message.display({
+                            content : "Could not get other performances. Please check network connection.",
+                            type : "error",
+                            resetParameters : true
+                        });
+
                     })
                 ;
 
