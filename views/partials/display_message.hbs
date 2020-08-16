@@ -80,7 +80,7 @@
     {{#if msg}}
 
     __global_message.display({
-        content : decodeURIComponent("{{msg}}"),
+        content : decodeURIComponent(`{{{msg}}}`),
         type : "{{msgtype}}",
         resetParameters : true
     });

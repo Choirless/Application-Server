@@ -76,9 +76,9 @@
 
         </section>
         
-        {{#ifEquals userType "admin"}}
+        {{#ifNotEquals userType "regular"}}
         {{> dashboard/create_choir }}
-        {{/ifEquals}}
+        {{/ifNotEquals}}
 
         {{> dashboard/create_song }}
 

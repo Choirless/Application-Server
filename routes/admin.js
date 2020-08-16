@@ -4,6 +4,7 @@ const router = express.Router();
 
 const invitations = require(`${__dirname}/../bin/modules/invitations`);
 const mail = require(`${__dirname}/../bin/modules/emails`);
+const generateNotification = require(`${__dirname}/../bin/modules/generate_notification`);
 
 router.use('*', (req, res, next) => {
 
@@ -11,7 +12,7 @@ router.use('*', (req, res, next) => {
         next();
     } else {
         res.status(401);
-        res.redirect(`/?msg=Sorry, you're not allowed there.&msgtype=error`);
+        res.redirect(`/?${generateNotification(`Sorry, you're not allowed there`, "error")}`);
     }
 
 });
@@ -29,7 +30,7 @@ router.post('/invite-beta-user', (req, res, next) => {
 
     if(!req.body.email){
         res.status(422);
-        res.redirect(`/admin?msg=No email address was passed for invitation.&msgtype=error`);
+        res.redirect(`/admin?${generateNotification(`No email address was passed for invitation`, "error")}`);
     } else {
 
         const invitationInformation = {
@@ -52,12 +53,12 @@ router.post('/invite-beta-user', (req, res, next) => {
 
                 mail.send(mailInformation, 'beta')
                     .then(function(){
-                        res.redirect(`/admin?msg=Invitation created with ID "${inviteId}" and an invitation email has been sent to ${req.body.email}.&msgtype=success`);
+                        res.redirect(`/admin?${generateNotification(`Invitation created with ID "${inviteId}" and an invitation email has been sent to ${req.body.emai}.`, "success")}`);
                     })
                     .catch(err => {
                         debug('/invite-beta-user err:', err);
                         res.status(500);
-                        res.redirect('/admin?msg=An error occurred sending the invitation email&msgtype=error');
+                        res.redirect('/admin?${generateNotification(`An error occurred sending the invitation email`, "error")}');
                     })
                 ;
 
@@ -65,7 +66,7 @@ router.post('/invite-beta-user', (req, res, next) => {
             .catch(err => {
                 debug('/invite-beta-user err:', err);
                 res.status(500);
-                res.redirect(`/admin?msg=Failed to create invitation&msgtype=error`);
+                res.redirect(`/admin?${generateNotification(`Failed to create invitation`, "error")}`);
             })
         ;
 
