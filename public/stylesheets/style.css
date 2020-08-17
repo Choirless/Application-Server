@@ -1629,4 +1629,8 @@ body#admin main section form{
     bottom: 0;
   }
 
+  body#admin main section form{
+    max-width: 100%;
+  }
+
 }
