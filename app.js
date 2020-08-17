@@ -42,7 +42,7 @@ app.use(express.urlencoded( { extended: false } ) );
 app.use( cookieParser() );
 app.use( messages );
 
-const staticCaching = process.env.NODE_ENV === "production" ? { maxAge: (60 * 60 * 1000).toString()} : {maxAge : 0}
+const staticCaching = process.env.NODE_ENV === "production" ? { maxAge: (60 * 60 * 72 * 1000).toString()} : {maxAge : 0} // 3 days in prod || 0 in development
 app.use( express.static( path.join(__dirname, 'public' ), staticCaching ));
 
 app.use(cookieSession({
