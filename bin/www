@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 require('dotenv').config( { silent : process.env.NODE_ENV === "production" } );
+global.Promise = require('bluebird');
 const app = require('../app');
 const debug = require('debug')('choirless:server');
 const http = require('http');
