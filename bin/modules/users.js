@@ -16,7 +16,17 @@ function getSpecificUserByID(userId){
         })
         .catch(err => {
             debug('Get user error:', err);
-            throw err;
+
+            if(err.status === 404){
+
+                return {
+                    unknown : true
+                };
+
+            } else {
+                throw err;
+            }
+
         })
     ;
 
@@ -39,9 +49,11 @@ function getSpecificUserByEmail(emailAddress){
             debug('Get user error:', err);
 
             if(err.status === 404){
+
                 return {
                     unknown : true
                 };
+
             } else {
                 throw err;
             }

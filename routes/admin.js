@@ -77,21 +77,19 @@ router.post('/invite-beta-user', (req, res, next) => {
 });
 
 router.post('/impersonate', (req, res) => {
-
     
-    if(!req.body.impersonatedId && !req.body.impersonatedEmail)
+    if(!req.body.impersonatedId && !req.body.impersonatedEmail){
     
         res.redirect(`/admin?${generateNotification('No userId or email address was passed to impersonate user', 'notice')}`);
     
-    if(req.body.impersonatedId){
+    } else {
         
         req.session.impersonating = true;
         req.session.impersonatedId = req.body.impersonatedId;
-        res.redirect('/dashboard');
-    
-    } else {
 
-        userInterface.get.byEmail(req.body.impersonatedEmail)
+        const userDataRequest = req.body.impersonatedId ? userInterface.get.byID(req.body.impersonatedId) : userInterface.get.byEmail(req.body.impersonatedEmail);
+        
+        userDataRequest    
             .then(user => {
 
                 if(user.unknown === true){
@@ -102,6 +100,8 @@ router.post('/impersonate', (req, res) => {
                     
                     req.session.impersonating = true;
                     req.session.impersonatedId = user.userId;
+                    req.session.impersonatedName = user.name;
+                    req.session.impersonatedEmail = user.email;
                     res.redirect('/dashboard');
 
                 }
@@ -113,7 +113,7 @@ router.post('/impersonate', (req, res) => {
                 res.redirect(`/admin?${generateNotification('Failed to impersonate user. Check logs.', 'error')}`);
             })
         ;
-
+    
     }
 
 });
@@ -122,6 +122,8 @@ router.post('/impersonate/stop', (req, res) => {
 
     req.session.impersonating = undefined;
     req.session.impersonatedId = undefined;
+    req.session.impersonatedName = undefined;
+    req.session.impersonatedEmail = undefined;
 
     res.redirect('/admin');
 
