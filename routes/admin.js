@@ -1,9 +1,11 @@
 const debug = require('debug')('routes:admin');
 const express = require('express');
+const { response } = require('express');
 const router = express.Router();
 
 const invitations = require(`${__dirname}/../bin/modules/invitations`);
 const mail = require(`${__dirname}/../bin/modules/emails`);
+const userInterface = require(`${__dirname}/../bin/modules/users`);
 const generateNotification = require(`${__dirname}/../bin/modules/generate_notification`);
 
 router.use('*', (req, res, next) => {
@@ -75,11 +77,44 @@ router.post('/invite-beta-user', (req, res, next) => {
 });
 
 router.post('/impersonate', (req, res) => {
+    
+    if(!req.body.impersonatedId && !req.body.impersonatedEmail){
+    
+        res.redirect(`/admin?${generateNotification('No userId or email address was passed to impersonate user', 'notice')}`);
+    
+    } else {
+        
+        req.session.impersonating = true;
+        req.session.impersonatedId = req.body.impersonatedId;
 
-    req.session.impersonating = true;
-    req.session.impersonatedId = req.body.impersonatedId;
+        const userDataRequest = req.body.impersonatedId ? userInterface.get.byID(req.body.impersonatedId) : userInterface.get.byEmail(req.body.impersonatedEmail);
+        
+        userDataRequest    
+            .then(user => {
 
-    res.redirect('/dashboard');
+                if(user.unknown === true){
+
+                    res.redirect(`/admin?${generateNotification('User not found in database. Could not impersonate.', 'error')}`);
+
+                } else {
+                    
+                    req.session.impersonating = true;
+                    req.session.impersonatedId = user.userId;
+                    req.session.impersonatedName = user.name;
+                    req.session.impersonatedEmail = user.email;
+                    res.redirect('/dashboard');
+
+                }
+
+            })
+            .catch(err => {
+                debug('/impersonate err:', err);
+                res.status(500);
+                res.redirect(`/admin?${generateNotification('Failed to impersonate user. Check logs.', 'error')}`);
+            })
+        ;
+    
+    }
 
 });
 
@@ -87,6 +122,8 @@ router.post('/impersonate/stop', (req, res) => {
 
     req.session.impersonating = undefined;
     req.session.impersonatedId = undefined;
+    req.session.impersonatedName = undefined;
+    req.session.impersonatedEmail = undefined;
 
     res.redirect('/admin');
 
