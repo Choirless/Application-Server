@@ -16,7 +16,48 @@ function getSpecificUserByID(userId){
         })
         .catch(err => {
             debug('Get user error:', err);
-            throw err;
+
+            if(err.status === 404){
+
+                return {
+                    unknown : true
+                };
+
+            } else {
+                throw err;
+            }
+
+        })
+    ;
+
+}
+
+function getSpecificUserByEmail(emailAddress){
+    
+    return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/user/byemail?apikey=${process.env.CHOIRLESS_API_KEY}&email=${emailAddress}`)
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            } else {
+                throw res;
+            }
+        })
+        .then(response => {
+            return response.user;
+        })
+        .catch(err => {
+            debug('Get user error:', err);
+
+            if(err.status === 404){
+
+                return {
+                    unknown : true
+                };
+
+            } else {
+                throw err;
+            }
+
         })
     ;
 
@@ -113,6 +154,7 @@ function getChoirsForUserID(userId){
 module.exports = {
     get : {
         byID : getSpecificUserByID,
+        byEmail : getSpecificUserByEmail,
         choirs : getChoirsForUserID
     },
     add : addUserToDatabase,
