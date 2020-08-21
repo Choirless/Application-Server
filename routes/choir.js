@@ -290,7 +290,7 @@ router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
                         if(invitationInfo.expired){ // Invite is now invalid
                             const expiredMsg = "Sorry, that invitation has expired. Please ask the choir leader to send another.";
                             res.redirect(`/dashboard?${generateNotification(`${expiredMsg}`, "error")}`);
-                        } else if(!invitationInfo.invitee || userInfo.email === invitationInfo.invitee){
+                        } else if(!invitationInfo.invitee || userInfo.email.toLowerCase() === invitationInfo.invitee.toLowerCase()){
                             return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member");
                         } else { // If this person is the wrong person, throw them out.
                             res.redirect(`/dashboard?${generateNotification(`Sorry, the invitation you used is not valid for this account. Please check the email account you're using for your Choirless account matches to email address you received the invitation for.`, "notice")}`);
