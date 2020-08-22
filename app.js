@@ -16,6 +16,7 @@ const protectRoute = require(`./bin/middleware/protect-route`);
 const messages = require(`./bin/middleware/messages`);
 
 const app = express();
+app.set('etag', false);
 
 // Enforce HTTPS
 app.enable('trust proxy');
