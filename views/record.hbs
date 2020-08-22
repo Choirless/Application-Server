@@ -64,6 +64,8 @@
             {{!-- <p>(Don't worry, we won't record or save anything until you tell us to).</p> --}}
         </div>
 
+        <div id="visualiser" data-active="true"></div>
+
         <h3>You</h3>
     </div>
 
@@ -88,6 +90,7 @@
 </div>
 
 {{> record/offset_analyser }}
+{{> record/visualiser }}
 
 <script>
 
@@ -137,6 +140,8 @@
         var performanceData = [];
         var performanceStream;
         var mR;
+
+        var visualiserElement = document.body.querySelector('div#visualiser');
 
         function download(chunks) {
 
@@ -379,6 +384,7 @@
             if(!recording){
 
                 recording = true;
+                visualiser.start();
 
                 recordBtn.textContent = "Stop Recording";
 
@@ -431,6 +437,7 @@
                     recordedVideos.pause();
                 }
 
+                visualiser.stop();
                 mR.stop();
 
                 performanceVideo.dataset.active = "false";
@@ -489,22 +496,6 @@
 
         }, false);
 
-        if(!isLeadRecording){
-
-            /*leadVideo.addEventListener('ended', function(){
-                playingLead = false;
-                leadVideo.currentTime = 0;
-                listenBtn.textContent = "Listen to lead";
-
-                if(showingPerformance && recordedVideo.paused === true){
-                    showingPerformance = false;
-                    playbackBtn.textContent = "Replay Performance";
-                }
-
-            }, false);*/
-
-        }
-
         recordedVideo.addEventListener('ended', function(){
 
             if(showingPerformance){
@@ -556,6 +547,11 @@
 
                             }
 
+                            visualiser.configure({
+                                element : visualiserElement,
+                                src : stream
+                            });
+
                             setTimeout(function(){
 
                                 console.log('Video is playing', !performanceVideo.paused);
@@ -577,7 +573,7 @@
                                     } else {
                                         recordBtn.dataset.active = "true";
                                         performanceView.dataset.videoloaded = "true";
-
+                                        visualiser.start();
                                     }
 
                                 }
@@ -619,7 +615,7 @@
                             recordBtn.dataset.active = "true";
                         }
                     }
-
+                    visualiser.start();
                     return result;
                 })
                 .catch(function(err){
