@@ -5,10 +5,10 @@
         'use strict';
 
         var outputElement;
-        var ctx;
         
         var bars = 16;
         var barValues;
+        var barElements;
 
         var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         var analyser = audioCtx.createAnalyser();
@@ -25,16 +25,18 @@
 
             console.log('configureVisualiser options:', options);
 
-            if(options.element){
-                outputElement = options.element;
-                ctx = outputElement.getContext('2d');
-                ctx.fillStyle = 'blue';
-                WIDTH = outputElement.width = outputElement.offsetWidth;
-                HEIGHT = outputElement.height = outputElement.offsetHeight;
-            }
-
             if(options.bars){
                 bars = options.bars;
+            }
+
+            if(options.element){
+                outputElement = options.element;
+                for(var i = 0; i < bars; i += 1){
+                    var bar = document.createElement('div');
+                    bar.style.width = ((outputElement.offsetWidth / bars) - 5) + "px";
+                    outputElement.appendChild(bar);
+                }
+                barElements = Array.from(outputElement.querySelectorAll('div'));
             }
             
             if(options.src){
@@ -52,21 +54,16 @@
 
             var barWidth = WIDTH / bars;
             var barHeight;
-            var x = 0;
-
-            ctx.clearRect(0, 0, WIDTH, HEIGHT);
-            ctx.fillStyle = 'white';
 
             for(var i = 0; i < barValues.length; i++) {
-                barHeight = (barValues[i] - 128) * 15;
+                barHeight = (barValues[i] - 128) * 4;
 
-                ctx.fillRect(x,  HEIGHT - barHeight, barWidth, barHeight);
+                barElements[i].style.height = barHeight + 'px';
 
-                x += barWidth + 1;
             }
 
             if(rendering){
-                requestAnimationFrame(analyse);
+                setTimeout(analyse, 50);
             }
 
         }

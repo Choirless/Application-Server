@@ -64,7 +64,7 @@
             {{!-- <p>(Don't worry, we won't record or save anything until you tell us to).</p> --}}
         </div>
 
-        <canvas id="visualiser"></canvas>
+        <div id="visualiser"></div>
 
         <h3>You</h3>
     </div>
@@ -141,7 +141,7 @@
         var performanceStream;
         var mR;
 
-        var visualiserElement = document.body.querySelector('canvas#visualiser');
+        var visualiserElement = document.body.querySelector('div#visualiser');
 
         function download(chunks) {
 
