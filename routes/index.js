@@ -13,4 +13,13 @@ router.get('/', function(req, res, next) {
 
 });
 
+router.get('/about', function(req, res, next) {
+	
+	res.render('about', { 
+		title: "Choirless | Bringing people together, even when they're not together.", 
+		bodyid: "about",
+	});
+
+});
+
 module.exports = router;

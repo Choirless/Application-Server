@@ -69,6 +69,10 @@ a.sub-link{
   text-align: center;
 }
 
+.small-text{
+  font-size: 0.75em;
+}
+
 input[type="text"]{
   font-family: 'Montserrat';
 }
@@ -495,10 +499,10 @@ footer{
   padding: 0 2em;
   box-sizing: border-box;
   bottom: 0;
-  position: absolute;
+  position: fixed;
   margin-left: auto;
   margin-right: auto;
-border-top: 1px solid rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(255,255,255,0.5);
 }
 
 footer div{
@@ -628,6 +632,26 @@ footer div p:last-of-type{
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+/* ABOUT STYLES */
+
+body#about main{
+  overflow-y: scroll;
+  height: 100%;
+  padding-bottom: 150px;
+}
+
+body#about main section{
+  margin-bottom: 3em;
+}
+
+body#about main h2{
+  text-shadow: 0 1px 1px black;
+}
+
+body#about main p{
+  text-shadow: 0 1px 1px black;
 }
 
 /* RECORD STYLES */
@@ -1505,6 +1529,7 @@ body#admin main section form{
   footer{
     padding: 0 1em;
     font-size: 0.65em;
+    background: black;
   }
 
   footer div {
