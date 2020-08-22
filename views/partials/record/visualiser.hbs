@@ -19,7 +19,6 @@
         var rendering = false;
 
         var WIDTH;
-        var HEIGHT;
 
         function configureVisualiser(options){
 
@@ -31,23 +30,24 @@
 
             if(options.element){
                 outputElement = options.element;
+                WIDTH = outputElement.offsetWidth;
                 for(var i = 0; i < bars; i += 1){
                     var bar = document.createElement('div');
-                    bar.style.width = ((outputElement.offsetWidth / bars) - 5) + "px";
+                    bar.style.width = ((WIDTH / bars) - 5) + "px";
                     outputElement.appendChild(bar);
                 }
                 barElements = Array.from(outputElement.querySelectorAll('div'));
             }
             
             if(options.src){
-                audioSrc = audioCtx.createMediaStreamSource(options.src);
+                audioSrc = audioCtx.createMediaStreamSource(options.src.clone());
             }
             
             outputElement.dataset.active = "false";
             
             analyser.fftSize = 1024;
             analyser.smoothingTimeConstant = 1;
-            bufferLength = analyser.frequencyBinCount
+            bufferLength = analyser.frequencyBinCount;
             audioSrc.connect(analyser);
 
         }
@@ -58,9 +58,9 @@
             var barHeight;
 
             for(var i = 0; i < barValues.length; i++) {
-                barHeight = (barValues[i] - 128) * 6;
-
-                barElements[i].style.height = barHeight + 'px';
+                //barHeight = (barValues[i] - 128) * 6;
+                barHeight = ((barValues[i] - 128) / 128) * 100;
+                barElements[i].style.height = barHeight + '%';
 
             }
 
