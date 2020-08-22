@@ -64,7 +64,7 @@
             {{!-- <p>(Don't worry, we won't record or save anything until you tell us to).</p> --}}
         </div>
 
-        <div id="visualiser"></div>
+        <div id="visualiser" data-active="true"></div>
 
         <h3>You</h3>
     </div>
@@ -384,6 +384,7 @@
             if(!recording){
 
                 recording = true;
+                visualiser.start();
 
                 recordBtn.textContent = "Stop Recording";
 
@@ -436,6 +437,7 @@
                     recordedVideos.pause();
                 }
 
+                visualiser.stop();
                 mR.stop();
 
                 performanceVideo.dataset.active = "false";
@@ -550,8 +552,6 @@
                                 src : stream.clone()
                             });
 
-                            visualiser.start();
-
                             setTimeout(function(){
 
                                 console.log('Video is playing', !performanceVideo.paused);
@@ -573,7 +573,7 @@
                                     } else {
                                         recordBtn.dataset.active = "true";
                                         performanceView.dataset.videoloaded = "true";
-
+                                        visualiser.start();
                                     }
 
                                 }
@@ -615,7 +615,7 @@
                             recordBtn.dataset.active = "true";
                         }
                     }
-
+                    visualiser.start();
                     return result;
                 })
                 .catch(function(err){

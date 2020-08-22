@@ -42,7 +42,9 @@
             if(options.src){
                 audioSrc = audioCtx.createMediaStreamSource(options.src);
             }
-
+            
+            outputElement.dataset.active = "false";
+            
             analyser.fftSize = 1024;
             analyser.smoothingTimeConstant = 1;
             bufferLength = analyser.frequencyBinCount
@@ -56,14 +58,15 @@
             var barHeight;
 
             for(var i = 0; i < barValues.length; i++) {
-                barHeight = (barValues[i] - 128) * 4;
+                barHeight = (barValues[i] - 128) * 6;
 
                 barElements[i].style.height = barHeight + 'px';
 
             }
 
             if(rendering){
-                setTimeout(analyse, 50);
+                //setTimeout(analyse, 50);
+                requestAnimationFrame(analyse);
             }
 
         }
@@ -88,17 +91,25 @@
 
             barValues = aggregateValues.map(value => value = value / (dataArray.length / bars));
 
+            for(var j = 0; j < barValues.length / 2; j += 1){
+
+                barValues[barValues.length - j] = barValues[j];
+
+            }
+
             requestAnimationFrame(render);
         }
 
         function startVisualising(){
             console.log('startVisualising');
             rendering = true;
+            outputElement.dataset.active = "true";
             requestAnimationFrame(analyse);
         }
 
         function stopVisualising(){
             console.log('stopVisualising');
+            outputElement.dataset.active = "false";
             rendering = false;
         }
 
