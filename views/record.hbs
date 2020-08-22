@@ -139,6 +139,8 @@
 
         var performanceData = [];
         var performanceStream;
+        var streamWidth;
+        var streamHeight;
         var mR;
 
         var visualiserElement = document.body.querySelector('div#visualiser');
@@ -532,6 +534,9 @@
                             console.log(stream);
                             performanceStream = stream;
 
+                            streamWidth = stream.getVideoTracks()[0].getSettings().width;
+                            streamHeight = stream.getVideoTracks()[0].getSettings().height;
+
                             var a = stream.getAudioTracks()[0];
                             reportedOffset = a.getSettings().latency;
 
@@ -637,6 +642,8 @@
             var fd = new FormData();
             fd.append('video', recordedVideo, 'video.webm');
             fd.append('offset', streamOffset / 1000);
+            fd.append('width', streamWidth);
+            fd.append('height', streamHeight);
 
             var req = new XMLHttpRequest();
             req.open('POST', '/performance/save/{{this.choirId}}/{{this.songId}}/{{this.partNameId}}');
