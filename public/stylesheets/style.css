@@ -630,6 +630,20 @@ footer div p:last-of-type{
   justify-content: center;
 }
 
+/* ABOUT STYLES */
+
+body#about main section{
+  margin-bottom: 3em;
+}
+
+body#about main h2{
+  text-shadow: 0 1px 1px black;
+}
+
+body#about main p{
+  text-shadow: 0 1px 1px black;
+}
+
 /* RECORD STYLES */
 
 body#record #videos{
