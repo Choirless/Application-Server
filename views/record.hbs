@@ -64,6 +64,8 @@
             {{!-- <p>(Don't worry, we won't record or save anything until you tell us to).</p> --}}
         </div>
 
+        <canvas id="visualiser"></canvas>
+
         <h3>You</h3>
     </div>
 
@@ -88,6 +90,7 @@
 </div>
 
 {{> record/offset_analyser }}
+{{> record/visualiser }}
 
 <script>
 
@@ -137,6 +140,8 @@
         var performanceData = [];
         var performanceStream;
         var mR;
+
+        var visualiserElement = document.body.querySelector('canvas#visualiser');
 
         function download(chunks) {
 
@@ -489,22 +494,6 @@
 
         }, false);
 
-        if(!isLeadRecording){
-
-            /*leadVideo.addEventListener('ended', function(){
-                playingLead = false;
-                leadVideo.currentTime = 0;
-                listenBtn.textContent = "Listen to lead";
-
-                if(showingPerformance && recordedVideo.paused === true){
-                    showingPerformance = false;
-                    playbackBtn.textContent = "Replay Performance";
-                }
-
-            }, false);*/
-
-        }
-
         recordedVideo.addEventListener('ended', function(){
 
             if(showingPerformance){
@@ -555,6 +544,13 @@
                                 performanceVideo.srcObject = stream;
 
                             }
+
+                            visualiser.configure({
+                                element : visualiserElement,
+                                src : stream.clone()
+                            });
+
+                            visualiser.start();
 
                             setTimeout(function(){
 

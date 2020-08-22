@@ -1,0 +1,100 @@
+<script>
+
+    var visualiser = (function(){
+
+        'use strict';
+
+        var outputElement;
+        var ctx;
+        
+        var bars = 16;
+
+        var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        var analyser = audioCtx.createAnalyser();
+        var audioSrc;
+        var dataArray;
+        var bufferLength;
+
+        var rendering = false;
+
+        var WIDTH;
+        var HEIGHT;
+
+        function configureVisualiser(options){
+
+            console.log('configureVisualiser options:', options);
+
+            if(options.element){
+                outputElement = options.element;
+                ctx = outputElement.getContext('2d');
+                ctx.fillStyle = 'blue';
+                WIDTH = outputElement.width = outputElement.offsetWidth;
+                HEIGHT = outputElement.height = outputElement.offsetHeight;
+            }
+
+            if(options.bars){
+                bars = options.bars;
+            }
+            
+            if(options.src){
+                audioSrc = audioCtx.createMediaStreamSource(options.src);
+            }
+
+            analyser.fftSize = 1024;
+            analyser.smoothingTimeConstant = 1;
+            bufferLength = analyser.frequencyBinCount
+            audioSrc.connect(analyser);
+
+        }
+
+        function render(){
+
+            var barWidth = (WIDTH / bufferLength) * 1;
+            var barHeight;
+            var x = 0;
+
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+            ctx.fillStyle = 'white';
+
+            for(var i = 0; i < bufferLength; i++) {
+                barHeight = (dataArray[i] - 128) * 20;
+
+                ctx.fillRect(x, HEIGHT - barHeight , barWidth, barHeight);
+
+                x += barWidth + 1;
+            }
+
+            ctx.fillRect(0,0,50,50);
+
+            if(rendering){
+                requestAnimationFrame(analyse);
+            }
+
+        }
+
+        function analyse(){
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteTimeDomainData(dataArray);
+            requestAnimationFrame(render);
+        }
+
+        function startVisualising(){
+            console.log('startVisualising');
+            rendering = true;
+            requestAnimationFrame(analyse);
+        }
+
+        function stopVisualising(){
+            console.log('stopVisualising');
+            rendering = false;
+        }
+
+        return {
+            configure : configureVisualiser,
+            start : startVisualising,
+            stop : stopVisualising
+        };
+
+    })();
+
+</script>

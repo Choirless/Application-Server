@@ -862,6 +862,15 @@ body#record .modal#performanceSelector .content ul li.heading {
   min-height: 20px;
 }
 
+body#record #videos #performance #visualiser{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25%;
+  background: transparent;
+}
+
 /* Create Styles */
 
 main{
