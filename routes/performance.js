@@ -169,7 +169,8 @@ router.post('/save/:CHOIRID/:SONGID/:SECTIONID', upload.single('video'), functio
 					partNameId : req.params.SECTIONID,
 					userId : res.locals.user,
 					offset : req.body.offset,
-					partType : recordingType
+					partType : recordingType,
+					aspectRatio : `${req.body.width}:${req.body.height}`
 				};
 			
 				choir.songs.recordings.add(recordingData)
