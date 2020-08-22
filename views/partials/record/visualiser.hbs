@@ -8,6 +8,7 @@
         var ctx;
         
         var bars = 16;
+        var barValues;
 
         var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         var analyser = audioCtx.createAnalyser();
@@ -49,22 +50,20 @@
 
         function render(){
 
-            var barWidth = (WIDTH / bufferLength) * 1;
+            var barWidth = WIDTH / bars;
             var barHeight;
             var x = 0;
 
             ctx.clearRect(0, 0, WIDTH, HEIGHT);
             ctx.fillStyle = 'white';
 
-            for(var i = 0; i < bufferLength; i++) {
-                barHeight = (dataArray[i] - 128) * 20;
+            for(var i = 0; i < barValues.length; i++) {
+                barHeight = (barValues[i] - 128) * 15;
 
-                ctx.fillRect(x, HEIGHT - barHeight , barWidth, barHeight);
+                ctx.fillRect(x,  HEIGHT - barHeight, barWidth, barHeight);
 
                 x += barWidth + 1;
             }
-
-            ctx.fillRect(0,0,50,50);
 
             if(rendering){
                 requestAnimationFrame(analyse);
@@ -75,6 +74,23 @@
         function analyse(){
             dataArray = new Uint8Array(analyser.frequencyBinCount);
             analyser.getByteTimeDomainData(dataArray);
+
+            var aggregateValues = [];
+            var groupValues = [];
+
+            for(var i = 0; i < dataArray.length; i++) {
+                
+                if(groupValues.length <= dataArray.length / bars){
+                    groupValues.push(dataArray[i]);
+                } else {
+                    aggregateValues.push(groupValues.reduce((a, b) => a + b, 0));
+                    groupValues.length = 0;
+                }
+
+            }
+
+            barValues = aggregateValues.map(value => value = value / (dataArray.length / bars));
+
             requestAnimationFrame(render);
         }
 
