@@ -49,7 +49,7 @@ app.use( express.static( path.join(__dirname, 'public' ), staticCaching ));
 app.use(cookieSession({
 	name: 'choirless-session',
 	secret : process.env.SESSION_SECRET,
-	maxAge: 24 * 60 * 60 * 1000, // 1 day
+	maxAge: 72 * 60 * 60 * 1000, // 3 days
 	secure : process.env.NODE_ENV === "production"
 }));
 
