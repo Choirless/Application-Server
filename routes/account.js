@@ -290,6 +290,156 @@ router.post('/beta-interest', (req, res, next) => {
 
 });
 
+router.get('/reset-password', function(req, res, next) {
+
+	if(!req.session.user){
+
+		res.render('account/reset_password', { 
+			title: "Choirless | Bringing people together, even when they're not together.", 
+			bodyid: "resetPassword"
+		});
+
+	} else {
+		res.redirect('/');
+	}
+
+});
+
+router.post('/reset-password', function(req, res, next) {
+
+	debug('req.body:', req.body);
+
+	if(!req.body.email){
+		res.redirect(`/account/reset-password?${generateNotification(`Sorry, you didn't pass an email address for the account you wish to reset`, 'error')}`);
+	} else {
+
+		users.get.byEmail(req.body.email)
+			.then(user => {
+				debug(user);
+				const resetMsg = generateNotification(`Thanks! If we find an account with the email address "${req.body.email}" we'll send an email with a link to reset your account`, 'success');
+
+				if(user.unknown === true){
+					res.redirect(`/?${resetMsg}`);
+				} else {
+
+					return invitations.create(user.userId, {
+							creator : user.email,
+							userId : user.userId
+						}, 'forgot-password')
+						.then(resetToken => {
+							debug('resetToken:', resetToken);
+
+							const forgottenInfo = {
+								to : user.email,
+								subject : "Choirless password reset",
+								info : {
+									name : user.name,
+									resetPasswordURL : `${process.env.SERVICE_URL}/account/change-password/${resetToken}`
+								}
+							};
+		
+							mail.send(forgottenInfo, 'forgot-password')
+								.then(function(){
+									res.redirect(`/?${resetMsg}`);
+								})
+								.catch(err => {
+									debug('An error occurred trying to send the welcome email.', err);
+								})
+							;
+
+						})
+					;
+
+				}
+
+			})
+			.catch(err => {
+				debug('err:', err);
+				res.status(500);
+				res.redirect(`/?${generateNotification(`Sorry, and error occurred whilst trying to reset your password`, 'error')}`)
+			})
+		;
+
+	}
+
+});
+
+router.get('/change-password/:RESETTOKEN', (req, res, next) => {
+
+	invitations.get(req.params.RESETTOKEN)
+		.then(resetRecord => {
+
+			debug('resetRecord:', resetRecord);
+
+			if(resetRecord.expired === true){
+				res.redirect(`/?${generateNotification(`Sorry, that link has expired. Please request another.`, 'notice')}`)
+			} else if(resetRecord.ok === false){
+				res.redirect(`/?${generateNotification(`Sorry, we could not find that reset request. Please check the link in your email, and if neccessary request another.`, 'notice')}`)
+			} else {
+				res.render('account/change_password', { 
+					title: "Choirless | Bringing people together, even when they're not together.", 
+					bodyid: "changePassword",
+					token : req.params.RESETTOKEN
+				});
+			}
+
+		})
+		.catch(err => {
+			res.status(500);
+			res.redirect(`/?${generateNotification(`Sorry, an error occurred whilst trying to find that reset link`, 'error')}`);
+		})
+	;
+
+});
+
+router.post('/change-password/:RESETTOKEN', (req, res, next) => {
+
+	if(req.body.password && req.body.repeatpassword){
+
+		if(req.body.password !== req.body.repeatpassword){
+			res.redirect(`/account/change-password/${req.params.RESETTOKEN}?${generateNotification(`You did not pass a matching password and repeat password. Please enter them again.`, 'notice')}`);
+		} else {
+
+			invitations.get(req.params.RESETTOKEN)
+				.then(resetRecord => {
+					
+					if(resetRecord.expired === true){
+						res.redirect(`/?${generateNotification(`Sorry, that link has expired. Please request another.`, 'notice')}`)
+					} else if(resetRecord.ok === false){
+						res.redirect(`/?${generateNotification(`Sorry, we could not find that reset request. Please check the link in your email, and if neccessary request another.`, 'notice')}`)
+					} else {
+
+						users.add({
+								userId : resetRecord.userId,
+								password : req.body.password
+							})
+							.then(function(){
+								res.redirect(`/account/login?${generateNotification(`Password successfully changed. Please log in.`, `success`)}`)		
+							})
+							.catch(err => {
+								debug('POST /change-password/:RESETTOKEN err:', err);
+								res.status(500);
+								res.redirect(`/account/change-password?${generateNotification(`Sorry, an error occurred while we tried to update your password.`, `error`)}`);
+							})
+						;
+
+					}
+
+				})
+				.catch(err => {
+					debug('POST /change-password/:RESETTOKEN err:', err);
+					res.status(500);
+					res.redirect(`/account/change-password?${generateNotification(`Sorry, an error occurred while we tried to verify your details.`, `error`)}`);
+				})
+			
+		}
+
+	} else {
+		res.redirect(`/account/change-password/${req.params.RESETTOKEN}?${generateNotification(`You did not pass a new password and repeat password.`, 'notice')}`);
+	}
+
+});
+
 router.get('/logout', (req, res) => {
 	req.session = null;
 	res.redirect('/');

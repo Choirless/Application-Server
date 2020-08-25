@@ -51,8 +51,8 @@ function createAnInvitation(creatorUserId, information, type){
         return Promise.reject(`No "information" object was passed to function`);
     }
 
-    if(!type || (type !== "choir" && type !== "beta")){
-        return Promise.reject('Invalid invitation type passed. Can either be "choir" or "beta".');
+    if(!type || (type !== "choir" && type !== "beta" && type !== "forgot-password")){
+        return Promise.reject('Invalid invitation type passed. Can either be "choir", "beta", or "forgot-password".');
     }
 
     return fetch(`${process.env.CHOIRLESS_API_ENDPOINT}/invitation?apikey=${process.env.CHOIRLESS_API_KEY}`, {
