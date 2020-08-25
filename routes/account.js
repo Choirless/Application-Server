@@ -311,6 +311,27 @@ router.post('/beta-interest', (req, res, next) => {
 
 });
 
+router.get('/reset-password', function(req, res, next) {
+
+	if(!req.session.user){
+
+		res.render('account/reset_password', { 
+			title: "Choirless | Bringing people together, even when they're not together.", 
+			bodyid: "resetPassword"
+		});
+
+	} else {
+		res.redirect('/');
+	}
+
+});
+
+router.post('/reset-password', function(req, res, next) {
+
+	res.end();
+
+});
+
 router.get('/logout', (req, res) => {
 	req.session = null;
 	res.redirect('/');

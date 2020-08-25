@@ -1054,6 +1054,19 @@ body#accountLogin main section form textarea{
   margin-bottom: 1em;
 }
 
+/* Reset Password styles */
+
+body#resetPassword main section {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3em;
+}
+
+body#resetPassword main section form button{
+  align-self: center;
+}
+
 /* Dashboard styles */
 
 body#dashboard{
