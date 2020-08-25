@@ -328,7 +328,60 @@ router.get('/reset-password', function(req, res, next) {
 
 router.post('/reset-password', function(req, res, next) {
 
-	res.end();
+	debug('req.body:', req.body);
+
+	if(!req.body.email){
+		res.redirect(`/account/reset-password?${generateNotification(`Sorry, you didn't pass an email address for the account you wish to reset`, 'error')}`);
+	} else {
+
+		users.get.byEmail(req.body.email)
+			.then(user => {
+				debug(user);
+				const resetMsg = generateNotification(`Thanks! If we find an account with the email address "${req.body.email}" we'll send an email with a link to reset your account`, 'success');
+
+				if(user.unknown === true){
+					res.redirect(`/?${resetMsg}`);
+				} else {
+
+					return invitations.create(user.userId, {
+							creator : user.email,
+							userId : user.userId
+						}, 'forgot-password')
+						.then(resetToken => {
+							debug('resetToken:', resetToken);
+
+							const forgottenInfo = {
+								to : user.email,
+								subject : "Choirless password reset",
+								info : {
+									name : user.name,
+									resetPasswordURL : `${process.env.SERVICE_URL}/account/change-password/${resetToken}`
+								}
+							};
+		
+							mail.send(forgottenInfo, 'forgot-password')
+								.then(function(){
+									res.redirect(`/?${resetMsg}`);
+								})
+								.catch(err => {
+									debug('An error occurred trying to send the welcome email.', err);
+								})
+							;
+
+						})
+					;
+
+				}
+
+			})
+			.catch(err => {
+				debug('err:', err);
+				res.status(500);
+				res.redirect(`/?${generateNotification(`Sorry, and error occurred whilst trying to reset your password`, 'error')}`)
+			})
+		;
+
+	}
 
 });
 
