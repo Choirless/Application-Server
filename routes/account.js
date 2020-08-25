@@ -112,16 +112,8 @@ router.get('/create/:INVITEID?', function(req, res, next) {
 		if(!inviteId){
 			res.redirect(`/?${generateNotification("Sorry, Choirless account creations are by invitation only at this time.", "general")}`);
 		} else {
-
-			let invitationData;
-
-			if(inviteId === process.env.CHOIRLESS_ALPHA_ID){
-				invitationData = Promise.resolve({});
-			} else {
-				invitationData = invitations.get(inviteId);
-			}
 			
-			invitationData
+			invitations.get(inviteId)
 				.then(invitation => {
 					
 					if(!invitation){
@@ -163,23 +155,10 @@ router.post('/create', (req, res, next) => {
 
 		if(req.body.password !== req.body.repeat_password){
 			res.status(422);
-			res.redirect(`/account/create?${generateNotification("Password and repeated password did not match.", "error")}`);
+			res.redirect(`/account/create?${generateNotification("Password and repeated password did not match.", "error")}${req.query.redirect ? `&${req.query.redirect}` : "" }`);
 		}
 
-		debug(req.query.redirect);
-
-		let invitationData;
-
-		if(req.body.inviteId === process.env.CHOIRLESS_ALPHA_ID){
-			invitationData = Promise.resolve({
-				choirId : process.env.CHOIRLESS_ALPHA_ID,
-				invitee : req.body.email
-			});
-		} else {
-			invitationData = invitations.get(req.body.inviteId);
-		}
-
-		invitationData
+		invitations.get(req.body.inviteId)
 			.then(invitation => {
 
 				if(!invitation){
@@ -188,7 +167,7 @@ router.post('/create', (req, res, next) => {
 					res.redirect(`/?${generateNotification("Sorry, that invitation has expired. Please ask the sender for another.", "error")}`);
 				} else {
 
-					if(invitation.invitee !== req.body.email){
+					if(invitation.invitee && invitation.invitee !== req.body.email){
 						res.status(401);
 						res.redirect(`/?${generateNotification("Sorry, the email you tried to create the account with doesn't match the address the invitation was sent to.", "error")}`);
 					} else {
