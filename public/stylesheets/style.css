@@ -1056,8 +1056,6 @@ body#accountLogin main section form textarea{
 
 /* Reset Password styles */
 
-changePassword
-
 body#resetPassword main section {
   max-width: 800px;
   margin-left: auto;
