@@ -225,12 +225,12 @@ router.post('/create', (req, res, next) => {
 				
 				if(err.status === 409){
 					// Account exists with this email address;
-					res.status(422);
-					res.redirect(`/account/create?${generateNotification(`Sorry, we couldn't create that account.`, "error")}&redirect=${req.query.redirect}`);
+					res.status(409);
+					res.redirect(`/account/create/${req.body.inviteId}?${generateNotification(`Sorry, that account already exists.`, "error")}&redirect=${req.query.redirect}`);
 				} else {
 
 					res.status(err.status);
-					res.redirect(`/account/create?${generateNotification(`Sorry, an error ocurred during the creation of this account.`)}&redirect=${req.query.redirect}`);
+					res.redirect(`/account/create/${req.body.inviteId}?${generateNotification(`Sorry, an error ocurred during the creation of this account.`)}&redirect=${req.query.redirect}`);
 
 				}
 
