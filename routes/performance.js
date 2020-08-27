@@ -95,16 +95,32 @@ router.get('/list-performances/:CHOIRID/:SONGID', (req, res, next) => {
 });
 
 router.head('/video/:VIDEOIDENTIFIER', (req, res) => {
-	storage.check(req.params.VIDEOIDENTIFIER)
-		.then(data => {
-			debug('HEAD DATA:', data);
-			res.set('Content-Length', data.ContentLength)
+
+
+	let [choirId, songId, partId] = req.params.VIDEOIDENTIFIER.split('+');
+	partId = partId.replace('.webm', '');
+	
+	const data = [];
+
+	data.push(storage.check(req.params.VIDEOIDENTIFIER));
+	data.push(choir.songs.recordings.get(choirId, songId, partId));
+
+	Promise.all(data)
+		.then(results => {
+
+			const fileInfo = results[0];
+			const offset = results[1].offset;
+
+			debug('HEAD DATA:', fileInfo);
+			res.set('Content-Length', fileInfo.ContentLength);
+			res.set('X-Choirless-Offset', offset);
 			res.end();
 		})
 		.catch(err => {
 			debug(err);
 		});
 	;
+
 });
 
 router.get('/video/:VIDEOIDENTIFIER', (req, res, next) => {

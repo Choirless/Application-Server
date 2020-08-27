@@ -170,7 +170,7 @@
             function playTheRecordedVideos(){
 
                 Array.from(leadView.querySelectorAll('video')).forEach(function(video){
-                    video.currentTime = 0;
+                    video.currentTime = Number(video.dataset.offset / 1000) || 0;
                     video.play();
                 });
 
@@ -265,11 +265,17 @@
                         method : "HEAD"
                     })
                     .then(function(res){
+
                         if(res.ok){
-                            return Number(res.headers.get('Content-Length'));
+
+                            return {
+                                sizeOfFile : Number(res.headers.get('Content-Length')),
+                                offset : Number(res.headers.get('X-Choirless-Offset')),
+                            };
+
                         }
                     })
-                    .then(function(sizeOfFile){
+                    .then(function(data){
 
                         var req = new XMLHttpRequest();
                         req.open('GET', videoURL, true);
@@ -279,6 +285,7 @@
                         req.onload = function() {
 
                             if (this.status === 200) {
+                                videoElement.dataset.offset = data.offset;
                                 videoElement.src = window.URL.createObjectURL(this.response);
                                 contentContainer.dataset.loaded = "true";
 
@@ -301,7 +308,7 @@
                         }
 
                         req.onprogress = function(e){
-                            indicatorElement.style.width = (e.loaded / sizeOfFile) * 100 + "%";
+                            indicatorElement.style.width = (e.loaded / data.sizeOfFile) * 100 + "%";
                         }
 
                         req.send();
