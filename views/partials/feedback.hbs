@@ -42,7 +42,8 @@
             var data = {
                 title : form[0].value,
                 content : form[1].value,
-                page : window.location.href
+                page : window.location.href,
+                userAgent : navigator.userAgent 
             };
 
             fetch(form.action, {
