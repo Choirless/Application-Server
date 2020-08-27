@@ -15,7 +15,7 @@ router.post('/send', (req, res) => {
         const msgInfo = {
             "to" : address,
             "subject" : "Choirless Beta Feedback",
-            "text" : `${res.locals.user} (${res.locals.email}) has sent some feedback for the Choirless beta.\nHere's what they said:\n\nTitle: ${req.body.title}\n\nPage: ${req.body.page}\n\nFeedback:\n${req.body.content}`
+            "text" : `${res.locals.user} (${res.locals.email}) has sent some feedback for the Choirless beta.\nHere's what they said:\n\nTitle: ${req.body.title}\n\nPage: ${req.body.page}\n\nUser Agent: ${req.body.userAgent}\n\nFeedback:\n${req.body.content}`
         };
 
         mail.send(msgInfo)
