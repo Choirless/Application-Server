@@ -378,69 +378,69 @@ button{
   font-family: 'Montserrat';
 }
 
-.cta-button.blue{
+button.blue, .cta-button.blue{
   background-color: #46649f !important;
   color: white !important;
   text-shadow: 0 1px rgb(0, 0, 0, 0.40);
 }
 
-.cta-button.blue:hover{
+button.blue:hover, .cta-button.blue:hover{
   background-color: #5679bd !important;
 }
 
-.cta-button.light-blue{
+button.light-blue, .cta-button.light-blue{
   background-color:#2a93e4 !important;
   text-shadow: 0 1px rgb(0, 0, 0, 0.40);
   color: white !important;
 }
 
-.cta-button.light-blue:hover{
+button.light-blue:hover, .cta-button.light-blue:hover{
   background-color:#56acef !important;
 }
 
-.cta-button.red{
+button.red, .cta-button.red{
   background-color: #c34343 !important;
   text-shadow: 0 1px rgb(0, 0, 0, 0.40);
   color: white !important;
 }
 
-.cta-button.red:hover{
+button.red:hover, .cta-button.red:hover{
   background-color: #e05252 !important;
 }
 
-.cta-button.green{
+button.green, .cta-button.green{
   background-color: #7dce33 !important;
   text-shadow: 0 1px rgb(0, 0, 0, 0.40);
   color: white !important;
 }
 
-.cta-button.dark-green{
+button.dark-green, .cta-button.dark-green{
   background-color: #6db12f !important;
   text-shadow: 0 1px rgb(0, 0, 0, 0.40);
   color: white !important;
 }
 
-.cta-button.dark-green:hover{
+button.dark-green:hover, .cta-button.dark-green:hover{
   background-color: #7dce33 !important;
   color: white !important;
 }
 
-.cta-button.green:hover{
+button.green:hover, .cta-button.green:hover{
   background-color: #98ea4c !important;
 }
 
-.cta-button.black{
+button.black, .cta-button.black{
   background-color: black !important;
   color:white !important;
 }
 
-.cta-button.yellow{
+button.yellow, .cta-button.yellow{
   background: #ffe563;
   color: black;
   text-shadow: initial;
 }
 
-.cta-button.yellow:hover{
+button.yellow:hover, .cta-button.yellow:hover{
   background: #fff1ad;
 }
 
@@ -911,6 +911,66 @@ body#record #videos #performance #visualiser div{
   transition: height 0.05s ease-in;
   box-shadow: 0 2px 3px black;
   max-height: 150%;
+}
+
+body#record #videos #performance #offsetAdjuster{
+  display: flex;
+  position: absolute;
+  bottom: 2em;
+}
+
+body#record #videos #performance #offsetAdjuster button{
+  border: 0 solid transparent;
+  font-size: 1.5em;
+  padding: 0 10px;
+  font-weight: 800;
+}
+
+body#record #videos #performance #offsetAdjuster button:hover{
+  cursor: pointer;
+}
+
+body#record #videos #performance #offsetAdjuster button:first-of-type{
+  border-radius: 3px 0 0 3px;
+}
+
+body#record #videos #performance #offsetAdjuster button:last-of-type{
+  border-radius: 0 3px 3px 0;
+}
+
+body#record #videos #performance #offsetAdjuster #offsetValue{
+  display: flex;
+  padding: 0.3em;
+  color: black;
+  background: white;
+  align-items: center;
+  min-width: 80px;
+  text-align: center;
+  justify-content: center;
+}
+
+body#record #videos #performance #offsetAdjuster #offsetValue input{
+  display: block;
+  height: 2em;
+  font-weight: 600;
+  font-size: 0.8em;
+  max-width: 3em;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  width: auto;
+  border: 0 solid transparent;
+  -moz-appearance: textfield;
+}
+
+body#record #videos #performance #offsetAdjuster #offsetValue input::-webkit-outer-spin-button,
+body#record #videos #performance #offsetAdjuster #offsetValue input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+body#record #videos #performance #offsetAdjuster #offsetValue p{
+  margin: 0;
+  font-size: 0.75em;
 }
 
 /* Create Styles */
