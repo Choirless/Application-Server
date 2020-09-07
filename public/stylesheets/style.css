@@ -260,6 +260,8 @@ form input[type="text"], form input[type="email"], form input[type="password"], 
 
 .modal .container .content form#songCreation #songparts .songpart .cta-button{
   height: 100%;
+  margin-top: inherit;
+  align-self: inherit;
 }
 
 .modal .container .content ul{

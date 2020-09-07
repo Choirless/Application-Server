@@ -2,9 +2,7 @@
 <div class="tableActions" id="songActions">
     <h3>{{songInformation.name}}</h3>
     
-    {{#if render}}
-    <button class="view-video cta-button dark-green" data-videosrc="{{render}}">See latest render</button>
-    {{/if}}
+    <button class="view-video cta-button dark-green {{#unless render}} inactive {{/unless}}" data-videosrc="{{render}}">See latest render</button>
 
     {{#ifEquals memberType "leader"}}
     <button id="addANewPart" class="cta-button light-blue" data-active="true">Add a part</button>
@@ -162,16 +160,6 @@
 
             }
 
-            var previewRenderBtn = tableActions.querySelector('button#previewRenderBtn');
-
-            if(previewRenderBtn){
-
-                previewRenderBtn.addEventListener('click', function(){
-                    document.querySelector('#renderPlayback').dataset.active = "true";
-                }, false);
-
-            }
-
             var viewVideoBtns = document.querySelectorAll('button.view-video');
 
             console.log(viewVideoBtns);
@@ -182,7 +170,16 @@
 
                     console.log(this.dataset.videosrc);
 
-                    viewPerformance(this.dataset.videosrc);
+                    if(this.classList.contains('inactive')){
+                        console.log('lol no');
+                        __global_message.display({
+                            content : "No render is available at this time. Your song must have at least two recordings before the rendering process will be triggered - after which, the video will become available in around 5 minutes.",
+                            type : "notice"
+                        });
+                    } else {
+                        viewPerformance(this.dataset.videosrc);
+                    }
+
 
                 }, false);
 
