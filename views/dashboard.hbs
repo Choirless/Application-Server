@@ -78,7 +78,12 @@
         
         {{#ifNotEquals userType "regular"}}
         {{> dashboard/create_choir }}
+        {{> dashboard/admin_intro }}
         {{/ifNotEquals}}
+
+        {{#ifEquals userType "regular"}}
+        {{> dashboard/member_intro }}
+        {{/ifEquals}}
 
         {{> dashboard/create_song }}
 

@@ -1,0 +1,38 @@
+<div id="adminIntro" class="modal" data-active="false">
+    <div class="container">
+        
+        <div class="content">
+            <h2>Welcome to Choirless!</h2>
+            <iframe src="https://www.youtube.com/embed/INKSus-zoqo?enablejsapi=1&version=3&playerapiid=ytplayer" frameborder="0" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+            <button type="button" class="cta-button red cancel">Close</button>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        const adminIntro = document.body.querySelector('.modal#adminIntro');
+        const closeIntro = adminIntro.querySelector('.cta-button.cancel');
+
+        closeIntro.addEventListener('click', function(e){
+            
+            adminIntro.dataset.active = "false";
+
+            localStorage.setItem('user-introduced', 'true');
+
+            adminIntro.querySelector('iframe').contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+
+        }, false);
+
+        if(!localStorage.getItem('user-introduced')){
+            adminIntro.dataset.active = "true";
+        }
+
+    }());
+
+</script>

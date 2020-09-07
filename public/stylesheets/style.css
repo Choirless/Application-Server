@@ -219,6 +219,11 @@ form input[type="text"], form input[type="email"], form input[type="password"], 
   width: 100%;
 }
 
+.modal .container .content iframe{
+  width: 100%;
+  min-height: 50vh;
+}
+
 .modal .content .warning{
 
   background: #e84343;
@@ -1409,18 +1414,18 @@ body#dashboard main section#choirInfo .modal#deleteRecording .container .content
   text-align: center;
 }
 
-body#dashboard .modal#renderPlayback .container .content{
+body#dashboard .modal .container .content{
   flex-direction: column;
   display: flex;
 }
 
-body#dashboard .modal#renderPlayback .container .content video{
+body#dashboard .modal .container .content video{
   width: 100%;
   min-width: 100%;
   outline: 0px solid transparent;
 }
 
-body#dashboard .modal#renderPlayback .container .content button {
+body#dashboard .modal .container .content button {
   align-self: flex-end;
   margin-top: 1em;
 }
