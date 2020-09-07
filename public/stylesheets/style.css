@@ -1113,8 +1113,12 @@ body#dashboard main section{
 body#dashboard main section#choirMenu{
   flex-direction: column;
   background: white;
-  padding: 1em;
+  padding: 0;
   color: black;
+}
+
+body#dashboard main section#choirMenu h2{
+  margin: 0.5em;
 }
 
 body#dashboard main section#choirMenu ul{
@@ -1136,7 +1140,7 @@ body#dashboard main section#choirMenu ul li a{
   text-decoration: none;
   color: inherit;
   display: block;
-  padding: 0.5em;
+  padding: 0.5em 0.5em 0.5em 1.25em;
 }
 
 body#dashboard main section#choirMenu ul li a.selected{
@@ -1157,6 +1161,7 @@ body#dashboard main section#choirMenu ul li a.selected::after{
   left: 100%;
   margin-top: -0.5em;
   transform: translateX(-50%) rotate(45deg);
+  border-right: 1px solid #ffffffb0;
 }
 
 body#dashboard main section#choirMenu button.cta-button{
