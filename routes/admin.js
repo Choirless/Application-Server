@@ -22,7 +22,7 @@ router.use('*', (req, res, next) => {
 router.get('/', function(req, res, next) {
 	
 	res.render('admin', { 
-		title: "Choirless | All the world's a stage | Admin", 
+		title: "Choirless | Admin", 
 		bodyid: "admin",
 	});
 
