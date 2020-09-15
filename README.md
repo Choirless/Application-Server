@@ -1,6 +1,6 @@
 # Choirless Application Server
 
-This repository contains the source code for the Choirless project's web-based front end. It is a p[Node.js](https://nodejs.org/) [Express](https://expressjs.com/) designed to run under [Cloud Foundry](https://www.ibm.com/uk-en/cloud/cloud-foundry) on the IBM Cloud.
+This repository contains the source code for the Choirless project's web-based front end. It is a [Node.js](https://nodejs.org/) [Express](https://expressjs.com/) app designed to run under [Cloud Foundry](https://www.ibm.com/uk-en/cloud/cloud-foundry) on the IBM Cloud.
 
 The application server requires two services to operate correctly:
 
