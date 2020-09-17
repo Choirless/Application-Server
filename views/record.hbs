@@ -54,7 +54,7 @@
             <p>(Don't worry, we won't record or save anything until you tell us to).</p>
         </div>
 
-        <div id="calibrate-stream" class="video-dialog" data-active="true">
+        <div id="calibrate-stream" class="video-dialog" data-active="false">
             <h2>Calibrate Inputs</h2>
             <p>We need to calibrate your inputs</p>
             <p><strong>Please remove any headphones you have attached to your device and unmute your speakers.</strong></p>
@@ -531,6 +531,12 @@
                 .then( function(listOfDevices){
 
                     var constraints = { video: true,  audio: {latency : 0.05, echoCancellation : false } } ;
+
+                    if(localStorage.getItem('camera-override')){
+                        constraints.video = {
+                            deviceId : { exact: localStorage.getItem('camera-override') }
+                        }
+                    }
 
                     navigator.mediaDevices.getUserMedia(constraints)
                         .then(function(stream) {
