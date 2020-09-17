@@ -64,6 +64,12 @@ app.use('/performance', [protectRoute], require(`${__dirname}/routes/performance
 app.use('/admin', [protectRoute], require(`${__dirname}/routes/admin`));
 app.use('/feedback', [protectRoute], require(`${__dirname}/routes/feedback`));
 
+app.get('/magic-camera-selector', (req, res, next) => {
+
+	res.render('magic-camera-selector');
+
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
 	next(createError(404, `We can't find that resource`));

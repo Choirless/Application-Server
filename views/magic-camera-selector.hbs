@@ -1,0 +1,115 @@
+<main style=" display: flex; flex-direction: column;">
+    <h3>Magic Camera Selector</h3>
+
+    <video muted style=" height: 25vh; justify-self: center; margin-bottom: 1em; background:grey;"></video>
+
+    <h4>Available Cameras</h4>
+
+    <ul>
+        <li></li>
+    </ul>
+
+    <button id="saveSelection" class="cta-button blue" style=" justify-self: center; width: 96%; max-width: 100%; box-sizing: border-box; position: fixed; bottom: 1em; left: 2%;">Save Selection</button>
+    
+</main>
+
+<script>
+
+    (function(){
+        'use strict';
+
+        var camerasElement = document.querySelector('ul');
+        var videoPreview = document.querySelector('video');
+        var saveSelection = document.querySelector('button#saveSelection');
+
+        function setSource(deviceId){
+            console.log(deviceId);
+
+            var constraints = { video: {deviceId : deviceId},  audio: {latency : 0.05, echoCancellation : false } } ;
+
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(function(stream) {
+                    
+                    console.log(stream);
+
+                    try{
+                        const vidURL = window.URL.createObjectURL(stream);
+                        videoPreview.src = vidURL;
+                    } catch(err){
+
+                        console.log('Unable to createObjectURL for stream. Setting srcObject to stream instead...');
+                        videoPreview.srcObject = stream;
+
+                    }
+
+                    videoPreview.dataset.id = deviceId;
+
+                    setTimeout(function(){
+
+                        console.log('Video is playing', !videoPreview.paused);
+
+                        videoPreview.play();
+
+                    }, 1000);
+
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            ;
+
+        }
+
+        navigator.mediaDevices.enumerateDevices()
+            .then(function(devices) {
+
+                var deviceList = document.createDocumentFragment();
+
+                var camerasCount = 0;
+
+                devices.forEach(function(device, idx) {
+
+                    if(device.kind === 'videoinput'){
+                        console.log(device);
+                        var li = document.createElement('li');
+                        li.textContent = `Camera ${camerasCount += 1}`;
+                        li.dataset.id = device.deviceId;
+
+                        li.addEventListener('click', function(){
+
+                            setSource(this.dataset.id);
+
+                        }, false);
+
+                        deviceList.appendChild(li);
+
+                    }
+
+                });
+
+                camerasElement.appendChild(deviceList);
+
+            })
+            .catch(function(err) {
+                console.log(err.name + ": " + err.message);
+            })
+        ;
+
+        saveSelection.addEventListener('click', function(){
+
+            if(!videoPreview.dataset.id){
+                __global_message.display({
+                    content : "You have not selected a camera to set as default",
+                    type : "error",
+                    resetParameters : false
+                });
+            } else {
+                localStorage.setItem('camera-override', videoPreview.dataset.id);
+                window.location.href = window.location.origin +  "/dashboard";
+            }
+
+        }, false);
+
+    }());
+
+</script>
