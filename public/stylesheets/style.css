@@ -733,6 +733,10 @@ body#record #videos[data-leadrecording="true"] div#performance {
   border-right: 0 transparent solid !important;
 }
 
+body#record #videos .half#performance #beginCalibration{
+  margin-top: 1em;
+}
+
 body#record div.videoContainer{
   width: 100%;
   height: 100%;
