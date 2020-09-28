@@ -1395,6 +1395,16 @@ body#dashboard main section#choirInfo table#song tbody tr td button{
   margin-left: 1em;
 }
 
+body#dashboard main section#choirInfo table#members tr td:nth-child(3){
+  text-transform: capitalize;
+  border-right: 0 solid transparent;
+  font-weight: 600;
+}
+
+body#dashboard main section#choirInfo table#members tr td:last-of-type button{
+  float: right;
+}
+
 body#dashboard main section#choirInfo div#settings{
   background: white;
   color: black;
@@ -1423,6 +1433,14 @@ body#dashboard main section#choirInfo .modal#deleteRecording .container .content
 
 body#dashboard main section#choirInfo .modal#deleteRecording .container .content p{
   text-align: center;
+}
+
+body#dashboard main section#choirInfo .modal#updateMemberType[data-switchtype="leader"] #makeMemberWarning{
+  display: none;
+}
+
+body#dashboard main section#choirInfo .modal#updateMemberType[data-switchtype="member"] #makeLeaderWarning{
+  display: none;
 }
 
 body#dashboard .modal .container .content{
