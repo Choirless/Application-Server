@@ -528,6 +528,7 @@ function deleteASongFromAChoir(choirId, songId){
             throw err;
         })
     ;
+
 }
 
 function getAllOfTheMembersOfAChoir(choirId, getMemberDetails = false){
@@ -638,6 +639,28 @@ function checkUserIsAMemberOfAChoir(choirId, userId, getUserInfoToo = false){
 
 }
 
+function updateAUsersMembershipStatusInAChoir(choirId, userId, userName, membershipType){
+
+    if(!choirId){
+        return Promise.reject('No choirId was passed to function.');  
+    }
+
+    if(!userId){
+        return Promise.reject('No userId was passed to function.');  
+    }
+
+    if(!userName){
+        return Promise.reject('No userName was passed to function.');  
+    }
+
+    if(!membershipType){
+        return Promise.reject('No membershipType was passed to function.');  
+    }
+
+    return joinAnExistingChoir(choirId, userId, userName, membershipType);
+
+}
+
 module.exports = {
     create : createANewChoir,
     update : updateAnExistingChoir,
@@ -666,6 +689,7 @@ module.exports = {
             get : getAnInvitationById,
             create : createAnInvitationForAUserToJoinAChoir
         },
-        check : checkUserIsAMemberOfAChoir
+        check : checkUserIsAMemberOfAChoir,
+        update : updateAUsersMembershipStatusInAChoir
     }
 };

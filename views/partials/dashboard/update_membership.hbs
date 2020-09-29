@@ -1,4 +1,4 @@
-<div id="updateMemberType" class="modal" data-active="true" data-switchtype="">
+<div id="updateMemberType" class="modal" data-active="false" data-switchtype="">
     <div class="container">
         
         <div class="content">
@@ -16,11 +16,12 @@
                 <p>Are you sure you want to make <strong class="username"></strong> a <strong>member</strong> in this choir?</p>
             </div>
 
-            <form id="updateMember" method="POST" action="/choir/update/member">
-            
-                <input type="text" name="userid" hidden/>
+            <form id="updateMember" method="POST" action="/choir/update-member">
+
+                <input type="text" value="{{choirInfo.choirId}}" name="choirId" hidden/>
+                <input type="text" name="userId" hidden/>
                 <input type="text" name="membershiptype" hidden/>
-            
+
                 <div class="side-by-side">
                     <button type="button" class="cta-button red cancel">Cancel</button>
                     <button type="submit" class="cta-button light-blue">Update Membership</button>

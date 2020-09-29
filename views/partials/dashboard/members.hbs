@@ -81,8 +81,8 @@
                 const form = updateMembershipModal.querySelector('form');
                 updateMembershipModal.dataset.switchtype = this.dataset.memberswitchtype;
                 
-                form[0].value = this.dataset.userid
-                form[1].value = this.dataset.memberswitchtype;
+                form[1].value = this.dataset.userid
+                form[2].value = this.dataset.memberswitchtype;
 
                 Array.from(updateMembershipModal.querySelectorAll('strong.username')).forEach(strongElement => {
                     strongElement.textContent = button.dataset.username;
