@@ -393,6 +393,41 @@ router.post('/add-member', (req, res, next) => {
 
 });
 
+router.post('/update-member', (req, res, next) => {
+
+    const membershipDetails = [];
+
+    debug(req.body);
+
+    membershipDetails.push( choirInterface.members.check(req.body.choirId, res.locals.user) );
+    membershipDetails.push( choirInterface.members.check(req.body.choirId, req.body.userId) );
+
+    Promise.all(membershipDetails)
+        .then(details => {
+
+            const memberMakingTheUpdate = details[0];
+            const memberBeingUpdated = details[1];
+            
+            if(memberMakingTheUpdate.memberType === "leader"){
+                return choirInterface.members.update(req.body.choirId, memberBeingUpdated.userId, memberBeingUpdated.name, req.body.membershiptype)
+            } else {
+                res.redirect(`/dashboard/choir/${req.body.choirId}?${generateNotification("Sorry, you need to be a leader of that choir to update membership statuses.", "error")}`);
+            }
+
+        })
+        .then(result => {
+            debug(result);
+            res.redirect(`/dashboard/choir/${req.body.choirId}/members?${generateNotification("Membership status updated.", "success")}`);
+        })
+        .catch(err => {
+            debug(err);
+            process.exit();
+        })
+    ;
+
+
+});
+
 router.post('/create-open-invitation/:CHOIRID',  (req, res, next) => {
 
     choirInterface.members.check(req.params.CHOIRID, res.locals.user)

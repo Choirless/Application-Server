@@ -1,0 +1,62 @@
+<div id="updateMemberType" class="modal" data-active="false" data-switchtype="">
+    <div class="container">
+        
+        <div class="content">
+            <h2>Update Membership Type</h2>
+
+            <div id="makeLeaderWarning">
+                <p>This will change <strong class="username"></strong>'s membership from <strong>"member"</strong> to <strong>"leader"</strong>.</p>
+                <p>This will mean that <strong class="username"></strong> will be able to manage people in this choir, add new songs, and delete any recorded part of any song as they wish.</p>
+                <p>Are you sure you want to make <strong class="username"></strong> a <strong>leader</strong> of this choir?</p>
+            </div>
+
+            <div id="makeMemberWarning">
+                <p>This will change <strong class="username"></strong>'s membership from <strong>"leader"</strong> to <strong>"member"</strong>.</p>
+                <p>This will mean that <strong class="username"></strong> will no longer be able to manage people in this choir, add new songs, and delete any recorded part of any song as they wish except their own.</p>
+                <p>Are you sure you want to make <strong class="username"></strong> a <strong>member</strong> in this choir?</p>
+            </div>
+
+            <form id="updateMember" method="POST" action="/choir/update-member">
+
+                <input type="text" value="{{choirInfo.choirId}}" name="choirId" hidden/>
+                <input type="text" name="userId" hidden/>
+                <input type="text" name="membershiptype" hidden/>
+
+                <div class="side-by-side">
+                    <button type="button" class="cta-button red cancel">Cancel</button>
+                    <button type="submit" class="cta-button light-blue">Update Membership</button>
+                </div>       
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        var form = document.querySelector('form#updateMember');
+        var cancelBtn = form.querySelector('.cancel');
+
+        cancelBtn.addEventListener('click', function(e){
+            
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            form.reset();
+            document.querySelector('.modal#updateMemberType').dataset.active="false";
+            form.querySelector('button[type="submit"]').classList.remove('loading');
+
+        }, false);
+
+        form.addEventListener('submit', function(e){
+            this.querySelector('button[type="submit"]').classList.add('loading');
+        }, false);
+
+    }());
+
+</script>
