@@ -273,34 +273,48 @@ router.get('/join/:CHOIRID/:INVITEID', (req, res, next) => {
             if(choirInformation.unknown === true){
                 res.redirect(`/dashboard?${generateNotification('Sorry, that choir does not exist.', "error")}`);
             } else {
-                const informationRequests = [];
 
-                informationRequests.push( usersInterface.get.byID( res.locals.user ) );
-                informationRequests.push( choirInterface.members.invitations.get( req.params.INVITEID ) );
+                choirInterface.members.check(req.params.CHOIRID, res.locals.user)
+                    .then(result => {
 
-                Promise.all(informationRequests)
-                    .then(results => {
+                        if(result !== undefined){
+                            res.status(422);
+                            res.redirect(`/dashboard/choir/${req.params.CHOIRID}?${generateNotification(`You're already a member of that choir!`, "notification")}`);
+                        } else {
+                            const informationRequests = [];
 
-                        const userInfo = results[0];
-                        const invitationInfo = results[1];
+                            informationRequests.push( usersInterface.get.byID( res.locals.user ) );
+                            informationRequests.push( choirInterface.members.invitations.get( req.params.INVITEID ) );
 
-                        debug(userInfo);
-                        debug(invitationInfo);
+                            Promise.all(informationRequests)
+                                .then(results => {
 
-                        if(invitationInfo.expired){ // Invite is now invalid
-                            const expiredMsg = "Sorry, that invitation has expired. Please ask the choir leader to send another.";
-                            res.redirect(`/dashboard?${generateNotification(`${expiredMsg}`, "error")}`);
-                        } else if(!invitationInfo.invitee || userInfo.email.toLowerCase() === invitationInfo.invitee.toLowerCase()){
-                            return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member");
-                        } else { // If this person is the wrong person, throw them out.
-                            res.redirect(`/dashboard?${generateNotification(`Sorry, the invitation you used is not valid for this account. Please check the email account you're using for your Choirless account matches to email address you received the invitation for.`, "notice")}`);
+                                    const userInfo = results[0];
+                                    const invitationInfo = results[1];
+
+                                    debug(userInfo);
+                                    debug(invitationInfo);
+
+                                    if(invitationInfo.expired){ // Invite is now invalid
+                                        const expiredMsg = "Sorry, that invitation has expired. Please ask the choir leader to send another.";
+                                        res.redirect(`/dashboard?${generateNotification(`${expiredMsg}`, "error")}`);
+                                    } else if(!invitationInfo.invitee || userInfo.email.toLowerCase() === invitationInfo.invitee.toLowerCase()){
+                                        return choirInterface.join(req.params.CHOIRID, res.locals.user, userInfo.name, "member");
+                                    } else { // If this person is the wrong person, throw them out.
+                                        res.redirect(`/dashboard?${generateNotification(`Sorry, the invitation you used is not valid for this account. Please check the email account you're using for your Choirless account matches to email address you received the invitation for.`, "notice")}`);
+                                    }
+
+                                })
+                                .then(function(){
+                                    res.redirect(`/dashboard/choir/${req.params.CHOIRID}?${generateNotification(`You've joined the choir!`, "success")}`);
+                                })
+                            ;
+                            
                         }
 
                     })
-                    .then(function(){
-                        res.redirect(`/dashboard/choir/${req.params.CHOIRID}?${generateNotification(`You've joined the choir!`, "success")}`);
-                    })
                 ;
+
             }
 
         })
@@ -397,8 +411,6 @@ router.post('/update-member', (req, res, next) => {
 
     const membershipDetails = [];
 
-    debug(req.body);
-
     membershipDetails.push( choirInterface.members.check(req.body.choirId, res.locals.user) );
     membershipDetails.push( choirInterface.members.check(req.body.choirId, req.body.userId) );
 
@@ -421,10 +433,9 @@ router.post('/update-member', (req, res, next) => {
         })
         .catch(err => {
             debug(err);
-            process.exit();
+            res.redirect(`/dashboard/choir/${req.body.choirId}/members?${generateNotification("Sorry something went wrong while making that change.", "error")}`);
         })
     ;
-
 
 });
 
