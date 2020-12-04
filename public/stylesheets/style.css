@@ -565,6 +565,12 @@ footer div p:last-of-type{
   max-width: 50%;
 }
 
+.global-dialog#safariWarning .dialog-content{
+  max-height: 75vh;
+  overflow: scroll;
+  font-size: 0.75em;
+}
+
 .modal{
   position: absolute;
   left: 0;
