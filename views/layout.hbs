@@ -43,13 +43,13 @@
 
 	<div id="safariWarning" class="global-dialog" data-active="false">
 		<div class="dialog-content">
-			<h3 id="heading">Hello, Safari user!</h3>
-			<p>We're sorry, but Safari doesn't have the advanced technologies that Choirless uses to record songs.</p>
-			<p>That said, Choirless works fantastically in Chrome, Firefox, and Edge. If you open up the link in one of those browsers, everything (should) be great.</p>
+			<h3 id="heading">Hello, Apple Fan!</h3>
+			<p>We're sorry, but iOS devices and Safari on Mac do not have the advanced technologies that Choirless uses to record songs.</p>
+			<p>That said, Choirless works fantastically in Chrome, Firefox, and Edge on Mac, Windows, Linux, and Android devices. If you open up the link in one of those browsers, everything (should) be great.</p>
+			<p>In the meantime, you can still use your Choirless account to manage your members and watch recordings.</p>
+			<button class="cta-button black">OK</button>
 		</div>
-	</div>
-
-	{{> feedback}}
+	</div>	
 
 	<script>
 
@@ -58,18 +58,32 @@
 			'use strict';
 
 			const safariWarning = document.querySelector('#safariWarning');
+			const okBtn = safariWarning.querySelector('button');
 
-			var ua = navigator.userAgent.toLowerCase(); 
-			if (ua.indexOf('safari') !== -1) { 
-				if (ua.indexOf('chrome') > -1) {
-				} else {
-					safariWarning.dataset.active = "true";
+			const hasBeenWarnedBefore = localStorage.getItem('safariWarningSeen');
+
+			if(hasBeenWarnedBefore !== "true"){
+
+				var ua = navigator.userAgent.toLowerCase(); 
+				if (ua.indexOf('safari') !== -1) { 
+					if (ua.indexOf('chrome') > -1) {
+					} else {
+						safariWarning.dataset.active = "true";
+					}
 				}
+
+				okBtn.addEventListener('click', function(){
+					safariWarning.dataset.active = "false";
+					localStorage.setItem('safariWarningSeen', 'true');
+				});
+
 			}
 
 		}());
 
 	</script>
+
+	{{> feedback}}	
 
 	<script>
 		if ('serviceWorker' in navigator) {
