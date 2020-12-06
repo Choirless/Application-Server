@@ -20,7 +20,7 @@ router.get('/', (req, res, next) => {
                 res.render('dashboard', { 
                     title : "Choirless | My Dashboard", 
                     bodyid: "dashboard",
-                    userChoirs : userChoirs,
+                    userChoirs : userChoirs.sort( (a, b) => {return a.name >= b.name ? 1 : -1; } ),
                     choirListMaxSize : CHOIR_LIST_MAX_INITAL_SIZE
                 });
             }
@@ -113,7 +113,7 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                                 res.render('dashboard', { 
                                     title : `Choirless | My Dashboard ${choirInfo ? `| ${choirInfo.name} ` : ""} ${songInformation ? `| ${songInformation.name}` : "" }`, 
                                     bodyid: "dashboard",
-                                    userChoirs : userChoirInfo,
+                                    userChoirs : userChoirInfo.sort( (a, b) => {return a.name >= b.name ? 1 : -1; } ),
                                     choirInfo : choirInfo,
                                     songs : choirSongs,
                                     members : choirMembers,
