@@ -29,4 +29,14 @@ module.exports = (Handlebars) => {
         return new Handlebars.SafeString(encodeURIComponent(options.fn(this)));
     });
 
+    Handlebars.registerHelper('lessThan', function( a, b ){
+        var next =  arguments[arguments.length-1];
+        return (a < b) ? next.fn(this) : next.inverse(this);
+    });
+
+    Handlebars.registerHelper('greaterThanOrEqualTo', function( a, b ){
+        var next =  arguments[arguments.length-1];
+        return (a >= b) ? next.fn(this) : next.inverse(this);
+    });
+
 }

@@ -7,6 +7,8 @@ const choir = require(`../bin/modules/choir`);
 const storage = require('../bin/lib/storage');
 const generateNotification = require(`${__dirname}/../bin/modules/generate_notification`);
 
+const CHOIR_LIST_MAX_INITAL_SIZE = process.env.CHOIR_LIST_MAX_INITAL_SIZE || 8;
+
 router.get('/', (req, res, next) => {
 
     users.get.choirs(res.locals.user)
@@ -18,7 +20,8 @@ router.get('/', (req, res, next) => {
                 res.render('dashboard', { 
                     title : "Choirless | My Dashboard", 
                     bodyid: "dashboard",
-                    userChoirs : userChoirs
+                    userChoirs : userChoirs,
+                    choirListMaxSize : CHOIR_LIST_MAX_INITAL_SIZE
                 });
             }
 
@@ -119,7 +122,8 @@ router.get('/choir/:CHOIRID/:VIEW?/:SONGID?', (req, res, next) => {
                                     leadRecorded : !!songRecordings ? songRecordings.length !== 0 : false,
                                     view : req.params.VIEW,
                                     memberType : requiredData.userInfo.memberType,
-                                    render : renderURL
+                                    render : renderURL,
+                                    choirListMaxSize : CHOIR_LIST_MAX_INITAL_SIZE
                                 });
                 
                             })

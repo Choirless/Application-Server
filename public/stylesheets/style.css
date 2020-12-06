@@ -452,6 +452,16 @@ button{
   background: #fff1ad;
 }
 
+.cta-button.transparent{
+  background: transparent;
+  color: black !important;
+  border: 1px solid black;
+}
+
+.cta-button.transparent:hover{
+  background-color: rgba(0,0,0,0.05);
+}
+
 .cta-button.loading{
   background-image: url("/assets/images/loader.gif");
   background-size: 60% auto ;
@@ -1126,6 +1136,7 @@ body#dashboard main section#choirMenu{
   background: white;
   padding: 0;
   color: black;
+  position: relative;
 }
 
 body#dashboard main section#choirMenu h2{
@@ -1135,8 +1146,6 @@ body#dashboard main section#choirMenu h2{
 body#dashboard main section#choirMenu ul{
   margin-bottom: 1em;
   max-height: 50%;
-  overflow: scroll;
-  box-shadow: 0 -5px 5px rgb(0, 0, 0, 0.1) inset;
 }
 
 body#dashboard main section#choirMenu ul li{
@@ -1180,6 +1189,13 @@ body#dashboard main section#choirMenu ul li a.selected::after{
 
 body#dashboard main section#choirMenu button.cta-button{
   width: 100%;
+}
+
+body#dashboard main section#choirMenu.sidebar #choirCreationCTA {
+  position: absolute;
+  bottom: 1em;
+  width: 100%;
+  background: white;
 }
 
 body#dashboard main section#choirInfo{
