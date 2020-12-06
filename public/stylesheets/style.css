@@ -1155,6 +1155,7 @@ body#dashboard main section#choirMenu ul{
 body#dashboard main section#choirMenu ul li{
   margin-bottom: 0.5em;
   color: black;
+  font-size: 0.85em;
 }
 
 body#dashboard main section#choirMenu ul li:hover{
