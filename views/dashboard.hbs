@@ -8,8 +8,26 @@
             {{#if userChoirs}}
             
                 {{#each userChoirs}}
-                    <li><a href="/dashboard/choir/{{choirId}}" {{#if ../choirInfo}} {{#ifEquals ../choirInfo.choirId choirId}}class="selected"{{/ifEquals}} {{/if}} >{{name}}</a></li>
+                    
+                    {{!-- <li><a href="/dashboard/choir/{{choirId}}" {{#if ../choirInfo}} {{#ifEquals ../choirInfo.choirId choirId}}class="selected"{{/ifEquals}} {{/if}} {{#greaterThanOrEqualTo @key ../choirListMaxSize}}data-active="false"{{/greaterThanOrEqualTo}} >{{name}}</a></li> --}}
+
+                    {{#ifEquals ../choirInfo.choirId choirId}}
+                        
+                        <li><a href="/dashboard/choir/{{choirId}}" {{#if ../choirInfo}} {{#ifEquals ../choirInfo.choirId choirId}}class="selected"{{/ifEquals}} {{/if}}>{{name}}</a></li>
+                    
+                    {{else}}
+
+                        <li><a href="/dashboard/choir/{{choirId}}" {{#greaterThanOrEqualTo @key ../choirListMaxSize}}data-active="false"{{/greaterThanOrEqualTo}} >{{name}}</a></li>
+
+                    {{/ifEquals}}
+
                 {{/each}}
+
+                {{#greaterThanOrEqualTo userChoirs.length choirListMaxSize}}
+                    <div class="center-text">
+                        <button id="seeMoreChoirs" class="cta-button transparent">See More Choirs</button>
+                    </div>
+                {{/greaterThanOrEqualTo}}
 
             {{else}}
 
@@ -23,8 +41,8 @@
         <button class="sub-menu light" id="choirMenuToggle" type="button"></button>
 
         {{#ifNotEquals userType "regular"}}
-        <div class="center-text">
-            <button class="cta-button black" id="choirCreationCTA">Create a Choir</button>
+        <div class="center-text" id="choirCreationCTA">
+            <button class="cta-button black">Create a Choir</button>
         </div>
         {{/ifNotEquals}}
 
@@ -85,7 +103,6 @@
         {{> dashboard/member_intro }}
         {{/ifEquals}}
 
-        {{> dashboard/create_song }}
 
         {{#ifEquals memberType "leader"}}
         {{> dashboard/add_member }}
@@ -94,6 +111,9 @@
         {{#ifEquals memberType "leader"}}
         {{> dashboard/add_song_part }}
         {{/ifEquals}}
+
+        {{> dashboard/create_song }}
+        {{> dashboard/see_additional_choirs }}
 
     </section>
 
@@ -105,19 +125,28 @@
 
         'use strict';
 
-        var createChoirModal = document.querySelector('#createChoir.modal');
-        var choirMenu = document.querySelector('#choirMenu');
-        var choirMenuToggle = choirMenu.querySelector('button#choirMenuToggle');
+        const createChoirModal = document.querySelector('#createChoir.modal');
+        const choirMenu = document.querySelector('#choirMenu');
+        const choirMenuToggle = choirMenu.querySelector('button#choirMenuToggle');
+
+        const seeMoreChoirsModal = document.querySelector('#seeAdditionalChoirs.modal');
+        const seeMoreChoirsBtn = choirMenu.querySelector('button#seeMoreChoirs');
 
         if(createChoirModal){
             
-            document.querySelector('#choirCreationCTA').addEventListener('click', function(){
+            document.querySelector('#choirCreationCTA button').addEventListener('click', function(){
 
                 createChoirModal.dataset.active = "true";
                 choirMenu.dataset.expanded = "false";
 
             }, false);
 
+        }
+
+        if(seeMoreChoirsBtn){
+            seeMoreChoirsBtn.addEventListener('click', function(){
+                seeMoreChoirsModal.dataset.active = "true";
+            }, false);
         }
 
         choirMenuToggle.addEventListener('click', function(){

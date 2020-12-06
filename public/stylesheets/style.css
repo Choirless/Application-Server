@@ -73,6 +73,10 @@ a.sub-link{
   font-size: 0.75em;
 }
 
+.no-text-decoration{
+  text-decoration: none;
+}
+
 input[type="text"]{
   font-family: 'Montserrat';
 }
@@ -450,6 +454,16 @@ button{
 
 .cta-button.yellow:hover{
   background: #fff1ad;
+}
+
+.cta-button.transparent{
+  background: transparent;
+  color: black !important;
+  border: 1px solid black;
+}
+
+.cta-button.transparent:hover{
+  background-color: rgba(0,0,0,0.05);
 }
 
 .cta-button.loading{
@@ -1126,6 +1140,7 @@ body#dashboard main section#choirMenu{
   background: white;
   padding: 0;
   color: black;
+  position: relative;
 }
 
 body#dashboard main section#choirMenu h2{
@@ -1135,8 +1150,6 @@ body#dashboard main section#choirMenu h2{
 body#dashboard main section#choirMenu ul{
   margin-bottom: 1em;
   max-height: 50%;
-  overflow: scroll;
-  box-shadow: 0 -5px 5px rgb(0, 0, 0, 0.1) inset;
 }
 
 body#dashboard main section#choirMenu ul li{
@@ -1180,6 +1193,13 @@ body#dashboard main section#choirMenu ul li a.selected::after{
 
 body#dashboard main section#choirMenu button.cta-button{
   width: 100%;
+}
+
+body#dashboard main section#choirMenu.sidebar #choirCreationCTA {
+  position: absolute;
+  bottom: 1em;
+  width: 100%;
+  background: white;
 }
 
 body#dashboard main section#choirInfo{
@@ -1638,7 +1658,7 @@ body#admin main section form{
     margin-top: 0.5em;
   }
 
-  body#dashboard main section#choirMenu .center-text{    
+  body#dashboard main section#choirMenu #choirCreationCTA{    
     position: absolute;
     bottom: 1em;
     left: 0;
