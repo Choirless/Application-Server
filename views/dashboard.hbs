@@ -8,7 +8,19 @@
             {{#if userChoirs}}
             
                 {{#each userChoirs}}
-                    <li><a href="/dashboard/choir/{{choirId}}" {{#if ../choirInfo}} {{#ifEquals ../choirInfo.choirId choirId}}class="selected"{{/ifEquals}} {{/if}} {{#greaterThanOrEqualTo @key ../choirListMaxSize}}data-active="false"{{/greaterThanOrEqualTo}} >{{name}}</a></li>
+                    
+                    {{!-- <li><a href="/dashboard/choir/{{choirId}}" {{#if ../choirInfo}} {{#ifEquals ../choirInfo.choirId choirId}}class="selected"{{/ifEquals}} {{/if}} {{#greaterThanOrEqualTo @key ../choirListMaxSize}}data-active="false"{{/greaterThanOrEqualTo}} >{{name}}</a></li> --}}
+
+                    {{#ifEquals ../choirInfo.choirId choirId}}
+                        
+                        <li><a href="/dashboard/choir/{{choirId}}" {{#if ../choirInfo}} {{#ifEquals ../choirInfo.choirId choirId}}class="selected"{{/ifEquals}} {{/if}}>{{name}}</a></li>
+                    
+                    {{else}}
+
+                        <li><a href="/dashboard/choir/{{choirId}}" {{#greaterThanOrEqualTo @key ../choirListMaxSize}}data-active="false"{{/greaterThanOrEqualTo}} >{{name}}</a></li>
+
+                    {{/ifEquals}}
+
                 {{/each}}
 
                 {{#greaterThanOrEqualTo userChoirs.length choirListMaxSize}}
