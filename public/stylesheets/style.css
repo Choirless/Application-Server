@@ -73,6 +73,10 @@ a.sub-link{
   font-size: 0.75em;
 }
 
+.no-text-decoration{
+  text-decoration: none;
+}
+
 input[type="text"]{
   font-family: 'Montserrat';
 }
@@ -1654,7 +1658,7 @@ body#admin main section form{
     margin-top: 0.5em;
   }
 
-  body#dashboard main section#choirMenu .center-text{    
+  body#dashboard main section#choirMenu #choirCreationCTA{    
     position: absolute;
     bottom: 1em;
     left: 0;

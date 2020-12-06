@@ -7,7 +7,7 @@ const choir = require(`../bin/modules/choir`);
 const storage = require('../bin/lib/storage');
 const generateNotification = require(`${__dirname}/../bin/modules/generate_notification`);
 
-const CHOIR_LIST_MAX_INITAL_SIZE = process.env.CHOIR_LIST_MAX_INITAL_SIZE || 8;
+const CHOIR_LIST_MAX_INITAL_SIZE = process.env.CHOIR_LIST_MAX_INITAL_SIZE || 6;
 
 router.get('/', (req, res, next) => {
 

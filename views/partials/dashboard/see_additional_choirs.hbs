@@ -1,0 +1,55 @@
+<div id="seeAdditionalChoirs" class="modal" data-active="false">
+    <div class="container">
+        
+        <div class="content">
+            <h2>All Of Your Choirs</h2>
+
+            <ul>
+                <!--<li><a href="#">The People's Front of Judea</a></li>-->
+
+                {{#if userChoirs}}
+                
+                    {{#each userChoirs}}
+                        
+                        {{!-- <li><a href="/dashboard/choir/{{choirId}}" {{#if ../choirInfo}} {{#ifEquals ../choirInfo.choirId choirId}}class="selected"{{/ifEquals}} {{/if}} {{#greaterThanOrEqualTo @key ../choirListMaxSize}}data-active="false"{{/greaterThanOrEqualTo}} >{{name}}</a></li> --}}
+
+                        <li><a href="/dashboard/choir/{{choirId}}" class="no-text-decoration">{{name}}</a></li>
+
+                    {{/each}}
+
+                {{else}}
+
+                    <div class="center-text">
+                        <p>You haven't created any choirs yet.</p>
+                    </div>
+
+                {{/if}}
+            </ul>
+
+            <div class="side-by-side">
+                <button type="button" class="cta-button black">Close</button>
+            </div>       
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    (function(){
+
+        'use strict';
+
+        const seeAdditionalChoirs = document.querySelector('#seeAdditionalChoirs.modal');
+        const closeBtn = seeAdditionalChoirs.querySelector('button');
+
+        closeBtn.addEventListener('click', function(){
+            seeAdditionalChoirs.dataset.active = "false";
+        });
+
+       
+    }());
+
+</script>
