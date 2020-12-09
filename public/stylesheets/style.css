@@ -1194,6 +1194,7 @@ body#dashboard main section#choirMenu ul li a.selected::after{
 
 body#dashboard main section#choirMenu button.cta-button{
   width: 100%;
+  margin-top: 1em;
 }
 
 body#dashboard main section#choirMenu.sidebar #choirCreationCTA {
