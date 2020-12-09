@@ -63,7 +63,21 @@
                 <tr data-collapsed="true" data-collapseid="{{this.partNameId}}">
                     <td colspan="1"><a>{{this.userName}}</a></td>
                     <td>
+
+                        {{#ifEquals this.userId ../../user}}
+                        
                         <button class="cta-button dark-green view-video" data-videosrc="/performance/video/{{../../choirInfo.choirId}}+{{../../songInformation.songId}}+{{this.partId}}.webm">View</button>
+                        
+                        {{else}}
+                            
+                            {{#ifEquals ../../memberType "leader"}}
+
+                                <button class="cta-button dark-green view-video" data-videosrc="/performance/video/{{../../choirInfo.choirId}}+{{../../songInformation.songId}}+{{this.partId}}.webm">View</button>
+
+                            {{/ifEquals}}
+
+                        {{/ifEquals}}
+                        
                         {{#ifEquals ../../memberType "leader"}}
                             
                             {{#ifNotEquals ../this.name "Lead"}}
