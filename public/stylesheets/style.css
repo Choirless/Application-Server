@@ -1486,8 +1486,8 @@ body#dashboard .modal .container .content video{
   outline: 0px solid transparent;
 }
 
-body#dashboard .modal .container .content button {
-  align-self: flex-end;
+body#dashboard .modal .container .content .cta-button {
+  align-self: unset;
   margin-top: 1em;
 }
 
